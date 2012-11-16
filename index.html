@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>pressureNET Data Analysis</title>
+    <link rel="stylesheet" type="text/css" href="style.css"/>
+    <link rel="stylesheet" href="http://code.jquery.com/ui/1.9.1/themes/base/jquery-ui.css" />
+    <script language="Javascript" type="text/javascript" src="jquery-1.8.2.js"></script>
+    <script language="Javascript" type="text/javascript" src="jquery.flot.js"></script>
+    <script language="Javascript" type="text/javascript" src="http://code.jquery.com/ui/1.9.1/jquery-ui.js"></script>
+    <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=&sensor=false"></script>
+    <script>
+    $(function() {
+        $("#start_date").datepicker();
+        $("#end_date").datepicker();
+    });
+    </script>
+  </head>
+  <body>
+    <div id="header" style="width:100%">
+      <div>
+        <span style="font-size:24px; font-weight:bold;"><a href="#">pressureNET</a> Data Viewing and Analysis Tool</span>
+      </span>
+      <span style="margin-left:100px;width:50%">
+        <a href="#">Download pressureNET</a> by <a href="http://cumulonimbus.ca">Cumulonimbus</a>
+      <span>
+    </div>
+    <br/>
+    <div id="controls">
+      From <input type="text" id="start_date" class="dateselector" placeholder="Start Date" size="10"/>
+      To <input type="text" id="end_date" class="dateselector" placeholder="End Date" size="10"/>
+      &nbsp;
+      <input type="button" value="Load" onClick="loadAndUpdate();" />
+      
+      <input type="button" value="Animate" onClick="animate();" />
+    </div>
+    <div id="query_results">
+      &nbsp;
+    </div>
+    
+    <div id="placeholder" style="width:600px;height:300px;float:left;"></div>
+    <div id="map_canvas" style="width:300px;height:300px;"></div>
+    <div id="">
+      <input type="button" value="Found something interesting? Tell us!" onClick="notifyInteresting()"/>  
+    </div>
+    <div id="info">
+      <div id="notable_events_list" style="width:40%; float:left">
+        <h3>Notable Events</h3>
+        <ul>
+          <li>Hurricane Sandy</li>
+          <li>Post-Sandy Nor'easter</li>
+          <li>Summer 2012 US Derecho</li>
+          <li>Hurricane Isaac</li>
+          <li>...Pacific Typhoons...</li>
+      </div>
+      <div id="event_information" style="width:40%;float:left">
+        <h3>Event Information</h3>
+        <p>
+          Hurricane Sandy was a Category 2...
+        
+        </p>
+      </div> 
+      <div id="current_position" style="display:none"></div>
+    </info>
+    <script type="text/javascript">
+    var minVisLat = 38;
+    var maxVisLat = 42;
+    var minVisLon = -74;
+    var maxVisLon = -70;
+    var startTime = 0;
+    var endTime = 0;
+   
+    var dataPoints = [];
+   
+   
+    // Animation:
+    // in progress, not currently functioning (nov 15 2012)
+    // select data by the hour and then show it in frames
+    function animate() {
+      $("#query_results").html("Loading...");
+      startTime = $('#start_date').datepicker('getDate').getTime();
+      endTime = $('#end_date').datepicker('getDate').getTime();
+      
+      var frameArray = new Array(); 
+      
+      var step = 60 * 60 * 1000; // one hour
+      var totalFrames = (endTime - startTime) / step;
+      
+      for(var x = startTime; x<endTime; x+=step) {
+        $.ajax({
+          url: "http://localhost:3142/?minVisLat=" + minVisLat + "&maxVisLat=" + maxVisLat + "&minVisLon=" + minVisLon + "&maxVisLon=" + maxVisLon + "&startTime=" + x + "&endTime=" + (x+step),
+          cache: false
+        }).done(function( jscode ) {
+          var doubleArray = eval(jscode);
+          frameArray.push(doubleArray);
+          $("#query_results").html("Animated " + frameArray.length + " of " + totalFrames + " frames");
+          if(frameArray.length == totalFrames) {
+            animateGraph(frameArray, 0, totalFrames);
+          }
+
+        });
+      }
+      
+    }
+   
+    function animateGraph(frameArray, frameNumber, totalFrames) {
+      if(frameNumber<totalFrames) {
+        console.log("animation frame #" + frameNumber);
+        setTimeout(animateGraph, 2000, frameArray, (frameNumber+1), totalFrames);
+        $.plot($("#placeholder"), [{data:frameArray[frameNumber], lines:{show:false}, points:{show:true}}]);
+      }
+    }
+    
+    $(document).ready(function() {
+      setDates();
+      initializeMap();      
+      loadAndUpdate();
+
+    });
+    
+    function setDates() {
+      var today = new Date();
+      var yesterday = new Date(today - (60*60*24*1000));
+      
+      $('#start_date').val($.datepicker.formatDate('yy/mm/dd', yesterday));
+      $('#end_date').val($.datepicker.formatDate('yy/mm/dd', today));
+    }
+
+    
+    function loadAndUpdate() {
+      $("#query_results").html("Loading...");
+      startTime = $('#start_date').datepicker('getDate').getTime();
+      endTime = $('#end_date').datepicker('getDate').getTime();
+      $.ajax({
+        url: "http://localhost:3142/?minVisLat=" + minVisLat + "&maxVisLat=" + maxVisLat + "&minVisLon=" + minVisLon + "&maxVisLon=" + maxVisLon + "&startTime=" + startTime + "&endTime=" + endTime,
+        cache: false
+      }).done(function( jscode ) {
+        var doubleArray = eval(jscode);
+        $.plot($("#placeholder"), [{data:doubleArray, lines:{show:false}, points:{show:true}}]);
+        $("#query_results").html("Showing " + doubleArray.length + " results");
+      });
+    }
+    
+    function updateChart() {
+      $('#current_position').html(minVisLat + " to " + minVisLat + ", " + minVisLon + " to " + maxVisLon);
+    
+    }
+  
+    function notifyInteresting() {
+      alert('Show smooth div to verify info and inform of successful submission');
+    }
+  
+    function initializeMap() {
+      var mapOptions = {
+        center: new google.maps.LatLng(40.6, -73.9), // start near nyc
+        zoom: 8,
+        mapTypeId: google.maps.MapTypeId.ROADMAP
+      };
+      var map = new google.maps.Map(document.getElementById("map_canvas"),
+          mapOptions);
+    
+      // getCenter: Ya and Za
+      // getBounds: ca.b, ca.f, ea.b, ea.f 
+      google.maps.event.addListener(map, 'center_changed', function() {
+          minVisLat = map.getBounds().ca.b;
+          maxVisLat = map.getBounds().ca.f;
+          minVisLon = map.getBounds().ea.b;
+          maxVisLon = map.getBounds().ea.f;
+          updateChart();
+      });
+
+      google.maps.event.addListener(map, 'zoom_changed', function() {
+          minVisLat = map.getBounds().ca.b;
+          maxVisLat = map.getBounds().ca.f;
+          minVisLon = map.getBounds().ea.b;
+          maxVisLon = map.getBounds().ea.f;
+          updateChart();
+      });
+    }
+    
+    </script>
+    
+  </body>
+</html>
