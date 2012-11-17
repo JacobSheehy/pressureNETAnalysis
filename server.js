@@ -72,10 +72,6 @@ var maxVisLon = 0;
         where += whereDataIsClose;
         
         var dataQuery = "SELECT id, reading, latitude, longitude, reading, daterecorded FROM archive GROUP BY archive.id, archive.reading, archive.latitude, archive.longitude, archive.daterecorded HAVING " + where + " limit 1000"; // limit 10000
-        var minPressureQuery = "SELECT min(reading) FROM archive WHERE " + where;
-        var maxPressureQuery = "SELECT max(reading) FROM archive WHERE " + where;
-        var minTimeQuery = "SELECT min(daterecorded) FROM archive WHERE " + where;
-        var maxTimeQuery = "SELECT max(daterecorded) FROM archive WHERE " + where;
         console.log(dataQuery);
         client.query(dataQuery, after(function(result) {
           //console.log(q);
