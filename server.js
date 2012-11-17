@@ -45,8 +45,18 @@ var maxVisLon = 0;
     console.log(e);
   }
   
+  /*
+   * Build a data array that we will return through http.
+   * 
+   * The first array element is [minpressure, maxpressure]
+   * The second is [minTime, maxTime].
+   * All others are the data points. 
+   * 
+   * 
+  */
   function assembleJSGraphsFromData(result) {
    var finalJSCode = [];
+   
    for(var i = 0; i < result.rows.length; i++) { 
      finalJSCode.push('[' + [(result.rows[i].daterecorded / 10000) + ',' +  result.rows[i].reading] + ']');
    }
@@ -55,16 +65,24 @@ var maxVisLon = 0;
   
   pg.connect(connectionString, after(function(client) {
     try{
-        var q = "SELECT * FROM archive WHERE latitude > " + minVisLat + " and latitude < " + maxVisLat + " and longitude > " + minVisLon + " and longitude < " + maxVisLon + " and daterecorded > " + startTime + " and daterecorded < " + endTime + " ORDER BY daterecorded ASC limit 10000"; // limit 10000
-        console.log(q); 
-        client.query(q, after(function(result) {
+        var where = "latitude > " + minVisLat + " and latitude < " + maxVisLat + " and longitude > " + minVisLon + " and longitude < " + maxVisLon + " and daterecorded > " + startTime + " and daterecorded < " + endTime;
+        
+        var whereDataIsClose = " and (reading > (select avg(archive.reading) from archive where " + where + ") - 2*(select (STDDEV_POP(archive.reading)) from archive where " + where + ")) and (reading < (select avg(archive.reading) from archive where " + where + ") + 2*(select (STDDEV_POP(archive.reading)) from archive where " + where + "))";
+        
+        where += whereDataIsClose;
+        
+        var dataQuery = "SELECT id, reading, latitude, longitude, reading, daterecorded FROM archive GROUP BY archive.id, archive.reading, archive.latitude, archive.longitude, archive.daterecorded HAVING " + where + " limit 1000"; // limit 10000
+        var minPressureQuery = "SELECT min(reading) FROM archive WHERE " + where;
+        var maxPressureQuery = "SELECT max(reading) FROM archive WHERE " + where;
+        var minTimeQuery = "SELECT min(daterecorded) FROM archive WHERE " + where;
+        var maxTimeQuery = "SELECT max(daterecorded) FROM archive WHERE " + where;
+        console.log(dataQuery);
+        client.query(dataQuery, after(function(result) {
           //console.log(q);
           var js = assembleJSGraphsFromData(result);
           var text = js;
           res.writeHead(200, {"Content-Type": "text/javascript", "Access-Control-Allow-Origin": "*"});
-
           res.end(text);
-          //console.log(req);
         }))
      } catch(e) {
       console.log(e);      
