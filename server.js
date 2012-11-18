@@ -25,6 +25,8 @@ var maxVisLat = 0;
 var minVisLon = 0;
 var maxVisLon = 0;
 
+var limit = 1000;
+
  try  {
     minVisLat = url.parse(req.url, true).query.minVisLat;
     maxVisLat = url.parse(req.url, true).query.maxVisLat;
@@ -32,6 +34,7 @@ var maxVisLon = 0;
     maxVisLon = url.parse(req.url, true).query.maxVisLon;
     startTime = url.parse(req.url, true).query.startTime;
     endTime   = url.parse(req.url, true).query.endTime;
+    limit = url.parse(req.url, true).query.limit;
     
     var after = function(callback) {
       return function(err, queryResult) {
@@ -68,11 +71,11 @@ var maxVisLon = 0;
         var where = "latitude > " + minVisLat + " and latitude < " + maxVisLat + " and longitude > " + minVisLon + " and longitude < " + maxVisLon + " and daterecorded > " + startTime + " and daterecorded < " + endTime;
         
         var whereDataIsClose = " and (reading > (select avg(archive.reading) from archive where " + where + ") - 2*(select (STDDEV_POP(archive.reading)) from archive where " + where + ")) and (reading < (select avg(archive.reading) from archive where " + where + ") + 2*(select (STDDEV_POP(archive.reading)) from archive where " + where + "))";
-        var simpleQuery = "SELECT * FROM archive WHERE " + where + " limit 5000";
+        var simpleQuery = "SELECT * FROM archive WHERE " + where + " limit " + limit;
         
         where += whereDataIsClose;
         
-        var dataQuery = "SELECT id, reading, latitude, longitude, reading, daterecorded FROM archive GROUP BY archive.id, archive.reading, archive.latitude, archive.longitude, archive.daterecorded HAVING " + where + " limit 5000"; // limit 10000
+        var dataQuery = "SELECT id, reading, latitude, longitude, reading, daterecorded FROM archive GROUP BY archive.id, archive.reading, archive.latitude, archive.longitude, archive.daterecorded HAVING " + where + " limit " + limit; // limit 10000
         //console.log(dataQuery);
         
         

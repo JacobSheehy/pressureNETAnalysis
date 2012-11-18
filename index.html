@@ -36,7 +36,9 @@
     <section id="date-range" class="full">
       <label for="start_date"> From</label> <input type="text" name="start_date" id="start_date" class="dateselector" placeholder="Start Date" size="10"/>
       <label for="end_date">To</label> <input type="text" id="end_date" name="end_date" class="dateselector" placeholder="End Date" size="10"/>
-      <input type="button" value="Load" onClick="loadAndUpdate();"  />
+      <input type="button" value="Load" onClick="loadAndUpdate(0);"  />
+      <span id="query_results"></span>
+
     </section>
       
     <section id="map_canvas" class="full" style="height:250px"></section>  
@@ -51,9 +53,7 @@
       
       </div>
     </div>
-    <section id="query_results" class="full">
-      &nbsp;    
-    </section>
+
     
     <section id="placeholder" class="full" style="width:620px;height:300px;"></section>
     
@@ -103,6 +103,8 @@
     var defaultQueryIncrement = 1000;
     var largeQueryIncrement = 5000;
     
+    var currentQueryLimit = defaultQueryLimit;
+    
     // Animation:
     // in progress, not currently functioning (nov 15 2012)
     // select data by the hour and then show it in frames
@@ -119,7 +121,7 @@
       
       for(var x = startTime; x<endTime; x+=step) {
         $.ajax({
-          url: "http://localhost:3142/?minVisLat=" + minVisLat + "&maxVisLat=" + maxVisLat + "&minVisLon=" + minVisLon + "&maxVisLon=" + maxVisLon + "&startTime=" + x + "&endTime=" + (x+step),
+          url: "http://localhost:3142/?minVisLat=" + minVisLat + "&maxVisLat=" + maxVisLat + "&minVisLon=" + minVisLon + "&maxVisLon=" + maxVisLon + "&startTime=" + x + "&endTime=" + (x+step) + "&limit=" + currentQueryLimit,
           cache: false
         }).done(function( jscode ) {
           var doubleArray = eval(jscode);
@@ -148,7 +150,7 @@
     $(document).ready(function() {
       setDates();
       initializeMap();      
-      loadAndUpdate();
+      loadAndUpdate(0);
       setUpSlider();
     });
     
@@ -187,13 +189,18 @@
       $('#end_date').val($.datepicker.formatDate('yy/mm/dd', end));
     }
 
-    function loadAndUpdate() {
+    function loadAndUpdate(increment) {
+      if(increment>0) {
+          currentQueryLimit += defaultQueryIncrement;
+      } else {
+        currentQueryLimit = defaultQueryLimit;
+      }
       $("#query_results").html("Loading...");
       startTime = $('#start_date').datepicker('getDate').getTime();
       endTime = $('#end_date').datepicker('getDate').getTime();
       //alert(startTime);
       $.ajax({
-        url: "http://localhost:3142/?minVisLat=" + minVisLat + "&maxVisLat=" + maxVisLat + "&minVisLon=" + minVisLon + "&maxVisLon=" + maxVisLon + "&startTime=" + startTime + "&endTime=" + endTime,
+        url: "http://localhost:3142/?minVisLat=" + minVisLat + "&maxVisLat=" + maxVisLat + "&minVisLon=" + minVisLon + "&maxVisLon=" + maxVisLon + "&startTime=" + startTime + "&endTime=" + endTime + "&limit=" + currentQueryLimit,
         cache: false
       }).done(function( jscode ) {
         var doubleArray = eval(jscode);
@@ -202,7 +209,14 @@
          lines:{show:false}, 
          points:{show:true}}]  
          );
-        $("#query_results").html("Showing " + doubleArray.length + " results");
+         
+         // if the results were likely limited, let the user show more
+         var showMore = "";
+         if(doubleArray.length%1000 == 0) {
+            
+            var showMore = "<a onClick='loadAndUpdate(1)' style='cursor:pointer'>Show More</a>";
+         }
+        $("#query_results").html("Showing " + doubleArray.length + " results. " + showMore);
       });
     }
     
