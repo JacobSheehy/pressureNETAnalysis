@@ -68,13 +68,16 @@ var maxVisLon = 0;
         var where = "latitude > " + minVisLat + " and latitude < " + maxVisLat + " and longitude > " + minVisLon + " and longitude < " + maxVisLon + " and daterecorded > " + startTime + " and daterecorded < " + endTime;
         
         var whereDataIsClose = " and (reading > (select avg(archive.reading) from archive where " + where + ") - 2*(select (STDDEV_POP(archive.reading)) from archive where " + where + ")) and (reading < (select avg(archive.reading) from archive where " + where + ") + 2*(select (STDDEV_POP(archive.reading)) from archive where " + where + "))";
+        var simpleQuery = "SELECT * FROM archive WHERE " + where + " limit 5000";
         
         where += whereDataIsClose;
         
-        var dataQuery = "SELECT id, reading, latitude, longitude, reading, daterecorded FROM archive GROUP BY archive.id, archive.reading, archive.latitude, archive.longitude, archive.daterecorded HAVING " + where + " limit 1000"; // limit 10000
-        console.log(dataQuery);
+        var dataQuery = "SELECT id, reading, latitude, longitude, reading, daterecorded FROM archive GROUP BY archive.id, archive.reading, archive.latitude, archive.longitude, archive.daterecorded HAVING " + where + " limit 5000"; // limit 10000
+        //console.log(dataQuery);
+        
+        
         client.query(dataQuery, after(function(result) {
-          //console.log(q);
+          console.log(dataQuery);
           var js = assembleJSGraphsFromData(result);
           var text = js;
           res.writeHead(200, {"Content-Type": "text/javascript", "Access-Control-Allow-Origin": "*"});

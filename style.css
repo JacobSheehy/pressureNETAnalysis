@@ -1,5 +1,151 @@
-html, body {
-  margin:0px;
-  padding:0px;
-  
-}
+body {
+	font: 14px/1.2 Roboto, "Helvetica Neue", Arial, sans-serif;
+	color: #000;
+	min-width: 640px;
+	background: #fff;
+	}
+
+h1 {
+	font: 30px/1 "Alte Haas Grotesk", "Helvetica Neue", Arial, sans-serif;
+	text-align: center;
+	}
+
+	h1 span {font-weight: bold;}
+
+h2 {
+	color: #555;
+	font-size: 20px;
+	font-weight: bold;
+	margin-bottom: 10px;
+	}
+
+	hgroup h2 {
+		margin-bottom: 0;
+		}
+
+h3 {
+	color: #333;
+	font-size: 16px;
+	font-weight: bold;
+	margin-bottom: 10px;
+	}
+
+
+
+a {
+	color: #33b5e5;
+	text-decoration: none;
+	}
+
+a:hover {
+	color: #09c;
+	}
+
+header {
+	z-index: 3;
+	color: #fff;
+	background: #333;
+	padding: 10px 0 5px;
+	}
+
+	header nav {
+		text-align: right;
+		width: 640px;
+		margin: 10px auto 0;
+		}
+
+		header nav a {
+			color: #fff;
+			border-left: #aaa solid 1px;
+			padding: 0 10px;
+			}
+
+		#cb-link {
+			background: url("http://www.cumulonimbus.ca/wp-content/themes/capillatus/favicon.gif") no-repeat;
+			border: none;
+			padding-left: 20px;
+			}
+
+#map {
+	z-index: -1;
+	overflow: hidden;
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	background: #eee;
+	margin: 0;
+	}
+
+#date-rage {
+	margin-top: 320px;
+	
+	}
+
+section {
+	
+	background: #fff;
+	margin: 0 auto;
+	}
+
+	section.full {
+		width: 620px;
+		padding: 10px;
+		}
+
+		section.full:after {
+			content: "";
+			display: table;
+			clear: both;
+			}
+
+	section.half {
+		float: left;
+		width: 300px;
+		}
+
+		section.half:first-child {
+			margin-right: 20px;
+			}
+
+	input[type="text"] {
+		float: left;
+		font-size: 16px;
+		text-align: center;
+		
+		height: 16px;
+		background: #eee;
+		border-color: #33b5e5;
+		border-style: solid;
+		border-width: 0 0 2px;
+		padding: 2px;
+		}
+
+	label {
+		float: left;
+		text-align: center;
+		width: 62px;
+		}
+
+	#event-list {
+		font-size: 18px;
+		margin-bottom: 5px;
+		}
+
+footer {
+	z-index: 1;
+	width: 620px;
+	background: #eee;
+	padding: 10px;
+	margin: 0 auto;
+	}
+
+	#contact {
+		display: block;
+		font-size: 18px;
+		color: #fff;
+		text-align: center;
+		width: auto;
+		background: #33b5e5;
+		padding: 5px;
+		margin: 0 auto;
+		}

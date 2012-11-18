@@ -2,43 +2,45 @@
 <html>
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <title>pressureNET Data Analysis</title>
+    <link rel="stylesheet" type="text/css" media="all" href="reset.css" />
+    
     <link rel="stylesheet" type="text/css" href="style.css"/>
     <link rel="stylesheet" href="http://code.jquery.com/ui/1.9.1/themes/base/jquery-ui.css" />
     <script language="Javascript" type="text/javascript" src="jquery-1.8.2.js"></script>
     <script language="Javascript" type="text/javascript" src="jquery.flot.js"></script>
     <script language="Javascript" type="text/javascript" src="http://code.jquery.com/ui/1.9.1/jquery-ui.js"></script>
-    <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=AIzaSyCegf5jELVrqr1Ms8T-mHd4azEPnzY6MQY&sensor=false"></script>
-    <script>
-    $(function() {
-        $("#start_date").datepicker();
-        $("#end_date").datepicker();
-    });
+    <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=s&sensor=false"></script>
+    <script type="text/javascript">
+    
+    var dateRange = 0;
     
     $(function() {
-        $( "#time_slider" ).slider();
+        $("#start_date").datepicker({changeMonth: true});
+        $("#end_date").datepicker({changeMonth: true});
     });
+    
+ 
     </script>
   </head>
   <body>
-    <div id="header" style="width:100%">
-      <div>
-        <span style="font-size:24px; font-weight:bold;"><a href="#">pressureNET</a> Data Viewing and Analysis Tool</span>
-      </span>
-      <span style="margin-left:100px;width:50%">
-        <a href="#">Download pressureNET</a> by <a href="http://cumulonimbus.ca">Cumulonimbus</a>
-      <span>
-    </div>
-    <br/>
-    <div id="controls">
-      From <input type="text" id="start_date" class="dateselector" placeholder="Start Date" size="10"/>
-      To <input type="text" id="end_date" class="dateselector" placeholder="End Date" size="10"/>
-      &nbsp;
-      <input type="button" value="Load" onClick="loadAndUpdate();" />
+  <header>
+		<h1><span>pressureNET</span> Data Viewing and Analysis Tool</h1>
+		<nav>
+			<a id="cb-link" href="http://cumulonimbus.ca">Cumulonimbus</a>
+			<a href="https://market.android.com/details?id=ca.cumulonimbus.barometernetwork" target="_blank">Download pressureNET</a>
+		</nav>
+	</header>
+	
+    <section id="date-range" class="full">
+      <label for="start_date"> From</label> <input type="text" name="start_date" id="start_date" class="dateselector" placeholder="Start Date" size="10"/>
+      <label for="end_date">To</label> <input type="text" id="end_date" name="end_date" class="dateselector" placeholder="End Date" size="10"/>
+      <input type="button" value="Load" onClick="loadAndUpdate();"  />
+    </section>
       
-      <input type="button" value="Animate" onClick="animate();" />
-    </div>
-    <div id="slider_container" style="padding:20px;">
+    <section id="map_canvas" class="full" style="height:250px"></section>  
+    <div id="slider_container" style="padding:20px;display:none">
       <div
       <div style="text-align:center">
         <div style="width:50%">
@@ -49,32 +51,42 @@
       
       </div>
     </div>
-    <div id="query_results">
+    <section id="query_results" class="half">
+      &nbsp;    
+    </section>
+    
+    <section id="placeholder" class="full" style="width:620px;height:300px;"></section>
+    
+    <div class="height:50px">
       &nbsp;
     </div>
-    
-    <div id="placeholder" style="width:600px;height:300px;float:left;"></div>
-    <div id="map_canvas" style="width:300px;height:300px;"></div>
-    <div id="">
-      <input type="button" value="Found something interesting? Tell us!" onClick="notifyInteresting()"/>  
-    </div>
-    <div id="info">
-      <div id="notable_events_list" style="width:40%; float:left">
-        <h3>Notable Events</h3>
-        <ul>
+      
+    <section id="events" class="full">
+	    <section id="notable-events" class="half">
+		    <h2>Notable Events</h2>
+		    <ul id="event-list">
           <li>Hurricane Sandy</li>
           <li>Post-Sandy Nor'easter</li>
           <li>Summer 2012 US Derecho</li>
           <li>Hurricane Isaac</li>
           <li>...Pacific Typhoons...</li>
-      </div>
-      <div id="event_information" style="width:40%;float:left">
-        <h3>Event Information</h3>
-        <p>
-          Hurricane Sandy was a Category 2...
-        
-        </p>
-      </div> 
+		    </ul>
+	    </section>
+	    <section id="event-info" class="half">
+		    <hgroup>
+			    <h2>Event Information</h2>
+			    <h3>Dates</h3>
+		    </hgroup>
+		    <p>Hurricane Sandy was a Category 2...</p>
+	    </section>
+    </section>
+
+    <footer>
+	    <a id="contact" href="mailto:software@cumulonimbus.ca" title="E-mail us!">Found something interesting? Let us know!</a>
+    </footer>
+
+      
+      
       <div id="current_position" style="display:none"></div>
     </info>
     <script type="text/javascript">
@@ -91,7 +103,7 @@
     // Animation:
     // in progress, not currently functioning (nov 15 2012)
     // select data by the hour and then show it in frames
-    /*
+    
     function animate() {
       $("#query_results").html("Loading...");
       startTime = $('#start_date').datepicker('getDate').getTime();
@@ -99,7 +111,7 @@
       
       var frameArray = new Array(); 
       
-      var step = 60 * 60 * 1000; // one hour
+      var step = 60 * 60 * 1000*6; // two hours
       var totalFrames = (endTime - startTime) / step;
       
       for(var x = startTime; x<endTime; x+=step) {
@@ -111,16 +123,17 @@
           frameArray.push(doubleArray);
           $("#query_results").html("Animated " + frameArray.length + " of " + totalFrames + " frames");
           if(frameArray.length == totalFrames) {
-            animateGraph(frameArray, 0, totalFrames);
+            //animateGraph(frameArray, 0, totalFrames);
+            dataPoints = frameArray;
           }
         });
       }
       
     }
-    */
     
-   /*
-    function animateGraph(frameArray, frameNumber, totalFrames) {
+    
+    
+    /*function animateGraph(frameArray, frameNumber, totalFrames) {
       if(frameNumber<totalFrames) {
         console.log("animation frame #" + frameNumber);
         setTimeout(animateGraph, 2000, frameArray, (frameNumber+1), totalFrames);
@@ -133,12 +146,36 @@
       setDates();
       initializeMap();      
       loadAndUpdate();
-
+      setUpSlider();
     });
+    
+    
+    function dateRange() {
+        var start = new Date($('#start_date').val());
+        var end = new Date($('#end_date').val());
+
+        // end - start returns difference in milliseconds 
+        var diff = end - start;
+        
+        // get days
+        var days = diff/1000/60/60/24;
+        return days;
+      }
+     
+    function setUpSlider() {
+        $( "#time_slider" ).slider({
+          slide: function(event, ui) {
+            // console.log(ui.value);
+            $.plot($("#placeholder"), [{data:dataPoints[ui.value], lines:{show:false}, points:{show:true}}],{yaxis:{min:930,max:1030}});
+         },
+         min:0,
+         max:(dateRange()*4)
+        });
+    }
     
     function setDates() {
       var today = new Date();
-      var yesterday = new Date(today - (60*60*24*1000));
+      var yesterday = new Date(today - (60*60*24*1000)*2); // two days
       
       $('#start_date').val($.datepicker.formatDate('yy/mm/dd', yesterday));
       $('#end_date').val($.datepicker.formatDate('yy/mm/dd', today));
