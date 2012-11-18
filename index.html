@@ -33,7 +33,7 @@
 		</nav>
 	</header>
 	
-    <section id="date-range" class="full">
+	  <section id="date-range" class="full">
       <label for="start_date"> From</label> <input type="text" name="start_date" id="start_date" class="dateselector" placeholder="Start Date" size="10"/>
       <label for="end_date">To</label> <input type="text" id="end_date" name="end_date" class="dateselector" placeholder="End Date" size="10"/>
       <input type="button" value="Load" onClick="loadAndUpdate(0);"  />
@@ -88,7 +88,7 @@
       
       
       <div id="current_position" style="display:none"></div>
-    </info>
+    
     <script type="text/javascript">
     var minVisLat = 38;
     var maxVisLat = 42;
@@ -99,9 +99,9 @@
    
     var dataPoints = [];
     
-    var defaultQueryLimit = 1000;
-    var defaultQueryIncrement = 1000;
-    var largeQueryIncrement = 5000;
+    var defaultQueryLimit = 5000;
+    var defaultQueryIncrement = 5000;
+    //var largeQueryIncrement = 10000;
     
     var currentQueryLimit = defaultQueryLimit;
     

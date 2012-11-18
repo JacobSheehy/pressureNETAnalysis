@@ -75,7 +75,7 @@ var limit = 1000;
         
         where += whereDataIsClose;
         
-        var dataQuery = "SELECT id, reading, latitude, longitude, reading, daterecorded FROM archive GROUP BY archive.id, archive.reading, archive.latitude, archive.longitude, archive.daterecorded HAVING " + where + " limit " + limit; // limit 10000
+        var dataQuery = "SELECT id, reading, latitude, longitude, reading, daterecorded FROM archive GROUP BY archive.reading, archive.id, archive.latitude, archive.longitude, archive.daterecorded HAVING " + where + " limit " + limit; // limit 10000
         //console.log(dataQuery);
         
         
