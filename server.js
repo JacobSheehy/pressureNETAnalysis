@@ -61,7 +61,7 @@ var limit = 1000;
    var finalJSCode = [];
    
    for(var i = 0; i < result.rows.length; i++) { 
-     finalJSCode.push('[' + [(result.rows[i].daterecorded / 10000) + ',' +  result.rows[i].reading] + ']');
+     finalJSCode.push('[' + [(result.rows[i].daterecorded) + ',' +  result.rows[i].reading] + ']');
    }
    return '[' + finalJSCode + ']';
   }
@@ -90,7 +90,7 @@ var limit = 1000;
       console.log(e);      
      }
   }))
-}).listen(3142, '127.0.0.1');
+}).listen(3142);
 
 console.log('Server running at http://127.0.0.1:3142/');
 

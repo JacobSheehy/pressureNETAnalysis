@@ -9,7 +9,7 @@
     <link rel="stylesheet" type="text/css" href="style.css"/>
     <link rel="stylesheet" href="http://code.jquery.com/ui/1.9.1/themes/base/jquery-ui.css" />
     <script language="Javascript" type="text/javascript" src="jquery-1.8.2.js"></script>
-    <script language="Javascript" type="text/javascript" src="jquery.flot.js"></script>
+    <script language="Javascript" type="text/javascript" src="jquery.flot.js"></script> 
     <script language="Javascript" type="text/javascript" src="http://code.jquery.com/ui/1.9.1/jquery-ui.js"></script>
     <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=&sensor=false"></script>
     <script type="text/javascript">
@@ -148,12 +148,12 @@
     */
     
     $(document).ready(function() {
+      
       setDates();
       initializeMap();      
       loadAndUpdate(0);
       setUpSlider();
     });
-    
     
     function dateRange() {
         var start = new Date($('#start_date').val());
@@ -171,7 +171,7 @@
         $( "#time_slider" ).slider({
           slide: function(event, ui) {
             // console.log(ui.value);
-            $.plot($("#placeholder"), [{data:dataPoints[ui.value], lines:{show:false}, points:{show:true}}],{yaxis:{min:930,max:1030}});
+            //$.plot($("#placeholder"), [{data:dataPoints[ui.value], lines:{show:false}, points:{show:true}}],{xaxis:{mode:time},yaxis:{min:930,max:1030}});
          },
          min:0,
          max:(dateRange()*4)
@@ -204,10 +204,10 @@
         cache: false
       }).done(function( jscode ) {
         var doubleArray = eval(jscode);
-        $.plot($("#placeholder"), [
-        {data:doubleArray, 
-         lines:{show:false}, 
-         points:{show:true}}]  
+        $.plot($("#placeholder"), [doubleArray], 
+         {lines:{show:false}, 
+         points:{show:true},
+         xaxis:{mode:"time"}}  
          );
          
          // if the results were likely limited, let the user show more
