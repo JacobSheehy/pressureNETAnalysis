@@ -53,7 +53,7 @@
       
       </div>
     </div>
-
+    <section id="current_position" class="full"></section>
     
     <section id="placeholder" class="full" style="width:620px;height:300px;"></section>
     
@@ -65,37 +65,38 @@
 	    <section id="notable-events" class="half">
 		    <h2>Notable Events</h2>
 		    <ul id="event-list">
-          <li>Hurricane Sandy</li>
-          <li>Post-Sandy Nor'easter</li>
-          <li>Summer 2012 US Derecho</li>
-          <li>Hurricane Isaac</li>
+          <li><a onClick="loadEventInfo('sandy')" style="cursor:pointer">Hurricane Sandy</a></li>
+          <li><a onClick="loadEventInfo('noreaster')" style="cursor:pointer">Post-Sandy Nor'easter</a></li>
+          <li><a onClick="loadEventInfo('derecho')" style="cursor:pointer">Summer 2012 US Derecho</a></li>
+          <li><a onClick="loadEventInfo('isaac')" style="cursor:pointer">Hurricane Isaac</a></li>
           <li>...Pacific Typhoons...</li>
 		    </ul>
 	    </section>
 	    <section id="event-info" class="half">
 		    <hgroup>
-			    <h2>Event Information</h2>
-			    <h3>Dates</h3>
+			    <h2><span id="event_title_text">Event Information</span></h2>
+			    <h3><span id="event_date_text">Date</span></h3>
 		    </hgroup>
-		    <p>Hurricane Sandy was a Category 2...</p>
+		    <p><span id="event_main_text">Hurricane Sandy was a Category 2...</span></p>
 	    </section>
     </section>
 
     <footer>
 	    <a id="contact" href="mailto:software@cumulonimbus.ca" title="E-mail us!">Found something interesting? Let us know!</a>
     </footer>
-
-      
-      
-      <div id="current_position" style="display:none"></div>
+  
+    
     
     <script type="text/javascript">
+    var centerLat = 0;
+    var centerLon = 0;
     var minVisLat = 38;
     var maxVisLat = 42;
     var minVisLon = -74;
     var maxVisLon = -70;
     var startTime = 0;
     var endTime = 0;
+    var zoom = 9;
    
     var dataPoints = [];
     
@@ -103,7 +104,63 @@
     var defaultQueryIncrement = 5000;
     //var largeQueryIncrement = 10000;
     
+    var map;
+    
     var currentQueryLimit = defaultQueryLimit;
+    
+    var events = [
+                  {
+                   eventName: "Sandy",
+                   eventDates: [new Date(), new Date()],
+                   eventDescription: "Sandy was a category 2...",
+                   pointsOfInterest: [
+                    {
+                        pointName: "New York", 
+                        latitude: 40.670345225,
+                        longitude: -73.9425720,
+                        startTime: (new  Date(2012, 9, 25)).getTime(),
+                        endTime: (new  Date(2012, 10, 01)).getTime(),
+                        zoomLevel: 11,
+                    },
+                    {
+                        pointName: "New Jersey",
+                        latitude: 39.9977615,
+                        longitude: -74.7212280,
+                        startTime: (new  Date(2012, 9, 29)).getTime(),
+                        endTime: (new  Date(2012, 10, 01)).getTime(),
+                        zoomLevel: 9,
+                    },
+                   ],
+      }];
+    
+    
+    function goTo(latitude, longitude, zoomLevel, startTime, endTime) {
+      setDates(new Date(startTime), new Date(endTime));
+      map.setZoom(zoomLevel);
+      var latLng = new google.maps.LatLng(latitude, longitude); //Makes a latlng
+      map.panTo(latLng);
+      
+      
+    }    
+    
+    function loadEventInfo(eventName) {
+      if(eventName=="sandy") {
+        $('#event_title_text').html(events[0].eventName);
+        $('#event_date_text').html(events[0].eventDates[0] + ' to ' + events[0].eventDates[1]);
+        
+        
+        var eventDescription = events[0].eventDescription;
+        
+        for(x = 0; x < events[0].pointsOfInterest.length; x++) {
+          eventDescription += "<br><a onClick='goTo(" + events[0].pointsOfInterest[x].latitude + ", " + events[0].pointsOfInterest[x].longitude + ", " + events[0].pointsOfInterest[x].zoomLevel + ", " + events[0].pointsOfInterest[x].startTime + ", " + events[0].pointsOfInterest[x].endTime + ")'>" + events[0].pointsOfInterest[x].pointName + "</a>";
+        
+        }
+        
+        $('#event_main_text').html(eventDescription);
+      }
+    }
+    
+    
     
     // Animation:
     // in progress, not currently functioning (nov 15 2012)
@@ -148,9 +205,8 @@
     */
     
     $(document).ready(function() {
-      
-      setDates();
-      initializeMap();      
+      setDates(new Date(2012, 9, 28), new  Date(2012, 10, 01));
+      initializeMap();
       loadAndUpdate(0);
       setUpSlider();
     });
@@ -177,11 +233,13 @@
          max:(dateRange()*4)
         });
     }
+
+
     
-    function setDates() {
-      var start = new Date(2012, 9, 28);
+    function setDates(start, end) {
+      //var start = new Date(2012, 9, 28);
       
-      var end = new  Date(2012, 10, 01);
+      //var end = new  Date(2012, 10, 01);
       
       $('#start_date').datepicker('setDate',start);
       $('#end_date').datepicker('setDate',end);
@@ -213,7 +271,6 @@
          // if the results were likely limited, let the user show more
          var showMore = "";
          if(doubleArray.length%1000 == 0) {
-            
             var showMore = "<a onClick='loadAndUpdate(1)' style='cursor:pointer'>Show More</a>";
          }
         $("#query_results").html("Showing " + doubleArray.length + " results. " + showMore);
@@ -221,7 +278,7 @@
     }
     
     function updateChart() {
-      $('#current_position').html(minVisLat + " to " + minVisLat + ", " + minVisLon + " to " + maxVisLon);
+      $('#current_position').html(centerLat + ", " + centerLon + " at zoom " + zoom);
     }
   
     function notifyInteresting() {
@@ -234,24 +291,30 @@
         zoom: 10,
         mapTypeId: google.maps.MapTypeId.ROADMAP
       };
-      var map = new google.maps.Map(document.getElementById("map_canvas"),
+      map = new google.maps.Map(document.getElementById("map_canvas"),
           mapOptions);
     
       // getCenter: Ya and Za
       // getBounds: ca.b, ca.f, ea.b, ea.f 
       google.maps.event.addListener(map, 'center_changed', function() {
+          centerLat = map.getCenter().Ya;
+          centerLon = map.getCenter().Za;
           minVisLat = map.getBounds().ca.b;
           maxVisLat = map.getBounds().ca.f;
           minVisLon = map.getBounds().ea.b;
           maxVisLon = map.getBounds().ea.f;
+          zoom = map.getZoom();
           updateChart();
       });
 
       google.maps.event.addListener(map, 'zoom_changed', function() {
+          centerLat = map.getCenter().Ya;
+          centerLon = map.getCenter().Za;
           minVisLat = map.getBounds().ca.b;
           maxVisLat = map.getBounds().ca.f;
           minVisLon = map.getBounds().ea.b;
           maxVisLon = map.getBounds().ea.f;
+          zoom = map.getZoom();
           updateChart();
       });
     }
