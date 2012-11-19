@@ -100,7 +100,7 @@
    
     var dataPoints = [];
     
-    var defaultQueryLimit = 5000;
+    var defaultQueryLimit = 100;
     var defaultQueryIncrement = 5000;
     //var largeQueryIncrement = 10000;
     
@@ -153,7 +153,7 @@
         var eventDescription = events[0].eventDescription;
         
         for(x = 0; x < events[0].pointsOfInterest.length; x++) {
-          eventDescription += "<br><a onClick='goTo(" + events[0].pointsOfInterest[x].latitude + ", " + events[0].pointsOfInterest[x].longitude + ", " + events[0].pointsOfInterest[x].zoomLevel + ", " + events[0].pointsOfInterest[x].startTime + ", " + events[0].pointsOfInterest[x].endTime + ")'>" + events[0].pointsOfInterest[x].pointName + "</a>";
+          eventDescription += "<br><a style='cursor:pointer' onClick='goTo(" + events[0].pointsOfInterest[x].latitude + ", " + events[0].pointsOfInterest[x].longitude + ", " + events[0].pointsOfInterest[x].zoomLevel + ", " + events[0].pointsOfInterest[x].startTime + ", " + events[0].pointsOfInterest[x].endTime + ")'>" + events[0].pointsOfInterest[x].pointName + "</a>";
         
         }
         
@@ -306,28 +306,20 @@
       map = new google.maps.Map(document.getElementById("map_canvas"),
           mapOptions);
     
+      var aboutToReload;
+    
       // getCenter: Ya and Za
       // getBounds: ca.b, ca.f, ea.b, ea.f 
       google.maps.event.addListener(map, 'center_changed', function() {
-          centerLat = map.getCenter().Ya;
-          centerLon = map.getCenter().Za;
-          minVisLat = map.getBounds().ca.b;
-          maxVisLat = map.getBounds().ca.f;
-          minVisLon = map.getBounds().ea.b;
-          maxVisLon = map.getBounds().ea.f;
-          zoom = map.getZoom();
-          updateChart();
+          window.clearTimeout(aboutToReload);
+          updateAllMapParams();
+          aboutToReload = setTimeout("loadAndUpdate()", 1000);
       });
 
       google.maps.event.addListener(map, 'zoom_changed', function() {
-          centerLat = map.getCenter().Ya;
-          centerLon = map.getCenter().Za;
-          minVisLat = map.getBounds().ca.b;
-          maxVisLat = map.getBounds().ca.f;
-          minVisLon = map.getBounds().ea.b;
-          maxVisLon = map.getBounds().ea.f;
-          zoom = map.getZoom();
-          updateChart();
+          window.clearTimeout(aboutToReload);
+          updateAllMapParams();
+          aboutToReload = setTimeout("loadAndUpdate()", 1000);
       });
     }
     
