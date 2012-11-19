@@ -139,7 +139,8 @@
       map.setZoom(zoomLevel);
       var latLng = new google.maps.LatLng(latitude, longitude); //Makes a latlng
       map.panTo(latLng);
-      
+      updateAllMapParams();
+      loadAndUpdate();
       
     }    
     
@@ -284,6 +285,17 @@
     function notifyInteresting() {
       alert('Show smooth div to verify info and inform of successful submission');
     }
+  
+    function updateAllMapParams() {
+      centerLat = map.getCenter().Ya;
+      centerLon = map.getCenter().Za;
+      minVisLat = map.getBounds().ca.b;
+      maxVisLat = map.getBounds().ca.f;
+      minVisLon = map.getBounds().ea.b;
+      maxVisLon = map.getBounds().ea.f;
+      zoom = map.getZoom();
+      updateChart();
+     }
   
     function initializeMap() {
       var mapOptions = {
