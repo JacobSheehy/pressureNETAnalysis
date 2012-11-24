@@ -100,7 +100,7 @@
    
     var dataPoints = [];
     
-    var defaultQueryLimit = 100;
+    var defaultQueryLimit = 1000;
     var defaultQueryIncrement = 5000;
     //var largeQueryIncrement = 10000;
     
@@ -287,12 +287,16 @@
     }
   
     function updateAllMapParams() {
-      centerLat = map.getCenter().Ya;
-      centerLon = map.getCenter().Za;
-      minVisLat = map.getBounds().ca.b;
-      maxVisLat = map.getBounds().ca.f;
-      minVisLon = map.getBounds().ea.b;
-      maxVisLon = map.getBounds().ea.f;
+      centerLat = map.getCenter().lat();
+      centerLon = map.getCenter().lng();
+      var bounds = map.getBounds();
+      var ne = bounds.getNorthEast();
+      var sw = bounds.getSouthWest();
+      minVisLat = sw.lat();
+      maxVisLat = ne.lat();
+      minVisLon = sw.lng();
+      maxVisLon = ne.lng();
+      
       zoom = map.getZoom();
       updateChart();
      }
