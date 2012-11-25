@@ -1,0 +1,358 @@
+{% load url from future %}
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>pressureNET Data Analysis</title>
+    <link rel="stylesheet" type="text/css" media="all" href="{{ STATIC_URL}}css/reset.css" />
+    
+    <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/style.css"/>
+    <link rel="stylesheet" href="http://code.jquery.com/ui/1.9.1/themes/base/jquery-ui.css" />
+    <script language="Javascript" type="text/javascript" src="{{ STATIC_URL }}js/jquery-1.8.2.js"></script>
+    <script language="Javascript" type="text/javascript" src="{{ STATIC_URL }}js/jquery.flot.js"></script> 
+    <script language="Javascript" type="text/javascript" src="http://code.jquery.com/ui/1.9.1/jquery-ui.js"></script>
+    <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=&sensor=false"></script>
+    <script type="text/javascript">
+    
+        var dateRange = 0;
+        
+        $(function() {
+            $("#start_date").datepicker({changeMonth: true,dateFormat: "yy/mm/dd" });
+            $("#end_date").datepicker({changeMonth: true,dateFormat: "yy/mm/dd"});
+        });
+    
+ 
+    </script>
+  </head>
+  <body>
+    <header>
+      <h1><span>pressureNET</span> Data Viewing and Analysis Tool</h1>
+      <nav>
+        <a id="cb-link" href="http://cumulonimbus.ca">Cumulonimbus</a>
+        <a href="https://market.android.com/details?id=ca.cumulonimbus.barometernetwork" target="_blank">Download pressureNET</a>
+      </nav>
+    </header>
+    
+    <section id="date-range" class="full">
+      <label for="start_date"> From</label> <input type="text" name="start_date" id="start_date" class="dateselector" placeholder="Start Date" size="10"/>
+      <label for="end_date">To</label> <input type="text" id="end_date" name="end_date" class="dateselector" placeholder="End Date" size="10"/>
+      <input type="button" value="Load" onClick="loadAndUpdate(0);"  />
+      <span id="query_results"></span>
+
+    </section>
+        
+    <section id="map_canvas" class="full" style="height:250px"></section>  
+    
+    <div id="slider_container" style="padding:20px;display:none">
+      <div
+      <div style="text-align:center">
+        <div style="width:50%">
+          Time Slider
+        </div>
+      </div>
+      <div id="time_slider" style="width:50%;">
+      
+      </div>
+    </div>
+    
+    <section id="current_position" class="full"></section>
+      
+    <section id="placeholder" class="full" style="width:620px;height:300px;"></section>
+      
+    <div class="height:50px">
+      &nbsp;
+    </div>
+        
+    <section id="events" class="full">
+      <section id="notable-events" class="half">
+        <h2>Notable Events</h2>
+        <ul id="event-list">
+          <li><a onClick="loadEventInfo('sandy')" style="cursor:pointer">Hurricane Sandy</a></li>
+          <li><a onClick="loadEventInfo('noreaster')" style="cursor:pointer">Post-Sandy Nor'easter</a></li>
+          <li><a onClick="loadEventInfo('derecho')" style="cursor:pointer">Summer 2012 US Derecho</a></li>
+          <li><a onClick="loadEventInfo('isaac')" style="cursor:pointer">Hurricane Isaac</a></li>
+          <li>...Pacific Typhoons...</li>
+        </ul>
+      </section>
+      <section id="event-info" class="half">
+        <hgroup>
+          <h2><span id="event_title_text">Event Information</span></h2>
+          <h3><span id="event_date_text">Date</span></h3>
+        </hgroup>
+        <p><span id="event_main_text">Hurricane Sandy was a Category 2...</span></p>
+      </section>
+    </section>
+
+    <footer>
+      <a id="contact" href="mailto:software@cumulonimbus.ca" title="E-mail us!">Found something interesting? Let us know!</a>
+    </footer>
+    
+      
+      
+    <script type="text/javascript">
+        var centerLat = 0;
+        var centerLon = 0;
+        var minVisLat = 38;
+        var maxVisLat = 42;
+        var minVisLon = -74;
+        var maxVisLon = -70;
+        var startTime = 0;
+        var endTime = 0;
+        var zoom = 9;
+       
+        var dataPoints = [];
+        
+        var defaultQueryLimit = 1000;
+        var defaultQueryIncrement = 5000;
+        //var largeQueryIncrement = 10000;
+        
+        var map;
+        
+        var currentQueryLimit = defaultQueryLimit;
+        
+        var events = [
+                      {
+                       eventName: "Sandy",
+                       eventDates: [new Date(), new Date()],
+                       eventDescription: "Sandy was a category 2...",
+                       pointsOfInterest: [
+                        {
+                            pointName: "New York", 
+                            latitude: 40.670345225,
+                            longitude: -73.9425720,
+                            startTime: (new  Date(2012, 9, 25)).getTime(),
+                            endTime: (new  Date(2012, 10, 01)).getTime(),
+                            zoomLevel: 11,
+                        },
+                        {
+                            pointName: "New Jersey",
+                            latitude: 39.9977615,
+                            longitude: -74.7212280,
+                            startTime: (new  Date(2012, 9, 29)).getTime(),
+                            endTime: (new  Date(2012, 10, 01)).getTime(),
+                            zoomLevel: 9,
+                        },
+                       ],
+          }];
+        
+        
+        function goTo(latitude, longitude, zoomLevel, startTime, endTime) {
+          setDates(new Date(startTime), new Date(endTime));
+          map.setZoom(zoomLevel);
+          var latLng = new google.maps.LatLng(latitude, longitude); //Makes a latlng
+          map.panTo(latLng);
+          updateAllMapParams();
+          loadAndUpdate();
+          
+        }    
+        
+        function loadEventInfo(eventName) {
+          if(eventName=="sandy") {
+            $('#event_title_text').html(events[0].eventName);
+            $('#event_date_text').html(events[0].eventDates[0] + ' to ' + events[0].eventDates[1]);
+            
+            
+            var eventDescription = events[0].eventDescription;
+            
+            for(x = 0; x < events[0].pointsOfInterest.length; x++) {
+              eventDescription += "<br><a style='cursor:pointer' onClick='goTo(" + events[0].pointsOfInterest[x].latitude + ", " + events[0].pointsOfInterest[x].longitude + ", " + events[0].pointsOfInterest[x].zoomLevel + ", " + events[0].pointsOfInterest[x].startTime + ", " + events[0].pointsOfInterest[x].endTime + ")'>" + events[0].pointsOfInterest[x].pointName + "</a>";
+            
+            }
+            
+            $('#event_main_text').html(eventDescription);
+          }
+        }
+        
+        
+        
+        // Animation:
+        // in progress, not currently functioning (nov 15 2012)
+        // select data by the hour and then show it in frames
+        
+        function animate() {
+          $("#query_results").html("Loading...");
+          startTime = $('#start_date').datepicker('getDate').getTime();
+          endTime = $('#end_date').datepicker('getDate').getTime();
+          
+          var frameArray = new Array(); 
+          
+          var step = 60 * 60 * 1000*6; // two hours
+          var totalFrames = (endTime - startTime) / step;
+          
+          for(var x = startTime; x<endTime; x+=step) {
+            $.ajax({
+              url: "{% url 'readings-list' %}?format=json&minVisLat=" + minVisLat + "&maxVisLat=" + maxVisLat + "&minVisLon=" + minVisLon + "&maxVisLon=" + maxVisLon + "&startTime=" + x + "&endTime=" + (x+step) + "&limit=" + currentQueryLimit,
+              cache: false
+            }).done(function( jscode ) {
+              var doubleArray = eval(jscode);
+              frameArray.push(doubleArray);
+              $("#query_results").html("Animated " + frameArray.length + " of " + totalFrames + " frames");
+              if(frameArray.length == totalFrames) {
+                //animateGraph(frameArray, 0, totalFrames);
+                dataPoints = frameArray;
+              }
+            });
+          }
+          
+        }
+        
+        
+        
+        /*function animateGraph(frameArray, frameNumber, totalFrames) {
+          if(frameNumber<totalFrames) {
+            console.log("animation frame #" + frameNumber);
+            setTimeout(animateGraph, 2000, frameArray, (frameNumber+1), totalFrames);
+            $.plot($("#placeholder"), [{data:frameArray[frameNumber], lines:{show:false}, points:{show:true}}]);
+          }
+        }
+        */
+        
+        $(document).ready(function() {
+          setDates(new Date(2012, 9, 28), new  Date(2012, 10, 01));
+          initializeMap();
+          loadAndUpdate(0);
+          setUpSlider();
+        });
+        
+        function dateRange() {
+            var start = new Date($('#start_date').val());
+            var end = new Date($('#end_date').val());
+
+            // end - start returns difference in milliseconds 
+            var diff = end - start;
+            
+            // get days
+            var days = diff/1000/60/60/24;
+            return days;
+          }
+         
+        function setUpSlider() {
+            $( "#time_slider" ).slider({
+              slide: function(event, ui) {
+                // console.log(ui.value);
+                //$.plot($("#placeholder"), [{data:dataPoints[ui.value], lines:{show:false}, points:{show:true}}],{xaxis:{mode:time},yaxis:{min:930,max:1030}});
+             },
+             min:0,
+             max:(dateRange()*4)
+            });
+        }
+
+
+        
+        function setDates(start, end) {
+          //var start = new Date(2012, 9, 28);
+          
+          //var end = new  Date(2012, 10, 01);
+          
+          $('#start_date').datepicker('setDate',start);
+          $('#end_date').datepicker('setDate',end);
+          $('#start_date').val($.datepicker.formatDate('yy/mm/dd', start));
+          $('#end_date').val($.datepicker.formatDate('yy/mm/dd', end));
+        }
+
+        function loadAndUpdate(increment) {
+          if(increment>0) {
+              currentQueryLimit += defaultQueryIncrement;
+          } else {
+              currentQueryLimit = defaultQueryLimit;
+          }
+
+          $("#query_results").html("Loading...");
+          
+          startTime = $('#start_date').datepicker('getDate').getTime();
+          endTime = $('#end_date').datepicker('getDate').getTime();
+          
+          //alert(startTime);
+          var query_params = {
+              format: 'json',
+              minVisLat: minVisLat,
+              maxVisLat: maxVisLat,
+              minVisLon: minVisLon,
+              maxVisLon: maxVisLon,
+              startTime: startTime,
+              endTime: endTime,
+              limit: currentQueryLimit
+          };
+
+          $.ajax({
+              url: "{% url 'readings-list' %}",
+              cache: false,
+              data: query_params,
+              dataType: 'json',
+              success: function (readings, status) {
+                  var plot_data = [];
+                  for(var reading_i in readings) {
+                      var reading = readings[reading_i];
+                      plot_data.push([reading.daterecorded, reading.reading]);
+                  }
+
+                  $.plot($("#placeholder"), [plot_data],{ 
+                      lines:{show:false}, 
+                      points:{show:true},
+                      xaxis:{mode:"time"}
+                  });
+                   
+                  // if the results were likely limited, let the user show more
+                  var showMore = "";
+                  if(readings.length%1000 == 0) {
+                      var showMore = "<a onClick='loadAndUpdate(1)' style='cursor:pointer'>Show More</a>";
+                  }
+                  $("#query_results").html("Showing " + readings.length + " results. " + showMore);
+              }
+          });
+        }
+        
+        function updateChart() {
+            $('#current_position').html(centerLat + ", " + centerLon + " at zoom " + zoom);
+        }
+      
+        function notifyInteresting() {
+            alert('Show smooth div to verify info and inform of successful submission');
+        }
+      
+        function updateAllMapParams() {
+            centerLat = map.getCenter().lat();
+            centerLon = map.getCenter().lng();
+            var bounds = map.getBounds();
+            var ne = bounds.getNorthEast();
+            var sw = bounds.getSouthWest();
+            minVisLat = sw.lat();
+            maxVisLat = ne.lat();
+            minVisLon = sw.lng();
+            maxVisLon = ne.lng();
+            
+            zoom = map.getZoom();
+            updateChart();
+        }
+      
+        function initializeMap() {
+            var mapOptions = {
+              center: new google.maps.LatLng(40.6, -73.9), // start near nyc
+              zoom: 10,
+              mapTypeId: google.maps.MapTypeId.ROADMAP
+            };
+            map = new google.maps.Map(document.getElementById("map_canvas"),
+                mapOptions);
+          
+            var aboutToReload;
+          
+            // getCenter: Ya and Za
+            // getBounds: ca.b, ca.f, ea.b, ea.f 
+            google.maps.event.addListener(map, 'center_changed', function() {
+                window.clearTimeout(aboutToReload);
+                updateAllMapParams();
+                aboutToReload = setTimeout("loadAndUpdate()", 1000);
+            });
+
+            google.maps.event.addListener(map, 'zoom_changed', function() {
+                window.clearTimeout(aboutToReload);
+                updateAllMapParams();
+                aboutToReload = setTimeout("loadAndUpdate()", 1000);
+            });
+       }
+        
+    </script>
+  </body>
+</html>
