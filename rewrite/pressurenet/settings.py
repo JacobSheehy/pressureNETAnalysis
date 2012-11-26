@@ -25,9 +25,6 @@ MIDDLEWARE_CLASSES = (
 
 ROOT_URLCONF = 'pressurenet.urls'
 
-# Python dotted path to the WSGI application used by Django's runserver.
-WSGI_APPLICATION = 'pressurenet.wsgi.application'
-
 INSTALLED_APPS = (
     'django.contrib.admin',
     'django.contrib.auth',
