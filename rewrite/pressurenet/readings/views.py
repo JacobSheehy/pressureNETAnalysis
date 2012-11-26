@@ -19,7 +19,8 @@ class ReadingListView(ListModelView):
         start_time = self.request.GET.get('startTime', None)
         end_time = self.request.GET.get('endTime', None)
         limit = self.request.GET.get('limit', None)
-        return super(ReadingListView, self).get_queryset().filter(
+
+        queryset = super(ReadingListView, self).get_queryset().filter(
             latitude__gte=min_lat,
             latitude__lte=max_lat,
             longitude__gte=min_lon,
@@ -27,6 +28,8 @@ class ReadingListView(ListModelView):
             daterecorded__gte=start_time,
             daterecorded__lte=end_time,
         )[:limit]
+
+        return queryset
 
 
 index = IndexView.as_view()
