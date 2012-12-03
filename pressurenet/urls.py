@@ -8,5 +8,5 @@ urlpatterns = patterns('',
     url(r'^api-auth/', include('djangorestframework.urls', namespace='djangorestframework')),
     url(r'^admin/', include(admin.site.urls)),
 
-    url(r'^readings/', include('readings.urls')),
+    url(r'^', include('readings.urls')),
 )
