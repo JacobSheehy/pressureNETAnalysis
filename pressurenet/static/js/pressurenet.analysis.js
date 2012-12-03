@@ -71,7 +71,22 @@
         PressureNET.updateAllMapParams();
         PressureNET.loadAndUpdate();
     }    
-    
+
+    PressureNET.loadEventInfo = function(eventName) {
+        if(eventName=="sandy") {
+            $('#event_title_text').html(events[0].eventName);
+            $('#event_date_text').html(events[0].eventDates[0] + ' to ' + events[0].eventDates[1]);
+            
+            var eventDescription = events[0].eventDescription;
+            
+            for(x = 0; x < events[0].pointsOfInterest.length; x++) {
+                eventDescription += "<br><a style='cursor:pointer' onClick='PressureNET.setMapPosition(" + events[0].pointsOfInterest[x].latitude + ", " + events[0].pointsOfInterest[x].longitude + ", " + events[0].pointsOfInterest[x].zoomLevel + ", " + events[0].pointsOfInterest[x].startTime + ", " + events[0].pointsOfInterest[x].endTime + ")'>" + events[0].pointsOfInterest[x].pointName + "</a>";
+            }
+            
+            $('#event_main_text').html(eventDescription);
+        }
+    }
+
     PressureNET.dateRange = function() {
         var start = new Date($('#start_date').val());
         var end = new Date($('#end_date').val());
