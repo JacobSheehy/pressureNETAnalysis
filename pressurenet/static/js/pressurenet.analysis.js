@@ -18,7 +18,7 @@
    
     var dataPoints = [];
     
-    var defaultQueryLimit = 1000;
+    var defaultQueryLimit = 2000;
     var defaultQueryIncrement = 5000;
     //var largeQueryIncrement = 10000;
     
@@ -58,7 +58,6 @@
             PressureNET.setDates(new Date(2012, 9, 28), new  Date(2012, 10, 01));
             PressureNET.initializeMap();
             PressureNET.loadAndUpdate(0);
-            PressureNET.setUpSlider();
         });
 
     }
@@ -99,15 +98,6 @@
         return days;
     }
      
-    PressureNET.setUpSlider = function() {
-        $( "#time_slider" ).slider({
-                slide: function(event, ui) {
-            },
-            min:0,
-            max:(PressureNET.dateRange()*4)
-        });
-    }
-    
     PressureNET.setDates = function(start, end) {
         //var start = new Date(2012, 9, 28);
         
@@ -131,7 +121,6 @@
         startTime = $('#start_date').datepicker('getDate').getTime();
         endTime = $('#end_date').datepicker('getDate').getTime();
         
-        //alert(startTime);
         var query_params = {
             format: 'json',
             minVisLat: minVisLat,
@@ -150,15 +139,25 @@
             dataType: 'json',
             success: function(readings, status) {
                 var plot_data = [];
+                var readings_sum = 0;
                 for(var reading_i in readings) {
                     var reading = readings[reading_i];
                     plot_data.push([reading.daterecorded, reading.reading]);
+                    readings_sum += reading.reading;
                 }
 
+                // remove outliers; find the mean, 
+                // then +- 50 should be fine.
+                var mean = readings_sum / readings.length;
+                console.log('mean ' + mean + ' total ' + readings.length);
+                var minY = mean - 50;
+                var maxY = mean + 50; 
                 $.plot($("#placeholder"), [plot_data],{ 
                     lines:{show:false}, 
                     points:{show:true},
-                    xaxis:{mode:"time"}
+                    xaxis:{mode:"time"},
+                    yaxis:{min:minY,
+                           max:maxY}
                 });
                  
                 // if the results were likely limited, let the user show more
@@ -205,8 +204,6 @@
       
         var aboutToReload;
       
-        // getCenter: Ya and Za
-        // getBounds: ca.b, ca.f, ea.b, ea.f 
         google.maps.event.addListener(map, 'center_changed', function() {
             window.clearTimeout(aboutToReload);
             PressureNET.updateAllMapParams();

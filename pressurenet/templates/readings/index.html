@@ -8,58 +8,70 @@
     
     <title>pressureNET Data Analysis</title>
     
-    <link rel="stylesheet" href="http://code.jquery.com/ui/1.9.1/themes/base/jquery-ui.css" />
+	  <link rel="shortcut icon" href="http://www.cumulonimbus.ca/wp-content/themes/capillatus/favicon.gif" />
     
-    <link rel="stylesheet" type="text/css" media="all" href="{{ STATIC_URL}}css/reset.css" />
     <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/style.css"/>
+    <link rel="stylesheet" type="text/css" href="http://code.jquery.com/ui/1.9.1/themes/base/jquery-ui.css" />
     
     <script language="Javascript" type="text/javascript" src="{{ STATIC_URL }}js/jquery-1.8.2.js"></script>
     <script language="Javascript" type="text/javascript" src="http://code.jquery.com/ui/1.9.1/jquery-ui.js"></script>
-    <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=&sensor=false"></script>
+    <script language="Javascript" type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=&sensor=false"></script>
     
+	  <script language="Javascript" type="text/javascript" src="{{ STATIC_URL }}js/defaults.js"></script>
     <script language="Javascript" type="text/javascript" src="{{ STATIC_URL }}js/jquery.flot.js"></script> 
     <script language="Javascript" type="text/javascript" src="{{ STATIC_URL }}js/pressurenet.analysis.js"></script> 
 
   </head>
   <body>
     <header>
-      <h1><span>pressureNET</span> Data Viewing and Analysis Tool</h1>
+      <h1><span>pressureNET</span> Data Visualization Tool</h1>
       <nav>
+			  <a class="page-link off" data-page="live">Live Stream</a>
+			  <a class="page-link off" data-page="about">About</a>
         <a id="cb-link" href="http://cumulonimbus.ca">Cumulonimbus</a>
         <a href="https://market.android.com/details?id=ca.cumulonimbus.barometernetwork" target="_blank">Download pressureNET</a>
       </nav>
     </header>
     
+	<div id="screen"></div>
+	<section id="pages">
+
+		<a id="close"></a>
+
+		<article id="live" class="page">
+
+			<h2>Live Streaming</h2>
+
+			<p>If you are a researcher at an educational institution or a meteorological organization and are interested in accessing our live data stream, please contact us. We are interested in sharing our live atmospheric pressure data, especially to those who are looking to improve weather forecasting.</p>
+
+			<a class="contact" href="mailto:livestream@cumulonimbus.ca">Email us to discuss the live stream</a>
+
+		</article>
+	
+		<article id="about" class="page">
+
+			<h2>About the Data Visualization Tool</h2>
+
+			<p><a href="https://play.google.com/store/apps/details?id=ca.cumulonimbus.barometernetwork">pressureNET</a> is an open source barometer network that runs on Android and collects atmopsheric pressure measurements from barometers inside phones and tablets. The project is <a href="https://github.com/JacobSheehy/pressureNET">open source on GitHub</a>. We plan on using the collected data to improve weather forecasting models. This site is a visualization of the data in our archives. By selecting dates and changing the map location you can see a graph of the raw data we have collected.  We are working to make this an open data set while respecting user privacy, and we intend to build an API that lets anyone dynamically pull data from the archive. If you like this project, please consider downloading <a href="https://play.google.com/store/apps/details?id=ca.cumulonimbus.barometernetwork">pressureNET</a> from Google Play.</p> 
+
+		</article>
+    </section>
+
     <section id="date-range" class="full">
       <label for="start_date"> From</label> <input type="text" name="start_date" id="start_date" class="dateselector" placeholder="Start Date" size="10"/>
       <label for="end_date">To</label> <input type="text" id="end_date" name="end_date" class="dateselector" placeholder="End Date" size="10"/>
       <input type="button" value="Load" onClick="PressureNET.loadAndUpdate(0);"  />
-      <span id="query_results"></span>
 
     </section>
         
+    <section id="query_results" class="full"></section>
+
     <section id="map_canvas" class="full" style="height:250px"></section>  
     
-    <div id="slider_container" style="padding:20px;display:none">
-      <div
-      <div style="text-align:center">
-        <div style="width:50%">
-          Time Slider
-        </div>
-      </div>
-      <div id="time_slider" style="width:50%;">
+    <section style="display:none" id="current_position" class="full"></section>
       
-      </div>
-    </div>
-    
-    <section id="current_position" class="full"></section>
+    <section id="placeholder" class="full" style="width:640px;height:300px;"></section>
       
-    <section id="placeholder" class="full" style="width:620px;height:300px;"></section>
-      
-    <div class="height:50px">
-      &nbsp;
-    </div>
-        
     <section id="events" class="full">
       <section id="notable-events" class="half">
         <h2>Notable Events</h2>
@@ -81,7 +93,7 @@
     </section>
 
     <footer>
-      <a id="contact" href="mailto:software@cumulonimbus.ca" title="E-mail us!">Found something interesting? Let us know!</a>
+      <a class="contact" href="mailto:software@cumulonimbus.ca" title="E-mail us!">Found something interesting? Let us know!</a>
     </footer>
 
     <script type="text/javascript">
