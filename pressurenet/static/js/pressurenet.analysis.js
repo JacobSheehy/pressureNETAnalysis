@@ -105,6 +105,8 @@
         eventId = 0;
       } else if(eventName=="isaac") {
         eventId = 1;
+      } else if(eventName=="noreaster") {
+        eventId = 2;
       }
       $('#event_title_text').html(events[eventId].eventName);
       $('#event_date_text').html(events[eventId].eventDates[eventId] + ' to ' + events[eventId].eventDates[1]);
