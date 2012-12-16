@@ -25,6 +25,8 @@
     var map;
     
     var currentQueryLimit = defaultQueryLimit;
+
+
     
     var events = [{
         eventName: "Sandy",
@@ -45,6 +47,13 @@
           startTime: (new  Date(2012, 9, 29)).getTime(),
           endTime: (new  Date(2012, 10, 01)).getTime(),
           zoomLevel: 9
+        }, { // 39.291382453532435 -76.48104933520496 1351396800000 1351742400000 10
+          pointName: "Baltimore",
+          latitude: 39.291382453532435,
+          longitude: -76.48104933520496,
+          startTime: 1351396800000,
+          endTime: 1351742400000,
+          zoomLevel: 10
         }]
     }, { // 29.989573859470866 -91.0675109863281 1346040000000 1346558400000 8
         eventName: "Isaac",
@@ -82,12 +91,35 @@
         $(function() {
             $("#start_date").datepicker({changeMonth: true,dateFormat: "yy/mm/dd" });
             $("#end_date").datepicker({changeMonth: true,dateFormat: "yy/mm/dd"});
+
+            // if there are query parameters, use them
+            var hasEventParams = PressureNET.getUrlVars()['event'];
+            if(hasEventParams=='true') {
+              PressureNET.initializeMap();
+              var latitudeParam = parseFloat(PressureNET.getUrlVars()['latitude']);
+              var longitudeParam = parseFloat(PressureNET.getUrlVars()['longitude']);
+              var startTimeParam = parseInt(PressureNET.getUrlVars()['startTime']);
+              var endTimeParam = parseInt(PressureNET.getUrlVars()['endTime']);
+              var zoomLevelParam = parseInt(PressureNET.getUrlVars()['zoomLevel']);
+              PressureNET.setMapPosition(latitudeParam, longitudeParam, zoomLevelParam, startTimeParam, endTimeParam);
+              PressureNET.loadAndUpdate(0);
+            } else {
+
+              PressureNET.setDates(new Date(2012, 9, 28), new  Date(2012, 10, 01));
+              PressureNET.initializeMap();
+              PressureNET.loadAndUpdate(0);
+            }
           
-            PressureNET.setDates(new Date(2012, 9, 28), new  Date(2012, 10, 01));
-            PressureNET.initializeMap();
-            PressureNET.loadAndUpdate(0);
         });
 
+    }
+
+    PressureNET.getUrlVars = function() {
+        var vars = {};
+        var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m,key,value) {
+          vars[key] = value;
+        });
+        return vars;
     }
 
     PressureNET.setMapPosition = function(latitude, longitude, zoomLevel, startTime, endTime) {
@@ -114,7 +146,7 @@
       var eventDescription = events[eventId].eventDescription;
       
       for(x = 0; x < events[eventId].pointsOfInterest.length; x++) {
-          eventDescription += "<br><a style='cursor:pointer' onClick='PressureNET.setMapPosition(" + events[eventId].pointsOfInterest[x].latitude + ", " + events[eventId].pointsOfInterest[x].longitude + ", " + events[eventId].pointsOfInterest[x].zoomLevel + ", " + events[eventId].pointsOfInterest[x].startTime + ", " + events[eventId].pointsOfInterest[x].endTime + ")'>" + events[eventId].pointsOfInterest[x].pointName + "</a>";
+          eventDescription += "<br><a href='#query_results' style='cursor:pointer' onClick='PressureNET.setMapPosition(" + events[eventId].pointsOfInterest[x].latitude + ", " + events[eventId].pointsOfInterest[x].longitude + ", " + events[eventId].pointsOfInterest[x].zoomLevel + ", " + events[eventId].pointsOfInterest[x].startTime + ", " + events[eventId].pointsOfInterest[x].endTime + ")'>" + events[eventId].pointsOfInterest[x].pointName + "</a>";
       }
       
       $('#event_main_text').html(eventDescription);
@@ -133,10 +165,6 @@
     }
      
     PressureNET.setDates = function(start, end) {
-        //var start = new Date(2012, 9, 28);
-        
-        //var end = new  Date(2012, 10, 01);
-        
         $('#start_date').datepicker('setDate',start);
         $('#end_date').datepicker('setDate',end);
         $('#start_date').val($.datepicker.formatDate('yy/mm/dd', start));
@@ -199,17 +227,21 @@
                 if(readings.length%1000 == 0) {
                     var showMore = "<a onClick='PressureNET.loadAndUpdate(1)' style='cursor:pointer'>Show More</a>";
                 }
-                $("#query_results").html("Showing " + readings.length + " results. " + showMore);
+                // var loadEventParams = PressureNET.getUrlVars()["event"];
+                // if (loadEventParams == 'true') {
+
+                // }
+                var share = '';
+                if(centerLat!=0 ) {
+                  // share = " |  <a href='" + PressureNET.getShareURL() + "'>Share</a>";
+                }
+                $("#query_results").html("Showing " + readings.length + " results. " + showMore + share);
             }
         });
     }
     
     PressureNET.updateChart = function() {
         $('#current_position').html(centerLat + ", " + centerLon + " at zoom " + zoom);
-    }
-  
-    PressureNET.notifyInteresting = function() {
-        alert('Show smooth div to verify info and inform of successful submission');
     }
   
     PressureNET.updateAllMapParams = function() {
@@ -233,6 +265,12 @@
       document.location.href = "mailto:software@cumulonimbus.ca?subject=pressureNET%20Interesting%20Data&body=" + centerLat + "%20" + centerLon + "%20" + startTime + "%20" + endTime + "%20" + zoom;
     },
   
+    PressureNET.getShareURL = function() {
+      startTime = $('#start_date').datepicker('getDate').getTime();
+      endTime = $('#end_date').datepicker('getDate').getTime();
+      return "http://pndv.cumulonimbus.ca/?event=true&latitude=" + centerLat + "&longitude=" + centerLon + "&startTime=" + startTime + "&endTime=" + endTime + "&zoomLevel=" + zoom;
+    },
+
     PressureNET.initializeMap = function() {
         var mapOptions = {
           center: new google.maps.LatLng(40.6, -73.9), // start near nyc
