@@ -27,24 +27,32 @@
     var currentQueryLimit = defaultQueryLimit;
     
     var events = [{
-            eventName: "Sandy",
-            eventDates: [new Date(), new Date()],
-            eventDescription: "Sandy was a category 2...",
-            pointsOfInterest: [{
-                pointName: "New York", 
-                latitude: 40.670345225,
-                longitude: -73.9425720,
-                startTime: (new  Date(2012, 9, 25)).getTime(),
-                endTime: (new  Date(2012, 10, 01)).getTime(),
-                zoomLevel: 11
-            }, {
-                pointName: "New Jersey",
-                latitude: 39.9977615,
-                longitude: -74.7212280,
-                startTime: (new  Date(2012, 9, 29)).getTime(),
-                endTime: (new  Date(2012, 10, 01)).getTime(),
-                zoomLevel: 9
-            }]
+        eventName: "Sandy",
+        eventDates: [new Date(), new Date()],
+        eventDescription: "Sandy was a category 2...",
+        pointsOfInterest: [{
+          pointName: "New York", 
+          latitude: 40.670345225,
+          longitude: -73.9425720,
+          startTime: (new  Date(2012, 9, 25)).getTime(),
+          endTime: (new  Date(2012, 10, 01)).getTime(),
+          zoomLevel: 11
+        }, {
+          pointName: "New Jersey",
+          latitude: 39.9977615,
+          longitude: -74.7212280,
+          startTime: (new  Date(2012, 9, 29)).getTime(),
+          endTime: (new  Date(2012, 10, 01)).getTime(),
+          zoomLevel: 9
+        }]
+    }, {
+        eventName: "Isaac",
+        eventDates: [new Date(), new Date()],
+        eventDescription: "Isaac was a ...",
+        pointsOfInterest: []
+            
+   
+
     }];
     
 
@@ -149,7 +157,7 @@
                 // remove outliers; find the mean, 
                 // then +- 50 should be fine.
                 var mean = readings_sum / readings.length;
-                console.log('mean ' + mean + ' total ' + readings.length);
+                // console.log('mean ' + mean + ' total ' + readings.length);
                 var minY = mean - 50;
                 var maxY = mean + 50; 
                 $.plot($("#placeholder"), [plot_data],{ 
@@ -191,7 +199,13 @@
         
         zoom = map.getZoom();
         PressureNET.updateChart();
-    }
+    },
+
+    PressureNET.alertCumulonimbus = function() {
+      startTime = $('#start_date').datepicker('getDate').getTime();
+      endTime = $('#end_date').datepicker('getDate').getTime();
+      document.location.href = "mailto:software@cumulonimbus.ca?subject=pressureNET%20Interesting%20Data&body=" + centerLat + "%20" + centerLon + "%20" + startTime + "%20" + endTime + "%20" + zoom;
+    },
   
     PressureNET.initializeMap = function() {
         var mapOptions = {
