@@ -45,14 +45,18 @@
           endTime: (new  Date(2012, 10, 01)).getTime(),
           zoomLevel: 9
         }]
-    }, {
+    }, { // 29.989573859470866 -91.0675109863281 1346040000000 1346558400000 8
         eventName: "Isaac",
         eventDates: [new Date(), new Date()],
         eventDescription: "Isaac was a ...",
-        pointsOfInterest: []
-            
-   
-
+        pointsOfInterest: [{
+          pointName: "Louisiana",
+          latitude: 29.989573859470866,
+          longitude: -91.0675109863281,
+          startTime: 1346040000000,
+          endTime: 1346558400000,
+          zoomLevel: 8
+        }]
     }];
     
 
@@ -80,18 +84,22 @@
     }    
 
     PressureNET.loadEventInfo = function(eventName) {
-        if(eventName=="sandy") {
-            $('#event_title_text').html(events[0].eventName);
-            $('#event_date_text').html(events[0].eventDates[0] + ' to ' + events[0].eventDates[1]);
-            
-            var eventDescription = events[0].eventDescription;
-            
-            for(x = 0; x < events[0].pointsOfInterest.length; x++) {
-                eventDescription += "<br><a style='cursor:pointer' onClick='PressureNET.setMapPosition(" + events[0].pointsOfInterest[x].latitude + ", " + events[0].pointsOfInterest[x].longitude + ", " + events[0].pointsOfInterest[x].zoomLevel + ", " + events[0].pointsOfInterest[x].startTime + ", " + events[0].pointsOfInterest[x].endTime + ")'>" + events[0].pointsOfInterest[x].pointName + "</a>";
-            }
-            
-            $('#event_main_text').html(eventDescription);
-        }
+      var eventId = 0;
+      if(eventName=="sandy") {
+        eventId = 0;
+      } else if(eventName=="isaac") {
+        eventId = 1;
+      }
+      $('#event_title_text').html(events[eventId].eventName);
+      $('#event_date_text').html(events[eventId].eventDates[eventId] + ' to ' + events[eventId].eventDates[1]);
+      
+      var eventDescription = events[eventId].eventDescription;
+      
+      for(x = 0; x < events[eventId].pointsOfInterest.length; x++) {
+          eventDescription += "<br><a style='cursor:pointer' onClick='PressureNET.setMapPosition(" + events[eventId].pointsOfInterest[x].latitude + ", " + events[eventId].pointsOfInterest[x].longitude + ", " + events[eventId].pointsOfInterest[x].zoomLevel + ", " + events[eventId].pointsOfInterest[x].startTime + ", " + events[eventId].pointsOfInterest[x].endTime + ")'>" + events[eventId].pointsOfInterest[x].pointName + "</a>";
+      }
+      
+      $('#event_main_text').html(eventDescription);
     }
 
     PressureNET.dateRange = function() {
