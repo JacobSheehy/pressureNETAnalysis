@@ -27,7 +27,7 @@ class ReadingListView(ListModelView):
             longitude__lte=max_lon,
             daterecorded__gte=start_time,
             daterecorded__lte=end_time,
-        )[:limit]
+        ).order_by('user_id')[:limit]
 
         return queryset
 

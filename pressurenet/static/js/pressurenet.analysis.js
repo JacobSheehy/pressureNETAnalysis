@@ -30,6 +30,7 @@
         eventName: "Sandy",
         eventDates: [new Date(), new Date()],
         eventDescription: "Sandy was a category 2...",
+        eventLink: "http://en.wikipedia.org/wiki/Hurricane_Sandy",
         pointsOfInterest: [{
           pointName: "New York", 
           latitude: 40.670345225,
@@ -49,6 +50,7 @@
         eventName: "Isaac",
         eventDates: [new Date(), new Date()],
         eventDescription: "Isaac was a ...",
+        eventLink: "http://en.wikipedia.org/wiki/Hurricane_Isaac_(2012)",
         pointsOfInterest: [{
           pointName: "Louisiana",
           latitude: 29.989573859470866,
@@ -57,7 +59,21 @@
           endTime: 1346558400000,
           zoomLevel: 8
         }]
-    }];
+    }, { // 39.98355761483058 -74.95125427246091 1352091600000 1352610000000 10
+         // boston: 42.326689434570994 -71.50360717773435 1352178000000 1352610000000 9 
+        eventName: "Post-Sandy Nor'easter",
+        eventDates: [new Date(), new Date()],
+        eventDescription: "After Sandy, ...",
+        eventLink: "http://en.wikipedia.org/wiki/November_2012_nor'easter",
+        pointsOfInterest: [{
+          pointName: "Boston",
+          latitude: 42.326689434570994,
+          longitude: -71.50360717773435,
+          startTime: 1352178000000,
+          endTime: 1352610000000,
+          zoomLevel: 9
+        }]
+      }];
     
 
     PressureNET.initialize = function(config) {
