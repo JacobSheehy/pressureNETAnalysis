@@ -88,6 +88,10 @@
     PressureNET.initialize = function(config) {
         readingsUrl = config.readingsUrl;
 
+        $('#share_input').focus(function() {
+          $(this).select();
+        });
+
         $(function() {
             $("#start_date").datepicker({changeMonth: true,dateFormat: "yy/mm/dd" });
             $("#end_date").datepicker({changeMonth: true,dateFormat: "yy/mm/dd"});
@@ -200,15 +204,20 @@
             success: function(readings, status) {
                 var plot_data = [];
                 var readings_sum = 0;
+                var sampleFactor = 10;
+                var count = 0;
                 for(var reading_i in readings) {
                     var reading = readings[reading_i];
                     plot_data.push([reading.daterecorded, reading.reading]);
-                    readings_sum += reading.reading;
+                    count++;
+                    if(count%sampleFactor==0) {
+                      readings_sum += reading.reading;
+                    }
                 }
 
                 // remove outliers; find the mean, 
                 // then +- 50 should be fine.
-                var mean = readings_sum / readings.length;
+                var mean = readings_sum / (readings.length / sampleFactor);
                 // console.log('mean ' + mean + ' total ' + readings.length);
                 var minY = mean - 50;
                 var maxY = mean + 50; 
@@ -225,18 +234,21 @@
                 if(readings.length%1000 == 0) {
                     var showMore = "<a onClick='PressureNET.loadAndUpdate(1)' style='cursor:pointer'>Show More</a>";
                 }
-                // var loadEventParams = PressureNET.getUrlVars()["event"];
-                // if (loadEventParams == 'true') {
-
-                // }
                 var share = '';
                 if(centerLat!=0 ) {
-                  share = " |  <a href='" + PressureNET.getShareURL() + "'>Share</a>";
+                  share = " |  <a style='cursor:pointer;' onClick='PressureNET.showShareLink(\"" + PressureNET.getShareURL() + "\")'>Share</a>";
                 }
                 $("#query_results").html("Showing " + readings.length + " results. " + showMore + share);
             }
         });
     }
+
+    PressureNET.showShareLink = function(link) {
+      $('#share_spot').show();
+      $('#share_input').val(link);
+      $('#share_input').focus();
+    }
+
     
     PressureNET.updateChart = function() {
         $('#current_position').html(centerLat + ", " + centerLon + " at zoom " + zoom);
