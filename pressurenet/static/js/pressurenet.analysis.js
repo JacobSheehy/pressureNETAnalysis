@@ -91,24 +91,22 @@
         $(function() {
             $("#start_date").datepicker({changeMonth: true,dateFormat: "yy/mm/dd" });
             $("#end_date").datepicker({changeMonth: true,dateFormat: "yy/mm/dd"});
+            PressureNET.initializeMap();
 
             // if there are query parameters, use them
             var hasEventParams = PressureNET.getUrlVars()['event'];
             if(hasEventParams=='true') {
-              PressureNET.initializeMap();
               var latitudeParam = parseFloat(PressureNET.getUrlVars()['latitude']);
               var longitudeParam = parseFloat(PressureNET.getUrlVars()['longitude']);
               var startTimeParam = parseInt(PressureNET.getUrlVars()['startTime']);
               var endTimeParam = parseInt(PressureNET.getUrlVars()['endTime']);
               var zoomLevelParam = parseInt(PressureNET.getUrlVars()['zoomLevel']);
               PressureNET.setMapPosition(latitudeParam, longitudeParam, zoomLevelParam, startTimeParam, endTimeParam);
-              PressureNET.loadAndUpdate(0);
             } else {
-
               PressureNET.setDates(new Date(2012, 9, 28), new  Date(2012, 10, 01));
-              PressureNET.initializeMap();
-              PressureNET.loadAndUpdate(0);
+              //PressureNET.loadAndUpdate(0);
             }
+
           
         });
 
@@ -127,7 +125,7 @@
         map.setZoom(zoomLevel);
         var latLng = new google.maps.LatLng(latitude, longitude); //Makes a latlng
         map.panTo(latLng);
-        PressureNET.updateAllMapParams();
+        PressureNET.updateAllMapParams(map);
         PressureNET.loadAndUpdate();
     }    
 
@@ -233,7 +231,7 @@
                 // }
                 var share = '';
                 if(centerLat!=0 ) {
-                  // share = " |  <a href='" + PressureNET.getShareURL() + "'>Share</a>";
+                  share = " |  <a href='" + PressureNET.getShareURL() + "'>Share</a>";
                 }
                 $("#query_results").html("Showing " + readings.length + " results. " + showMore + share);
             }
@@ -248,12 +246,14 @@
         centerLat = map.getCenter().lat();
         centerLon = map.getCenter().lng();
         var bounds = map.getBounds();
-        var ne = bounds.getNorthEast();
-        var sw = bounds.getSouthWest();
-        minVisLat = sw.lat();
-        maxVisLat = ne.lat();
-        minVisLon = sw.lng();
-        maxVisLon = ne.lng();
+        if (typeof bounds != 'undefined') {
+          var ne = bounds.getNorthEast();
+          var sw = bounds.getSouthWest();
+          minVisLat = sw.lat();
+          maxVisLat = ne.lat();
+          minVisLon = sw.lng();
+          maxVisLon = ne.lng();
+        } 
         
         zoom = map.getZoom();
         PressureNET.updateChart();
@@ -283,12 +283,22 @@
         var aboutToReload;
       
         google.maps.event.addListener(map, 'center_changed', function() {
+        /*
             window.clearTimeout(aboutToReload);
             PressureNET.updateAllMapParams();
             aboutToReload = setTimeout("PressureNET.loadAndUpdate()", 1000);
+            */
         });
 
         google.maps.event.addListener(map, 'zoom_changed', function() {
+         /*
+             window.clearTimeout(aboutToReload);
+            PressureNET.updateAllMapParams();
+            aboutToReload = setTimeout("PressureNET.loadAndUpdate()", 1000);
+            */
+        });
+        
+        google.maps.event.addListener(map, 'bounds_changed', function() {
             window.clearTimeout(aboutToReload);
             PressureNET.updateAllMapParams();
             aboutToReload = setTimeout("PressureNET.loadAndUpdate()", 1000);
