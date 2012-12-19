@@ -49,6 +49,15 @@ a:hover {
 	}
 
 
+.graph_info_table {
+  border: 1px solid #fff;
+  border-collapse: collapse;
+  width:50%;
+}
+.graph_info_table tr td {
+  border: 1px solid #fff;
+  padding: 5px;
+}
 
 header {
 	z-index: 5;

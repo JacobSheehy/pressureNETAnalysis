@@ -87,7 +87,65 @@
     <section style="display:none" id="current_position" class="full"></section>
       
     <section id="placeholder" class="full" style="width:640px;height:300px;"></section>
-      
+    
+    <section id="graph_info" class="full" style="display:none">
+      <p>This graph is a plot of our raw atmospheric pressure data in millibars over time (some outliers have been discarded). Below is a table of information about the graph.</p>
+
+      <table class="graph_info_table">
+        <tr>
+          <td>
+            <p>Latitute</p>
+          </td>
+          <td>
+            <pre id="minVisLatCell"></pre>
+          </td>
+          <td>
+            <p>to</p>
+          </td>
+          <td>
+            <pre id="maxVisLatCell"></pre>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <p>Longitude</p>
+          </td>
+          <td>
+            <pre id="minVisLonCell"></pre>
+          </td>
+          <td>
+            <p>to</p>
+          </td>
+          <td>
+            <pre id="maxVisLonCell"></pre>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <p>Time</p>
+          </td>
+          <td>
+            <pre id="startTimeCell"></pre>
+          </td>
+          <td>
+            <p>to</p>
+          </td>
+          <td>
+            <pre id="endTimeCell"></pre>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <p>Measurements</p>
+          </td>
+          <td colspan="3">
+            <pre id="resultsCountCell"></pre>
+          </td>
+        </tr>
+      </table>     
+
+    </section>
+
     <section id="events" class="full">
       <section id="notable-events" class="half">
         <h2>Notable Events</h2>

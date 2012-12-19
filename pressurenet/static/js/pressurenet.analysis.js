@@ -239,8 +239,19 @@
                   share = " |  <a style='cursor:pointer;' onClick='PressureNET.showShareLink(\"" + PressureNET.getShareURL() + "\")'>Share</a>";
                 }
                 $("#query_results").html("Showing " + readings.length + " results. " + showMore + share);
+                PressureNET.updateGraph(minVisLat, maxVisLat, minVisLon, maxVisLon, startTime, endTime, readings.length);
             }
         });
+    }
+
+    PressureNET.updateGraph = function(minVisLat, maxVisLat, minVisLon, MaxVisLon, startTime, endTime, length) {
+      $('#minVisLatCell').html(parseFloat(minVisLat).toFixed(6));
+      $('#maxVisLatCell').html(parseFloat(maxVisLat).toFixed(6));
+      $('#minVisLonCell').html(parseFloat(minVisLon).toFixed(6));
+      $('#maxVisLonCell').html(parseFloat(maxVisLon).toFixed(6));
+      $('#startTimeCell').html($.datepicker.formatDate('MM dd yy', new Date(startTime)));
+      $('#endTimeCell').html($.datepicker.formatDate('MM dd yy', new Date(endTime)));
+      $('#resultsCountCell').html(length);
     }
 
     PressureNET.showShareLink = function(link) {
@@ -311,6 +322,9 @@
         });
         
         google.maps.event.addListener(map, 'bounds_changed', function() {
+            if(map.getZoom() > 15) {
+              map.setZoom(15);
+            }
             window.clearTimeout(aboutToReload);
             PressureNET.updateAllMapParams();
             aboutToReload = setTimeout("PressureNET.loadAndUpdate()", 1000);
