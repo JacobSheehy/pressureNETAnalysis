@@ -59,6 +59,17 @@ a:hover {
   padding: 5px;
 }
 
+.graph_info_table tr td p {
+  font-size:small;
+}
+
+.graph_info p {
+  font-size:small;
+}
+.graph_info_table tr td pre {
+  font-size:small;
+}
+
 header {
 	z-index: 5;
 	color: #fff;
