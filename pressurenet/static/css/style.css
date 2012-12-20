@@ -161,6 +161,7 @@ header {
   border:1px #333 solid;
   margin:1px;
   padding:1px;
+  left:300px !important;
 }
 
 section {

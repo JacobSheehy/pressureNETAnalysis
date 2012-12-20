@@ -236,7 +236,7 @@
                 }
                 var share = '';
                 if(centerLat!=0 ) {
-                  share = " |  <a style='cursor:pointer;' onClick='PressureNET.showShareLink(\"" + PressureNET.getShareURL() + "\")'>Share</a>";
+                  share = " |  <a style='cursor:pointer;' id='dynamic_share_link' onClick='PressureNET.showShareLink(\"" + PressureNET.getShareURL() + "\")'>Share</a>";
                 }
                 $("#query_results").html("Showing " + readings.length + " results. " + showMore + share);
                 PressureNET.updateGraph(minVisLat, maxVisLat, minVisLon, maxVisLon, startTime, endTime, readings.length);
@@ -255,7 +255,7 @@
     }
 
     PressureNET.showShareLink = function(link) {
-      $('#share_spot').show();
+      $('#share_spot').toggle();
       $('#share_input').val(link);
       $('#share_input').focus();
     }
