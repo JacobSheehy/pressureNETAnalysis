@@ -185,6 +185,7 @@
             currentQueryLimit = defaultQueryLimit;
         }
 
+        $('#placeholder').html('');
         $("#query_results").html("Loading...");
         
         startTime = $('#start_date').datepicker('getDate').getTime();
