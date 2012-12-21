@@ -31,6 +31,7 @@
     var events = [{
         eventName: "Sandy",
         eventDates: [new Date(), new Date()],
+        eventTime: "October - November 2012",
         eventDescription: "Sandy was a category 2...",
         eventLink: "http://en.wikipedia.org/wiki/Hurricane_Sandy",
         pointsOfInterest: [{
@@ -58,6 +59,7 @@
     }, { // 29.989573859470866 -91.0675109863281 1346040000000 1346558400000 8
         eventName: "Isaac",
         eventDates: [new Date(), new Date()],
+        eventTime: "Summer 2012",
         eventDescription: "Isaac was a ...",
         eventLink: "http://en.wikipedia.org/wiki/Hurricane_Isaac_(2012)",
         pointsOfInterest: [{
@@ -72,6 +74,7 @@
          // boston: 42.326689434570994 -71.50360717773435 1352178000000 1352610000000 9 
         eventName: "Post-Sandy Nor'easter",
         eventDates: [new Date(), new Date()],
+        eventTime: "November 2012",
         eventDescription: "After Sandy, ...",
         eventLink: "http://en.wikipedia.org/wiki/November_2012_nor'easter",
         pointsOfInterest: [{
@@ -109,6 +112,7 @@
             } else {
               PressureNET.setDates(new Date(2012, 9, 28), new  Date(2012, 10, 01));
               //PressureNET.loadAndUpdate(0);
+              PressureNET.loadEventInfo('sandy');
             }
 
           
@@ -143,9 +147,10 @@
         eventId = 2;
       }
       $('#event_title_text').html(events[eventId].eventName);
-      $('#event_date_text').html(events[eventId].eventDates[eventId] + ' to ' + events[eventId].eventDates[1]);
+      $('#event_date_text').html(events[eventId].eventTime);
+      $('#event_link_text').html('<a href="' + events[eventId].eventLink + '">' + events[eventId].eventName + ' on Wikipedia</a>');
       
-      var eventDescription = events[eventId].eventDescription;
+      var eventDescription = ''; //events[eventId].eventDescription;
       
       for(x = 0; x < events[eventId].pointsOfInterest.length; x++) {
           eventDescription += "<br><a href='#query_results' style='cursor:pointer' onClick='PressureNET.setMapPosition(" + events[eventId].pointsOfInterest[x].latitude + ", " + events[eventId].pointsOfInterest[x].longitude + ", " + events[eventId].pointsOfInterest[x].zoomLevel + ", " + events[eventId].pointsOfInterest[x].startTime + ", " + events[eventId].pointsOfInterest[x].endTime + ")'>" + events[eventId].pointsOfInterest[x].pointName + "</a>";

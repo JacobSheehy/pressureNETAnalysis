@@ -64,7 +64,7 @@
 
 			<h2>About the Data Visualization Tool</h2>
 
-			<p><a href="https://play.google.com/store/apps/details?id=ca.cumulonimbus.barometernetwork">pressureNET</a> is an open source barometer network that runs on Android and collects atmopsheric pressure measurements from barometers inside phones and tablets. The project is <a href="https://github.com/JacobSheehy/pressureNET">open source on GitHub</a>. We plan on using the collected data to improve weather forecasting models. This site is a visualization of the data in our archives. By selecting dates and changing the map location you can see a graph of the raw data we have collected.  We are working to make this an open data set while respecting user privacy, and we intend to build an API that lets anyone dynamically pull data from the archive. If you like this project, please consider downloading <a href="https://play.google.com/store/apps/details?id=ca.cumulonimbus.barometernetwork">pressureNET</a> from Google Play.</p> 
+			<p><a href="https://play.google.com/store/apps/details?id=ca.cumulonimbus.barometernetwork">pressureNET</a> is an open source barometer network that runs on Android and collects atmopsheric pressure measurements from barometers inside phones and tablets. The project is <a href="https://github.com/JacobSheehy/pressureNET">open source on GitHub</a>. We plan on using the collected data to improve weather forecasting models. This site is a visualization of the data in our archives. By selecting dates and changing the map location you can see a graph of the raw data we have collected.  We are working to make this an open data set while respecting user privacy, and we intend to build an API that lets anyone pull data from the archive. If you like this project, please consider downloading <a href="https://play.google.com/store/apps/details?id=ca.cumulonimbus.barometernetwork">pressureNET</a> from Google Play.</p> 
 
 		</article>
     </section>
@@ -152,17 +152,17 @@
         <ul id="event-list">
           <li><a onClick="PressureNET.loadEventInfo('sandy')" style="cursor:pointer">Hurricane Sandy</a></li>
           <li><a onClick="PressureNET.loadEventInfo('noreaster')" style="cursor:pointer">Post-Sandy Nor'easter</a></li>
-          <li><a onClick="PressureNET.loadEventInfo('derecho')" style="cursor:pointer">Summer 2012 US Derecho</a></li>
           <li><a onClick="PressureNET.loadEventInfo('isaac')" style="cursor:pointer">Hurricane Isaac</a></li>
-          <li>...Pacific Typhoons...</li>
+          <li>Coming soon: Pacific Typhoons</li>
         </ul>
       </section>
       <section id="event-info" class="half">
         <hgroup>
-          <h2><span id="event_title_text">Event Information</span></h2>
-          <h3><span id="event_date_text">Date</span></h3>
+          <h2><span id="event_title_text"></span></h2>
+          <h4><span id="event_date_text"></span></h4>
+          <h5><span id="event_link_text"></span></h5>
         </hgroup>
-        <p><span id="event_main_text">Hurricane Sandy was a Category 2...</span></p>
+        <p><span id="event_main_text"></span></p>
       </section>
     </section>
 
