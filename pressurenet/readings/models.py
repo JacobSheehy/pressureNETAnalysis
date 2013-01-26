@@ -8,6 +8,7 @@ class Reading(models.Model):
     reading = models.FloatField()
     daterecorded = models.BigIntegerField()
     tzoffset = models.BigIntegerField()
+    sharing = models.CharField(max_length=255)
 
     class Meta:
         verbose_name = 'reading'

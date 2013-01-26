@@ -10,3 +10,16 @@ class ReadingResource(ModelResource):
         'reading',
         'daterecorded',
     )
+
+class FullReadingResource(ModelResource):
+    model = Reading
+
+    fields = (
+        'reading',
+        'latitude',
+        'longitude',
+        'daterecorded',
+        'user_id',
+        'tzoffset',
+        'sharing'
+    )
