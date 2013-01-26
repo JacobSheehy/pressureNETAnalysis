@@ -2,10 +2,11 @@ from django.views.generic.base import TemplateView
 from djangorestframework.views import ListModelView
 from djangorestframework.reverse import reverse
 from djangorestframework.response import Response
-from pressurenet.readings.resources import ReadingResource
+from readings.resources import ReadingResource
+from readings.models import Reading
 from django.http import HttpResponse
 import urllib2
-from readings.models import Reading
+
 
 def add_from_pressurenet(request):
     """
@@ -18,7 +19,6 @@ def add_from_pressurenet(request):
     result = urllib2.urlopen('http://callisto:8080/BarometerNetworkServer-2.2/BarometerServlet?pndv=buffer') #, urllib.urlencode(get_data))
     content = result.read()
     readings_list = content.split(';')
-    print 'processing', len(readings_list), 'readings'
     for reading in readings_list:
       reading_data = reading.split(',')
       raw_latitude = float(reading_data[0])
@@ -28,6 +28,7 @@ def add_from_pressurenet(request):
       raw_tzoffset = int(float(reading_data[4]))
       raw_user_id = reading_data[5]
       raw_sharing = reading_data[6]
+      raw_client_key = reading_data[7]
       this_reading = Reading(
         latitude = raw_latitude,
         longitude = raw_longitude,
@@ -35,11 +36,10 @@ def add_from_pressurenet(request):
         daterecorded = raw_daterecorded,
         tzoffset = raw_tzoffset,
         user_id = raw_user_id,
-        sharing = raw_sharing)
+        sharing = raw_sharing,
+        client_key = raw_client_key)
       
       this_reading.save()
-      print 'saved', raw_reading 
-    #print readings_list
     return HttpResponse('okay go')
 
 

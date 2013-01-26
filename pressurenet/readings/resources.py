@@ -21,5 +21,6 @@ class FullReadingResource(ModelResource):
         'daterecorded',
         'user_id',
         'tzoffset',
-        'sharing'
+        'sharing',
+        'client_key'
     )
