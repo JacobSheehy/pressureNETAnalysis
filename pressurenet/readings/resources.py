@@ -2,7 +2,6 @@ from djangorestframework.resources import ModelResource
 
 from readings.models import Reading
 
-
 class ReadingResource(ModelResource):
     model = Reading
 
@@ -22,5 +21,6 @@ class FullReadingResource(ModelResource):
         'user_id',
         'tzoffset',
         'sharing',
-        'client_key'
+        'client_key',
     )
+

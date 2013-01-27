@@ -26,8 +26,6 @@
     
     var currentQueryLimit = defaultQueryLimit;
 
-
-    
     var events = [{
         eventName: "Sandy",
         eventDates: [new Date(), new Date()],
@@ -297,7 +295,7 @@
     PressureNET.getShareURL = function() {
       startTime = $('#start_date').datepicker('getDate').getTime();
       endTime = $('#end_date').datepicker('getDate').getTime();
-      return "http://pndv.cumulonimbus.ca/?event=true&latitude=" + centerLat + "&longitude=" + centerLon + "&startTime=" + startTime + "&endTime=" + endTime + "&zoomLevel=" + zoom;
+      return "http://pressurenet.cumulonimbus.ca/?event=true&latitude=" + centerLat + "&longitude=" + centerLon + "&startTime=" + startTime + "&endTime=" + endTime + "&zoomLevel=" + zoom;
     },
 
     PressureNET.initializeMap = function() {

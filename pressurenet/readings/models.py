@@ -1,7 +1,7 @@
 from django.db import models
 
-
 class Reading(models.Model):
+    """Barometer reading from pressureNET"""
     user_id = models.CharField(max_length=255)
     latitude = models.FloatField()
     longitude = models.FloatField()
@@ -18,3 +18,4 @@ class Reading(models.Model):
 
     def __unicode__(self):
         return '%s: %s' % (self.user_id, self.reading)
+
