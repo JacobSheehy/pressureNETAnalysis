@@ -5,6 +5,8 @@ from djangorestframework.response import Response
 from readings.resources import ReadingResource
 from readings.resources import FullReadingResource
 from readings.models import Reading
+from readings.models import CustomerCallLog
+from readings.models import Customer
 from django.http import HttpResponse
 import urllib2
 
@@ -50,39 +52,77 @@ class ReadingLiveView(ListModelView):
     """Handle requests for livestreaming"""
     def get_queryset(self):
         # Collect parameters
-        global_data = self.request.GET.get('global', False)
-        min_latitude = self.request.GET.get('min_lat', None)
-        max_latitude = self.request.GET.get('max_lat', None)
-        min_longitude = self.request.GET.get('min_lon', None)
-        max_longitude = self.request.GET.get('max_lon', None)
-        start_time = self.request.GET.get('start_time', None)
-        end_time = self.request.GET.get('end_time', None)
-        since_last_call =  self.request.GET.get('since_last_call', False)
-        results_limit = self.request.GET.get('limit', None)
-        api_key =  self.request.GET.get('api_key', None)
-        use_utc = self.request.GET.get('use_utc', True)
+        request_global_data = self.request.GET.get('global', False)
+        request_min_latitude = self.request.GET.get('min_lat', None)
+        request_max_latitude = self.request.GET.get('max_lat', None)
+        request_min_longitude = self.request.GET.get('min_lon', None)
+        request_max_longitude = self.request.GET.get('max_lon', None)
+        request_start_time = self.request.GET.get('start_time', None)
+        request_end_time = self.request.GET.get('end_time', None)
+        request_since_last_call =  self.request.GET.get('since_last_call', False)
+        request_results_limit = self.request.GET.get('limit', -1)
+        request_api_key =  self.request.GET.get('api_key', '')
+        request_use_utc = self.request.GET.get('use_utc', True)
+
+        # Figure out the booleans from the strings
+        if request_global_data == 'true' or request_global_data == 'True':
+            request_global_data = True
+        else:
+            request_global_data = False
+        if request_since_last_call == 'true' or request_since_last_call == 'True':
+            request_since_last_call = True
+        else:
+            request_since_last_call = False        
 
         # Check the API key for validity
-        
-        
-        # Perform the query and return the results
-        
-        if since_last_call == False:
+        api_check = Customer.objects.filter(api_key=request_api_key)
+        if len(api_check) == 0:
+            # Not a valid API key. Return an empty queryset. TODO: return an error.
+            queryset = super(ReadingLiveView, self).get_queryset().filter(user_id='-1')
+            return queryset
+               
+        # Perform the query
+        # TODO: Ensure sharing privacy matches customer type
+        if request_since_last_call == False:
             # There's no since_last_call, so use the start_time and end_time values
             queryset = super(ReadingLiveView, self).get_queryset().filter(
-                latitude__gte=min_latitude,
-                latitude__lte=max_latitude,
-                longitude__gte=min_longitude,
-                longitude__lte=max_longitude,
-                daterecorded__gte=start_time,
-                daterecorded__lte=end_time,
+                latitude__gte=request_min_latitude,
+                latitude__lte=request_max_latitude,
+                longitude__gte=request_min_longitude,
+                longitude__lte=request_max_longitude,
+                daterecorded__gte=request_start_time,
+                daterecorded__lte=request_end_time,
             ).order_by('user_id') #[:limit]
-
-            return queryset
         else:
             # Find out when this API key made its last call
             # and use that in the query
             pass
+        
+        # Keep a log of this event using CustomerCallLog
+        """
+        TODO: 
+        data_format = models.CharField(max_length=10)
+        # customer = models.ForeignKey(Customer)
+        """
+        call_log = CustomerCallLog(
+          min_latitude = request_min_latitude,
+          max_latitude = request_max_latitude,
+          min_longitude = request_min_longitude,
+          max_longitude = request_max_longitude,
+          global_data = request_global_data,
+          since_last_call = request_since_last_call,
+          start_time = request_start_time,
+          end_time = request_end_time,
+          results_limit = request_results_limit,
+          api_key = request_api_key,
+          use_utc = request_use_utc,
+          processing_time = 0,
+          results_returned = len(queryset),
+          data_format = 'json'
+        )
+        call_log.save()
+        
+        return queryset
 
 class ReadingListView(ListModelView):
     def get_queryset(self):
@@ -109,6 +149,4 @@ class ReadingListView(ListModelView):
 index = IndexView.as_view()
 reading_list = ReadingListView.as_view(resource=ReadingResource)
 reading_live = ReadingLiveView.as_view(resource=FullReadingResource)
-
-
 
