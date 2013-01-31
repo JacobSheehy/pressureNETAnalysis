@@ -18,7 +18,7 @@ def add_from_pressurenet(request):
     # print request
     # get <-> post with urlencode
     get_data = [('pndv','buffer'),]     # a sequence of two element tuples
-    result = urllib2.urlopen('http://callisto:8080/BarometerNetworkServer-2.2/BarometerServlet?pndv=buffer') #, urllib.urlencode(get_data))
+    result = urllib2.urlopen(PRESSURENET_DATA_URL) #, urllib.urlencode(get_data))
     content = result.read()
     readings_list = content.split(';')
     for reading in readings_list:

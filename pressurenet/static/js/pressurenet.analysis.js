@@ -8,13 +8,13 @@
 
     var centerLat = 0;
     var centerLon = 0;
-    var minVisLat = 38;
-    var maxVisLat = 42;
-    var minVisLon = -74;
-    var maxVisLon = -70;
+    var minVisLat = 35;
+    var maxVisLat = 45;
+    var minVisLon = -77;
+    var maxVisLon = -65;
     var startTime = 0;
     var endTime = 0;
-    var zoom = 9;
+    var zoom = 2;
    
     var dataPoints = [];
     
@@ -108,14 +108,25 @@
               var zoomLevelParam = parseInt(PressureNET.getUrlVars()['zoomLevel']);
               PressureNET.setMapPosition(latitudeParam, longitudeParam, zoomLevelParam, startTimeParam, endTimeParam);
             } else {
-              PressureNET.setDates(new Date(2012, 9, 28), new  Date(2012, 10, 01));
-              //PressureNET.loadAndUpdate(0);
-              PressureNET.loadEventInfo('sandy');
+              
+              PressureNET.setDates(new Date(((new Date()).getTime() - (2*86400000))), new Date(((new Date()).getTime() + 86400000)));
+              PressureNET.getLocation();
             }
 
           
         });
+    }
 
+    PressureNET.loadMapWithUserLocation = function(position) {
+        var latitude = position.coords.latitude;
+        var longitude = position.coords.longitude;
+        PressureNET.setMapPosition(latitude, longitude, 5, ((new Date()).getTime() - 86400000), ((new Date()).getTime() + 86400000));
+    }
+    
+    PressureNET.getLocation = function() {
+        if ('geolocation' in navigator) {
+            navigator.geolocation.getCurrentPosition(PressureNET.loadMapWithUserLocation);
+        }
     }
 
     PressureNET.getUrlVars = function() {
@@ -143,7 +154,7 @@
         eventId = 1;
       } else if(eventName=="noreaster") {
         eventId = 2;
-      }
+      } 
       $('#event_title_text').html(events[eventId].eventName);
       $('#event_date_text').html(events[eventId].eventTime);
       $('#event_link_text').html('<a href="' + events[eventId].eventLink + '">' + events[eventId].eventName + ' on Wikipedia</a>');
@@ -300,8 +311,8 @@
 
     PressureNET.initializeMap = function() {
         var mapOptions = {
-          center: new google.maps.LatLng(40.6, -73.9), // start near nyc
-          zoom: 10,
+          center: new google.maps.LatLng(10, -20), 
+          zoom: 2,
           mapTypeId: google.maps.MapTypeId.ROADMAP
         };
         map = new google.maps.Map(document.getElementById("map_canvas"),
