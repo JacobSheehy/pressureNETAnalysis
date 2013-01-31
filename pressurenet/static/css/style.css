@@ -167,13 +167,6 @@ header {
 
 #share_spot {
   display:none;
-  z-index:8;
-  position:absolute;
-  width:500px;
-  border:1px #333 solid;
-  margin:1px;
-  padding:1px;
-  left:300px !important;
 }
 
 section {
