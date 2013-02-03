@@ -4,6 +4,7 @@ from djangorestframework.reverse import reverse
 from djangorestframework.response import Response
 from readings.resources import ReadingResource
 from readings.resources import FullReadingResource
+from readings.resources import CustomerCallLogResource
 from readings.models import Reading
 from readings.models import CustomerCallLog
 from readings.models import Customer
@@ -60,7 +61,7 @@ class ReadingLiveView(ListModelView):
         request_start_time = self.request.GET.get('start_time', None)
         request_end_time = self.request.GET.get('end_time', None)
         request_since_last_call =  self.request.GET.get('since_last_call', False)
-        request_results_limit = self.request.GET.get('limit', -1)
+        request_results_limit = self.request.GET.get('limit', 1000000)
         request_api_key =  self.request.GET.get('api_key', '')
         request_use_utc = self.request.GET.get('use_utc', True)
 
@@ -83,20 +84,30 @@ class ReadingLiveView(ListModelView):
                
         # Perform the query
         # TODO: Ensure sharing privacy matches customer type
-        if request_since_last_call == False:
-            # There's no since_last_call, so use the start_time and end_time values
+        
+        if request_global_data == False and request_since_last_call == False:
+            # Use the start_time and end_time values along with all location parameters
             queryset = super(ReadingLiveView, self).get_queryset().filter(
-                latitude__gte=request_min_latitude,
-                latitude__lte=request_max_latitude,
-                longitude__gte=request_min_longitude,
-                longitude__lte=request_max_longitude,
-                daterecorded__gte=request_start_time,
-                daterecorded__lte=request_end_time,
-            ).order_by('user_id') #[:limit]
-        else:
-            # Find out when this API key made its last call
-            # and use that in the query
+                latitude__gte = request_min_latitude,
+                latitude__lte = request_max_latitude,
+                longitude__gte = request_min_longitude,
+                longitude__lte = request_max_longitude,
+                daterecorded__gte = request_start_time,
+                daterecorded__lte = request_end_time,
+            ).order_by('user_id')[:limit]
+        elif request_global_data == True and request_since_last_call == False:
+            queryset = super(ReadingLiveView, self).get_queryset().filter(
+                daterecorded__gte = request_start_time,
+                daterecorded__lte = request_end_time,
+            ).order_by('user_id')[:limit]
+        elif request_global_data == True and request_since_last_call == True:
+            last_call_time = super(CustomerLogResource, self).get_queryset().filter(
+                api_key = request_api_key,
+            ).order_by('timestamp')[0]
+            print last_call_time
+        elif request_global_data == False and request_since_last_call == True:
             pass
+            
         
         # Keep a log of this event using CustomerCallLog
         """
@@ -149,4 +160,5 @@ class ReadingListView(ListModelView):
 index = IndexView.as_view()
 reading_list = ReadingListView.as_view(resource=ReadingResource)
 reading_live = ReadingLiveView.as_view(resource=FullReadingResource)
+customer_log = ReadingLiveView.as_view(resource=CustomerCallLogResource)
 

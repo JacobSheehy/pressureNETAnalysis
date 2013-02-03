@@ -42,7 +42,8 @@ class Customer(models.Model):
     contact_phone = models.CharField(max_length=25)
     contact_address = models.CharField(max_length=255)
     api_key = models.CharField(max_length=255)
-    # plan = models.ForeignKey(CustomerPlan)
+    #dev_key = models.CharField(max_length=255)
+    #plan = models.ForeignKey(CustomerPlan)
     customer_type = models.CharField(max_length=20)
     payment_status = models.CharField(max_length=20)
     payment_confirmation = models.CharField(max_length=255)
@@ -75,7 +76,6 @@ class CustomerCallLog(models.Model):
     use_utc = models.BooleanField()
     processing_time = models.FloatField()
     results_returned = models.IntegerField()
-    # customer = models.ForeignKey(Customer)
 
     class Meta:
         verbose_name = 'customercalllog'
