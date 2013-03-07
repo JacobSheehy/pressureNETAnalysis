@@ -1,14 +1,18 @@
+import urllib2
+    
+from django.conf import settings
+from django.http import HttpResponse
 from django.views.generic.base import TemplateView
+
 from djangorestframework.views import ListModelView
 from djangorestframework.reverse import reverse
 from djangorestframework.response import Response
+
 from readings.resources import ReadingResource
 from readings.resources import FullReadingResource
 from readings.models import Reading
 from readings.models import CustomerCallLog
 from readings.models import Customer
-from django.http import HttpResponse
-import urllib2
 
 def add_from_pressurenet(request):
     """
@@ -18,11 +22,15 @@ def add_from_pressurenet(request):
     # print request
     # get <-> post with urlencode
     get_data = [('pndv','buffer'),]     # a sequence of two element tuples
-    result = urllib2.urlopen('http://callisto:8080/BarometerNetworkServer-2.2/BarometerServlet?pndv=buffer') #, urllib.urlencode(get_data))
+    result = urllib2.urlopen('http://ec2-174-129-98-143.compute-1.amazonaws.com:8080/BarometerNetworkServer-3.0/BarometerServlet?pndv=buffer') #, urllib.urlencode(get_data))
     content = result.read()
     readings_list = content.split(';')
+    count = 0
+    error_message = ''
     for reading in readings_list:
       reading_data = reading.split('|')
+      if reading_data[0] == '':
+        continue
       raw_latitude = float(reading_data[0])
       raw_longitude = float(reading_data[1])
       raw_reading = float(reading_data[2])
@@ -41,8 +49,12 @@ def add_from_pressurenet(request):
         sharing = raw_sharing,
         client_key = raw_client_key)
       
-      this_reading.save()
-    return HttpResponse('okay go')
+      try:
+        this_reading.save()
+        count += 1
+      except:
+        continue
+    return HttpResponse('okay go, count '+ str(count))
 
 
 class IndexView(TemplateView):
@@ -75,12 +87,16 @@ class ReadingLiveView(ListModelView):
             request_since_last_call = False        
 
         # Check the API key for validity
-        api_check = Customer.objects.filter(api_key=request_api_key)
-        if len(api_check) == 0:
+        #api_check = Customer.objects.filter(api_key=request_api_key)
+        #if len(api_check) == 0:
             # Not a valid API key. Return an empty queryset. TODO: return an error.
+            #queryset = super(ReadingLiveView, self).get_queryset().filter(user_id='-1')
+            #return queryset
+
+        if request_api_key not in settings.READINGS_API_KEYS:
             queryset = super(ReadingLiveView, self).get_queryset().filter(user_id='-1')
-            return queryset
-               
+            return queryset        
+       
         # Perform the query
         # TODO: Ensure sharing privacy matches customer type
         if request_since_last_call == False:
@@ -92,7 +108,7 @@ class ReadingLiveView(ListModelView):
                 longitude__lte=request_max_longitude,
                 daterecorded__gte=request_start_time,
                 daterecorded__lte=request_end_time,
-            ).order_by('user_id') #[:limit]
+            ).order_by('user_id').exclude(sharing='Cumulonimbus (Us)') #[:limit]
         else:
             # Find out when this API key made its last call
             # and use that in the query

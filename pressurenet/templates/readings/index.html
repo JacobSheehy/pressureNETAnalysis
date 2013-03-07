@@ -6,7 +6,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     
-    <title>pressureNET Data Analysis</title>
+    <title>pressureNET</title>
     
 	  <link rel="shortcut icon" href="http://www.cumulonimbus.ca/wp-content/themes/capillatus/favicon.gif" />
     
@@ -15,7 +15,7 @@
     
     <script language="Javascript" type="text/javascript" src="{{ STATIC_URL }}js/jquery-1.8.2.js"></script>
     <script language="Javascript" type="text/javascript" src="http://code.jquery.com/ui/1.9.1/jquery-ui.js"></script>
-    <script language="Javascript" type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=&sensor=false"></script>
+    <script language="Javascript" type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=AIzaSyBi5dXNdOowRIkC0DwsgR_mWLbKoQKHvk0&sensor=false"></script>
     
 	  <script language="Javascript" type="text/javascript" src="{{ STATIC_URL }}js/defaults.js"></script>
     <script language="Javascript" type="text/javascript" src="{{ STATIC_URL }}js/jquery.flot.js"></script> 
@@ -23,7 +23,7 @@
     <script type="text/javascript">
 
       var _gaq = _gaq || [];
-      _gaq.push(['_setAccount', '']);
+      _gaq.push(['_setAccount', 'UA-78967-8']);
       _gaq.push(['_trackPageview']);
 
       (function() {
@@ -36,7 +36,7 @@
   </head>
   <body>
     <header>
-      <h1><a href="http://pndv.cumulonimbus.ca" style="color:#fff !important"><span>pressureNET</span> Data Visualization Tool</a></h1>
+      <h1><a href="http://pndv.cumulonimbus.ca" style="color:#fff !important"><span>pressureNET</span></a></h1>
       <nav>
 			  <a class="page-link off" data-page="live">Live Stream</a>
 			  <a class="page-link off" data-page="about">About</a>
@@ -64,7 +64,7 @@
 
 			<h2>About the Data Visualization Tool</h2>
 
-			<p><a href="https://play.google.com/store/apps/details?id=ca.cumulonimbus.barometernetwork">pressureNET</a> is an open source barometer network that runs on Android and collects atmopsheric pressure measurements from barometers inside phones and tablets. The project is <a href="https://github.com/JacobSheehy/pressureNET">open source on GitHub</a>. We plan on using the collected data to improve weather forecasting models. This site is a visualization of the data in our archives. By selecting dates and changing the map location you can see a graph of the raw data we have collected.  We are working to make this an open data set while respecting user privacy, and we intend to build an API that lets anyone pull data from the archive. If you like this project, please consider downloading <a href="https://play.google.com/store/apps/details?id=ca.cumulonimbus.barometernetwork">pressureNET</a> from Google Play.</p> 
+			<p><a href="https://play.google.com/store/apps/details?id=ca.cumulonimbus.barometernetwork">pressureNET</a> is a barometer network that runs on Android and collects atmospheric pressure measurements from barometers inside phones and tablets. The project is <a href="https://github.com/JacobSheehy/pressureNET">open source on GitHub</a>. We plan on using the collected data to improve weather forecasting models. By selecting dates and changing the map location you can see a graph of the raw data we have collected.  We are working to make this an open data set while respecting user privacy, and we intend to build an API that lets anyone pull data from the archive. If you like this project, please consider downloading <a href="https://play.google.com/store/apps/details?id=ca.cumulonimbus.barometernetwork">pressureNET</a> from Google Play.</p> 
 
 		</article>
     </section>
@@ -77,9 +77,8 @@
     </section>
         
     <section id="query_results" class="full"></section>
-    <section id="share_spot">
-      <input type="text" id="share_input" style="width:90%"/> &nbsp;
-      <a onClick="$('#share_spot').hide();" style="cursor:pointer;">X</a>
+    <section id="share_spot" class="full">
+      <input type="text" id="share_input" style="width:80%" /> &nbsp;
     </section>
 
     <section id="map_canvas" class="full" style="height:250px"></section>  

@@ -108,15 +108,27 @@
               var zoomLevelParam = parseInt(PressureNET.getUrlVars()['zoomLevel']);
               PressureNET.setMapPosition(latitudeParam, longitudeParam, zoomLevelParam, startTimeParam, endTimeParam);
             } else {
-              PressureNET.setDates(new Date(2012, 9, 28), new  Date(2012, 10, 01));
-              //PressureNET.loadAndUpdate(0);
-              PressureNET.loadEventInfo('sandy');
+              PressureNET.setDates(new Date(((new Date()).getTime() - (2*86400000))), new Date(((new Date()).getTime() + 86400000)));
+              PressureNET.getLocation();
             }
 
           
         });
 
     }
+
+    PressureNET.loadMapWithUserLocation = function(position) {
+        var latitude = position.coords.latitude;
+        var longitude = position.coords.longitude;
+        PressureNET.setMapPosition(latitude, longitude, 5, ((new Date()).getTime() - 86400000), ((new Date()).getTime() + 86400000));
+    }
+    
+    PressureNET.getLocation = function() {
+        if ('geolocation' in navigator) {
+            navigator.geolocation.getCurrentPosition(PressureNET.loadMapWithUserLocation);
+        }
+    }
+
 
     PressureNET.getUrlVars = function() {
         var vars = {};
@@ -300,8 +312,8 @@
 
     PressureNET.initializeMap = function() {
         var mapOptions = {
-          center: new google.maps.LatLng(40.6, -73.9), // start near nyc
-          zoom: 10,
+          center: new google.maps.LatLng(42, -73), // start near nyc
+          zoom: 4,
           mapTypeId: google.maps.MapTypeId.ROADMAP
         };
         map = new google.maps.Map(document.getElementById("map_canvas"),
