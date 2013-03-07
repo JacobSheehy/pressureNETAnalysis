@@ -1,7 +1,7 @@
 import urllib2
     
 from django.conf import settings
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseNotAllowed
 from django.views.generic.base import TemplateView
 
 from djangorestframework.views import ListModelView
@@ -67,6 +67,14 @@ class IndexView(TemplateView):
 class ReadingLiveView(ListModelView):
     """Handle requests for livestreaming"""
 
+    def get(self, *args, **kwargs):
+        request_api_key =  self.request.GET.get('api_key', '')
+
+        if request_api_key not in settings.READINGS_API_KEYS:
+            return HttpResponseNotAllowed('An API Key is required')
+
+        return super(ReadingLiveView, self).get(*args, **kwargs)
+
     def get_queryset(self):
         # Collect parameters
         request_global_data = self.request.GET.get('global', False)
@@ -78,8 +86,8 @@ class ReadingLiveView(ListModelView):
         request_end_time = self.request.GET.get('end_time', None)
         request_since_last_call =  self.request.GET.get('since_last_call', False)
         request_results_limit = self.request.GET.get('limit', 1000000)
-        request_api_key =  self.request.GET.get('api_key', '')
         request_use_utc = self.request.GET.get('use_utc', True)
+        request_api_key =  self.request.GET.get('api_key', '')
 
         # Figure out the booleans from the strings
         if request_global_data == 'true' or request_global_data == 'True':
@@ -98,10 +106,6 @@ class ReadingLiveView(ListModelView):
             #queryset = super(ReadingLiveView, self).get_queryset().filter(user_id='-1')
             #return queryset
 
-        if request_api_key not in settings.READINGS_API_KEYS:
-            queryset = super(ReadingLiveView, self).get_queryset().filter(user_id='-1')
-            return queryset        
-       
         # Perform the query
         # TODO: Ensure sharing privacy matches customer type
         
@@ -115,10 +119,6 @@ class ReadingLiveView(ListModelView):
                 daterecorded__gte=request_start_time,
                 daterecorded__lte=request_end_time,
             ).order_by('user_id').exclude(sharing='Cumulonimbus (Us)') #[:limit]
-        else:
-            # Find out when this API key made its last call
-            # and use that in the query
-            pass
             
         
         # Keep a log of this event using CustomerCallLog
