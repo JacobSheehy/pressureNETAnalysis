@@ -15,6 +15,7 @@ from readings.models import Reading
 from readings.models import CustomerCallLog
 from readings.models import Customer
 
+
 def add_from_pressurenet(request):
     """
     Data is incoming from pressureNET. 
@@ -29,40 +30,43 @@ def add_from_pressurenet(request):
     count = 0
     error_message = ''
     for reading in readings_list:
-      reading_data = reading.split('|')
-      if reading_data[0] == '':
-        continue
-      raw_latitude = float(reading_data[0])
-      raw_longitude = float(reading_data[1])
-      raw_reading = float(reading_data[2])
-      raw_daterecorded = int(float(reading_data[3]))
-      raw_tzoffset = int(float(reading_data[4]))
-      raw_user_id = reading_data[5]
-      raw_sharing = reading_data[6]
-      raw_client_key = reading_data[7]
-      this_reading = Reading(
-        latitude = raw_latitude,
-        longitude = raw_longitude,
-        reading = raw_reading,
-        daterecorded = raw_daterecorded,
-        tzoffset = raw_tzoffset,
-        user_id = raw_user_id,
-        sharing = raw_sharing,
-        client_key = raw_client_key)
-      
-      try:
-        this_reading.save()
-        count += 1
-      except:
-        continue
+        reading_data = reading.split('|')
+        if reading_data[0] == '':
+            continue
+        raw_latitude = float(reading_data[0])
+        raw_longitude = float(reading_data[1])
+        raw_reading = float(reading_data[2])
+        raw_daterecorded = int(float(reading_data[3]))
+        raw_tzoffset = int(float(reading_data[4]))
+        raw_user_id = reading_data[5]
+        raw_sharing = reading_data[6]
+        raw_client_key = reading_data[7]
+        this_reading = Reading(
+            latitude = raw_latitude,
+            longitude = raw_longitude,
+            reading = raw_reading,
+            daterecorded = raw_daterecorded,
+            tzoffset = raw_tzoffset,
+            user_id = raw_user_id,
+            sharing = raw_sharing,
+            client_key = raw_client_key
+        )
+        
+        try:
+            this_reading.save()
+            count += 1
+        except:
+            continue
     return HttpResponse('okay go, count '+ str(count))
 
 
 class IndexView(TemplateView):
     template_name = 'readings/index.html'
 
+
 class ReadingLiveView(ListModelView):
     """Handle requests for livestreaming"""
+
     def get_queryset(self):
         # Collect parameters
         request_global_data = self.request.GET.get('global', False)
@@ -124,26 +128,28 @@ class ReadingLiveView(ListModelView):
         # customer = models.ForeignKey(Customer)
         """
         call_log = CustomerCallLog(
-          min_latitude = request_min_latitude,
-          max_latitude = request_max_latitude,
-          min_longitude = request_min_longitude,
-          max_longitude = request_max_longitude,
-          global_data = request_global_data,
-          since_last_call = request_since_last_call,
-          start_time = request_start_time,
-          end_time = request_end_time,
-          results_limit = request_results_limit,
-          api_key = request_api_key,
-          use_utc = request_use_utc,
-          processing_time = 0,
-          results_returned = len(queryset),
-          data_format = 'json'
+            min_latitude = request_min_latitude,
+            max_latitude = request_max_latitude,
+            min_longitude = request_min_longitude,
+            max_longitude = request_max_longitude,
+            global_data = request_global_data,
+            since_last_call = request_since_last_call,
+            start_time = request_start_time,
+            end_time = request_end_time,
+            results_limit = request_results_limit,
+            api_key = request_api_key,
+            use_utc = request_use_utc,
+            processing_time = 0,
+            results_returned = len(queryset),
+            data_format = 'json'
         )
         call_log.save()
         
         return queryset
 
+
 class ReadingListView(ListModelView):
+
     def get_queryset(self):
         min_lat = self.request.GET.get('minVisLat', None)
         max_lat = self.request.GET.get('maxVisLat', None)

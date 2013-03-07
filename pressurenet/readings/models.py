@@ -1,5 +1,6 @@
 from django.db import models
 
+
 class Reading(models.Model):
     """Barometer reading from pressureNET"""
     user_id = models.CharField(max_length=255)
@@ -19,6 +20,7 @@ class Reading(models.Model):
     def __unicode__(self):
         return '%s: %s' % (self.user_id, self.reading)
 
+
 class CustomerPlan(models.Model):
     plan_name = models.CharField(max_length=255)
     plan_price = models.FloatField()
@@ -33,6 +35,7 @@ class CustomerPlan(models.Model):
 
     def __unicode__(self):
         return '%s: %s' % (self.plan_name, self.plan_price)
+
 
 class Customer(models.Model):
     """Customer data"""
@@ -59,6 +62,7 @@ class Customer(models.Model):
     def __unicode__(self):
         return '%s: %s' % (self.company_name, self.contact_mail)
 
+
 class CustomerCallLog(models.Model):
     """Log data for each customer API call"""
     timestamp = models.DateTimeField(auto_now_add=True)
@@ -84,4 +88,3 @@ class CustomerCallLog(models.Model):
     
     def __unicode__(self):
         return '%s: %s %s' % (time, results_returned, api_key) 
-

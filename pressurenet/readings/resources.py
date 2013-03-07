@@ -1,7 +1,8 @@
 from djangorestframework.resources import ModelResource
 
-from pressurenet.readings.models import Reading
-from pressurenet.readings.models import CustomerCallLog
+from readings.models import Reading
+from readings.models import CustomerCallLog
+
 
 class ReadingResource(ModelResource):
     model = Reading
@@ -10,6 +11,7 @@ class ReadingResource(ModelResource):
         'reading',
         'daterecorded',
     )
+
 
 class FullReadingResource(ModelResource):
     model = Reading
@@ -24,6 +26,8 @@ class FullReadingResource(ModelResource):
         'sharing',
         'client_key',
     )
+
+
 class CustomerCallLogResource(ModelResource):
     model = CustomerCallLog
     
