@@ -77,27 +77,21 @@ class ReadingLiveView(ListModelView):
 
     def get_queryset(self):
         # Collect parameters
-        request_global_data = self.request.GET.get('global', False)
+        request_global_data = self.request.GET.get('global', '')
+        request_since_last_call =  self.request.GET.get('since_last_call', '')
+        request_use_utc = self.request.GET.get('use_utc', '')
         request_min_latitude = self.request.GET.get('min_lat', None)
         request_max_latitude = self.request.GET.get('max_lat', None)
         request_min_longitude = self.request.GET.get('min_lon', None)
         request_max_longitude = self.request.GET.get('max_lon', None)
         request_start_time = self.request.GET.get('start_time', None)
         request_end_time = self.request.GET.get('end_time', None)
-        request_since_last_call =  self.request.GET.get('since_last_call', False)
         request_results_limit = self.request.GET.get('limit', 1000000)
-        request_use_utc = self.request.GET.get('use_utc', True)
         request_api_key =  self.request.GET.get('api_key', '')
 
         # Figure out the booleans from the strings
-        if request_global_data == 'true' or request_global_data == 'True':
-            request_global_data = True
-        else:
-            request_global_data = False
-        if request_since_last_call == 'true' or request_since_last_call == 'True':
-            request_since_last_call = True
-        else:
-            request_since_last_call = False        
+        request_global_data = request_global_data.lower() == 'true'
+        request_since_last_call = request_since_last_call.lower() == 'true'
 
         # Check the API key for validity
         #api_check = Customer.objects.filter(api_key=request_api_key)
@@ -109,7 +103,7 @@ class ReadingLiveView(ListModelView):
         # Perform the query
         # TODO: Ensure sharing privacy matches customer type
         
-        if request_global_data == False and request_since_last_call == False:
+        if not (request_global_data or request_since_last_call):
             # Use the start_time and end_time values along with all location parameters
             queryset = super(ReadingLiveView, self).get_queryset().filter(
                 latitude__gte=request_min_latitude,
@@ -175,4 +169,3 @@ index = IndexView.as_view()
 reading_list = ReadingListView.as_view(resource=ReadingResource)
 reading_live = ReadingLiveView.as_view(resource=FullReadingResource)
 customer_log = ReadingLiveView.as_view(resource=CustomerCallLogResource)
-
