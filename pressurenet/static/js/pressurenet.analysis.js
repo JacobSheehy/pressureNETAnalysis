@@ -8,13 +8,13 @@
 
     var centerLat = 0;
     var centerLon = 0;
-    var minVisLat = 38;
-    var maxVisLat = 42;
-    var minVisLon = -74;
-    var maxVisLon = -70;
+    var minVisLat = 35;
+    var maxVisLat = 45;
+    var minVisLon = -77;
+    var maxVisLon = -65;
     var startTime = 0;
     var endTime = 0;
-    var zoom = 9;
+    var zoom = 2;
    
     var dataPoints = [];
     
@@ -114,7 +114,18 @@
 
           
         });
+    }
 
+    PressureNET.loadMapWithUserLocation = function(position) {
+        var latitude = position.coords.latitude;
+        var longitude = position.coords.longitude;
+        PressureNET.setMapPosition(latitude, longitude, 5, ((new Date()).getTime() - 86400000), ((new Date()).getTime() + 86400000));
+    }
+    
+    PressureNET.getLocation = function() {
+        if ('geolocation' in navigator) {
+            navigator.geolocation.getCurrentPosition(PressureNET.loadMapWithUserLocation);
+        }
     }
 
     PressureNET.loadMapWithUserLocation = function(position) {
@@ -155,7 +166,7 @@
         eventId = 1;
       } else if(eventName=="noreaster") {
         eventId = 2;
-      }
+      } 
       $('#event_title_text').html(events[eventId].eventName);
       $('#event_date_text').html(events[eventId].eventTime);
       $('#event_link_text').html('<a href="' + events[eventId].eventLink + '">' + events[eventId].eventName + ' on Wikipedia</a>');
