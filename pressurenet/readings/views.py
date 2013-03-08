@@ -30,6 +30,8 @@ def add_from_pressurenet(request):
     count = 0
     error_message = ''
     for reading in readings_list:
+        raw_location_accuracy = 0
+        raw_reading_accuracy = 0
         reading_data = reading.split('|')
         if reading_data[0] == '':
             continue
@@ -41,8 +43,11 @@ def add_from_pressurenet(request):
         raw_user_id = reading_data[5]
         raw_sharing = reading_data[6]
         raw_client_key = reading_data[7]
-        raw_location_accuracy = reading_data[8]
-        raw_reading_accuracy = reading_data[9]
+        try:
+          raw_location_accuracy = reading_data[8]
+          raw_reading_accuracy = reading_data[9]
+        except:
+          pass # backwards compatibility; do nothing, but don't crash doing it
         this_reading = Reading(
             latitude = raw_latitude,
             longitude = raw_longitude,
