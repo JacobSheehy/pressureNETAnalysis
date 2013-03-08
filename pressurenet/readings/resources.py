@@ -25,6 +25,8 @@ class FullReadingResource(ModelResource):
         'tzoffset',
         'sharing',
         'client_key',
+        'location_accuracy',
+        'reading_accuracy',
     )
 
 

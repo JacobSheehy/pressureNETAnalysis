@@ -11,6 +11,8 @@ class Reading(models.Model):
     tzoffset = models.BigIntegerField()
     sharing = models.CharField(max_length=255)
     client_key = models.CharField(max_length=255)
+    location_accuracy = models.FloatField()
+    reading_accuracy = models.FloatField()
 
     class Meta:
         verbose_name = 'reading'

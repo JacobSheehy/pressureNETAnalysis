@@ -24,7 +24,7 @@ def add_from_pressurenet(request):
     # print request
     # get <-> post with urlencode
     get_data = [('pndv','buffer'),]     # a sequence of two element tuples
-    result = urllib2.urlopen('http://ec2-174-129-98-143.compute-1.amazonaws.com:8080/BarometerNetworkServer-3.0/BarometerServlet?pndv=buffer') #, urllib.urlencode(get_data))
+    result = urllib2.urlopen('/BarometerServlet?pndv=buffer') #, urllib.urlencode(get_data))
     content = result.read()
     readings_list = content.split(';')
     count = 0
@@ -41,6 +41,8 @@ def add_from_pressurenet(request):
         raw_user_id = reading_data[5]
         raw_sharing = reading_data[6]
         raw_client_key = reading_data[7]
+        raw_location_accuracy = reading_data[8]
+        raw_reading_accuracy = reading_data[9]
         this_reading = Reading(
             latitude = raw_latitude,
             longitude = raw_longitude,
@@ -49,7 +51,9 @@ def add_from_pressurenet(request):
             tzoffset = raw_tzoffset,
             user_id = raw_user_id,
             sharing = raw_sharing,
-            client_key = raw_client_key
+            client_key = raw_client_key,
+						location_accuracy = raw_location_accuracy,
+						reading_accuracy = raw_reading_accuracy,
         )
         
         try:
