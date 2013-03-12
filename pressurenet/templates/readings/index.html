@@ -2,178 +2,141 @@
 
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<title>pressureNET</title>
+
+	<link rel="shortcut icon" href="http://www.cumulonimbus.ca/favicon.gif">
     
-    <title>pressureNET</title>
-    
-	  <link rel="shortcut icon" href="http://www.cumulonimbus.ca/wp-content/themes/capillatus/favicon.gif" />
-    
-    <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/style.css"/>
-    <link rel="stylesheet" type="text/css" href="http://code.jquery.com/ui/1.9.1/themes/base/jquery-ui.css" />
-    
-    <script language="Javascript" type="text/javascript" src="{{ STATIC_URL }}js/jquery-1.8.2.js"></script>
-    <script language="Javascript" type="text/javascript" src="http://code.jquery.com/ui/1.9.1/jquery-ui.js"></script>
-    <script language="Javascript" type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=AIzaSyBi5dXNdOowRIkC0DwsgR_mWLbKoQKHvk0&sensor=false"></script>
-    
-	  <script language="Javascript" type="text/javascript" src="{{ STATIC_URL }}js/defaults.js"></script>
-    <script language="Javascript" type="text/javascript" src="{{ STATIC_URL }}js/jquery.flot.js"></script> 
-    <script language="Javascript" type="text/javascript" src="{{ STATIC_URL }}js/pressurenet.analysis.js"></script> 
-    <script type="text/javascript">
+	<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/style.css">
+	<link rel="stylesheet" type="text/css" href="http://code.jquery.com/ui/1.10.1/themes/base/jquery-ui.css">
+	<link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Roboto:300,400,700,900,400italic">
 
-      var _gaq = _gaq || [];
-      _gaq.push(['_setAccount', 'UA-78967-8']);
-      _gaq.push(['_trackPageview']);
+	<script language="Javascript" type="text/javascript" src="http://code.jquery.com/jquery-1.9.1.js"></script>
+	<script language="Javascript" type="text/javascript" src="http://code.jquery.com/ui/1.10.1/jquery-ui.js"></script>
+	<script language="Javascript" type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=AIzaSyBi5dXNdOowRIkC0DwsgR_mWLbKoQKHvk0&sensor=false"></script>
 
-      (function() {
-         var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-         ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-         var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-      })();
+	<script language="Javascript" type="text/javascript" src="{{ STATIC_URL }}js/jquery.flot.js"></script> 
+	<script language="Javascript" type="text/javascript" src="{{ STATIC_URL }}js/pressurenet.analysis.js"></script> 
+	<script type="text/javascript">
 
-     </script>
-  </head>
-  <body>
-    <header>
-      <h1><a href="http://pndv.cumulonimbus.ca" style="color:#fff !important"><span>pressureNET</span></a></h1>
-      <nav>
-			  <a class="page-link off" data-page="live">Live Stream</a>
-			  <a class="page-link off" data-page="about">About</a>
-        <a id="cb-link" href="http://cumulonimbus.ca">Cumulonimbus</a>
-        <a href="https://play.google.com/store/apps/details?id=ca.cumulonimbus.barometernetwork" target="_blank">Download pressureNET</a>
-      </nav>
-    </header>
-    
-	<div id="screen"></div>
-	<section id="pages">
+		var _gaq = _gaq || [];
+		_gaq.push(['_setAccount', 'UA-78967-8']);
+		_gaq.push(['_trackPageview']);
 
-		<a id="close"></a>
+		(function() {
+			var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+			ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+			var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+		})();
 
-		<article id="live" class="page">
+	</script>
+</head>
+<body>
+	<header id="masthead">
+		<h1 id="site-title"><a href="http://pndv.cumulonimbus.ca">pressure<span>NET</span></a></h1>
+		<nav>
+			<a href="live.html">Live Stream</a>
+			<a href="about.html">About</a>
+			<a id="link-cb" class="link-logo" href="http://cumulonimbus.ca">Cumulonimbus</a>
+			<a id="link-gp" class="link-logo" href="https://play.google.com/store/apps/details?id=ca.cumulonimbus.barometernetwork" target="_blank">Download pressureNET</a>
+		</nav>
+	</header>
 
-			<h2>Live Streaming</h2>
+	<section id="main" class="group">
 
-			<p>If you are a researcher at an educational institution or a meteorological organization and are interested in accessing our live data stream, please contact us. We are interested in sharing our live atmospheric pressure data, especially to those who are looking to improve weather forecasting.</p>
+		<section id="intro" class="full">
+			<h2>Welcome to pressureNET</h2>
+			<p>This site let's you see barometric pressure readings collected by thousands of <a href="https://market.android.com/details?id=ca.cumulonimbus.barometernetwork" target="_blank">pressureNET</a> users. As the readings are collected, along with the associated time and location, they are streamed to this site. This information can be used to predict weather more accurately and to better understand weather patterns. Choose a date range and drag the map to the location you're interested in seeing pressure trends for.</p>
+		</section>
 
-			<a class="contact" href="mailto:livestream@cumulonimbus.ca">Email us to discuss the live stream</a>
+		<section id="date-range" class="full">
+			<div class="half">
+				<label for="start_date">From</label>
+				<input type="text" name="start_date" id="start_date" class="dateselector" placeholder="Start Date">
+			</div>
+			<div class="half">
+				<label for="end_date">To</label>
+				<input type="text" id="end_date" name="end_date" class="dateselector" placeholder="End Date">
+			</div>
+			<input type="button" id="load" value="Load" onClick="PressureNET.loadAndUpdate(0);">
+		</section>
 
-		</article>
-	
-		<article id="about" class="page">
+		<section id="query_results" class="full"></section>
+		<section id="share_spot" class="full">
+			<input type="text" id="share_input">
+		</section>
 
-			<h2>About the Data Visualization Tool</h2>
+		<section id="map_canvas" class="full"></section>  
 
-			<p><a href="https://play.google.com/store/apps/details?id=ca.cumulonimbus.barometernetwork">pressureNET</a> is a barometer network that runs on Android and collects atmospheric pressure measurements from barometers inside phones and tablets. The project is <a href="https://github.com/JacobSheehy/pressureNET">open source on GitHub</a>. We plan on using the collected data to improve weather forecasting models. By selecting dates and changing the map location you can see a graph of the raw data we have collected.  We are working to make this an open data set while respecting user privacy, and we intend to build an API that lets anyone pull data from the archive. If you like this project, please consider downloading <a href="https://play.google.com/store/apps/details?id=ca.cumulonimbus.barometernetwork">pressureNET</a> from Google Play.</p> 
+		<section id="current_position" class="full"></section>
 
-		</article>
-    </section>
+		<section id="placeholder" class="full"></section>
 
-    <section id="date-range" class="full">
-      <label for="start_date"> From</label> <input type="text" name="start_date" id="start_date" class="dateselector" placeholder="Start Date" size="10"/>
-      <label for="end_date">To</label> <input type="text" id="end_date" name="end_date" class="dateselector" placeholder="End Date" size="10"/>
-      <input type="button" value="Load" onClick="PressureNET.loadAndUpdate(0);"  />
+		<section id="graph_info" class="full">
+			<p>This graph is a plot of our raw atmospheric pressure data in millibars over time (some outliers have been discarded). Below is a table of information about the graph.</p>
 
-    </section>
-        
-    <section id="query_results" class="full"></section>
-    <section id="share_spot" class="full">
-      <input type="text" id="share_input" style="width:80%" /> &nbsp;
-    </section>
+			<table class="graph_info_table">
+				<tr>
+					<th>Latitude</th>
+					<td id="minVisLatCell"></td>
+					<td class="center">to</td>
+					<td id="maxVisLatCell"></td>
+				</tr>
+				<tr>
+					<th>Longitude</th>
+					<td id="minVisLonCell"></td>
+					<td class="center">to</td>
+					<td id="maxVisLonCell"></td>
+				</tr>
+				<tr>
+					<th>Time</th>
+					<td id="startTimeCell"></td>
+					<td class="center">to</td>
+					<td id="endTimeCell"></td>
+				</tr>
+				<tr>
+					<th>Measurements</th>
+					<td id="resultsCountCell" colspan="3"></td>
+				</tr>
+			</table>
+		</section>
 
-    <section id="map_canvas" class="full" style="height:250px"></section>  
-    
-    <section style="display:none" id="current_position" class="full"></section>
-      
-    <section id="placeholder" class="full" style="width:640px;height:300px;"></section>
-    
-    <section id="graph_info" class="full" style="display:block">
-      <p>This graph is a plot of our raw atmospheric pressure data in millibars over time (some outliers have been discarded). Below is a table of information about the graph.</p>
+		<section id="events" class="full">
 
-      <table class="graph_info_table">
-        <tr>
-          <td>
-            <p>Latitute</p>
-          </td>
-          <td>
-            <pre id="minVisLatCell"></pre>
-          </td>
-          <td>
-            <p>to</p>
-          </td>
-          <td>
-            <pre id="maxVisLatCell"></pre>
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <p>Longitude</p>
-          </td>
-          <td>
-            <pre id="minVisLonCell"></pre>
-          </td>
-          <td>
-            <p>to</p>
-          </td>
-          <td>
-            <pre id="maxVisLonCell"></pre>
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <p>Time</p>
-          </td>
-          <td>
-            <pre id="startTimeCell"></pre>
-          </td>
-          <td>
-            <p>to</p>
-          </td>
-          <td>
-            <pre id="endTimeCell"></pre>
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <p>Measurements</p>
-          </td>
-          <td colspan="3">
-            <pre id="resultsCountCell"></pre>
-          </td>
-        </tr>
-      </table>     
+			<section id="notable-events" class="half">
+				<h2>Notable Events</h2>
+				<ul id="event-list">
+					<li><a onClick="PressureNET.loadEventInfo('sandy')" style="cursor:pointer">Hurricane Sandy</a></li>
+					<li><a onClick="PressureNET.loadEventInfo('noreaster')" style="cursor:pointer">Post-Sandy Nor'easter</a></li>
+					<li><a onClick="PressureNET.loadEventInfo('isaac')" style="cursor:pointer">Hurricane Isaac</a></li>
+					<li>Coming soon: Pacific Typhoons</li>
+				</ul>
+			</section>
+			<section id="event-info" class="half">
+				<hgroup>
+					<h2 id="event_title_text"></h2>
+					<h4 id="event_date_text"></h4>
+					<h5 id="event_link_text"></h5>
+				</hgroup>
+				<p id="event_main_text"></p>
+			</section>
 
-    </section>
+		</section>
 
-    <section id="events" class="full">
-      <section id="notable-events" class="half">
-        <h2>Notable Events</h2>
-        <ul id="event-list">
-          <li><a onClick="PressureNET.loadEventInfo('sandy')" style="cursor:pointer">Hurricane Sandy</a></li>
-          <li><a onClick="PressureNET.loadEventInfo('noreaster')" style="cursor:pointer">Post-Sandy Nor'easter</a></li>
-          <li><a onClick="PressureNET.loadEventInfo('isaac')" style="cursor:pointer">Hurricane Isaac</a></li>
-          <li>Coming soon: Pacific Typhoons</li>
-        </ul>
-      </section>
-      <section id="event-info" class="half">
-        <hgroup>
-          <h2><span id="event_title_text"></span></h2>
-          <h4><span id="event_date_text"></span></h4>
-          <h5><span id="event_link_text"></span></h5>
-        </hgroup>
-        <p><span id="event_main_text"></span></p>
-      </section>
-    </section>
+	</section>
 
-    <footer>
-      <a class="contact" style="cursor:pointer;" onClick="PressureNET.alertCumulonimbus()" title="E-mail us!">Found something interesting? Let us know!</a>
-    </footer>
+	<footer>
+		<a class="contact" style="cursor:pointer;" onClick="PressureNET.alertCumulonimbus()" title="E-mail us!">Found something interesting? <wbr>Let us know!</a>
+	</footer>
 
-    <script type="text/javascript">
-        PressureNET.initialize({
-            readingsUrl: '{% url 'readings-list' %}'
-        });
-    </script>
+	<script type="text/javascript">
+		PressureNET.initialize({
+			readingsUrl: '{% url 'readings-list' %}'
+		});
+	</script>
 
-  </body>
+</body>
 </html>

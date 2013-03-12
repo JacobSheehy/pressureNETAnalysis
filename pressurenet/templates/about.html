@@ -1,0 +1,65 @@
+{% load url from future %}
+
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>pressureNET | Live Stream</title>
+
+	<link rel="shortcut icon" href="http://www.cumulonimbus.ca/favicon.gif">
+    
+    <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/style.css">
+    <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Roboto:300,400,700,900,400italic">
+
+    <script type="text/javascript">
+
+		var _gaq = _gaq || [];
+		_gaq.push(['_setAccount', 'UA-78967-8']);
+		_gaq.push(['_trackPageview']);
+
+		(function() {
+			var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+			ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+			var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+		})();
+
+	</script>
+</head>
+<body>
+	<header id="masthead">
+		<h1 id="site-title"><a href="http://pndv.cumulonimbus.ca">pressure<span>NET</span></a></h1>
+		<nav>
+			<a href="live.html">Live Stream</a>
+			<a href="about.html">About</a>
+			<a id="link-cb" class="link-logo" href="http://cumulonimbus.ca">Cumulonimbus</a>
+			<a id="link-gp" class="link-logo" href="https://play.google.com/store/apps/details?id=ca.cumulonimbus.barometernetwork" target="_blank">Download pressureNET</a>
+		</nav>
+	</header>
+
+	<section id="main" class="group">
+
+		<section id="about-site" class="full">
+			<h2>About this Site</h2>
+			<p></p>
+		</section>
+
+		<section id="about-app" class="full">
+			<h2>About the App</h2>
+			<p></p>
+		</section>
+
+		<section id="about-service" class="full">
+			<h2>About the Live Stream Service</h2>
+			<p></p>
+		</section>
+
+	</section>
+
+	<footer id="colophon" class="group">
+		<a class="contact" href="mailto:software@cumulonimbus.ca" title="E-mail us!">Want to know more? <wbr>Get in touch!</a>
+	</footer>
+
+</body>
+</html>
