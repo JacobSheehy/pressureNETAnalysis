@@ -187,15 +187,15 @@ a {
 			}
 
 	#date-range {}
-
+  
 	#query_results, #share_spot {
-		display: none;
+
 		background-color: #bbb;
 		}
 
-		#share_input {width: 100%;}
-
-	#map_canvas {height: 15rem;}
+		#share_input {width: 100%; }
+  
+	#map_canvas {height: 15rem;z-index:0}
 	#current_position {display: none;}
 	#placeholder {height: 15rem}
 
