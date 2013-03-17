@@ -24,6 +24,13 @@ h2 {
 
 h3 {
 	color: #333;
+	font-size: 1.125rem;
+	font-weight: 700;
+	margin-bottom: 0.625rem;
+	}
+
+h4 {
+	color: #333;
 	font-size: 1rem;
 	font-weight: 700;
 	margin-bottom: 0.625rem;
@@ -188,16 +195,16 @@ a {
 
 	#date-range {}
   
-	#query_results, #share_spot {
+	#query_results, #share_spot {background-color: #bbb;}
 
-		background-color: #bbb;
-		}
-
-		#share_input {width: 100%; }
+		#share_input {width: 100%;}
   
-	#map_canvas {height: 15rem;z-index:0}
+	#map_canvas {
+		height: 15rem;
+		z-index: 0;
+		}
 	#current_position {display: none;}
-	#placeholder {height: 15rem}
+	#placeholder {height: 15rem;}
 
 	.graph_info_table {
 		font-size: 0.75rem;
@@ -213,6 +220,10 @@ a {
 		font-size: 1.125rem;
 		margin-bottom: 0.3125rem;
 		}
+
+	.closed:after {content: "/25B2";}
+	.open:after {content: "/25BC";}
+	#legal-notes {display: none;}
 
 footer {
 	z-index: 1;
