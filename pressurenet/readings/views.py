@@ -72,6 +72,11 @@ def add_from_pressurenet(request):
 class IndexView(TemplateView):
     template_name = 'readings/index.html'
 
+class LivestreamView(TemplateView):
+    template_name = 'readings/livestream.html'
+
+class AboutView(TemplateView):
+    template_name = 'readings/about.html'
 
 class ReadingLiveView(ListModelView):
     """Handle requests for livestreaming"""
@@ -175,6 +180,8 @@ class ReadingListView(ListModelView):
 
 
 index = IndexView.as_view()
+livestream = LivestreamView.as_view()
+about = AboutView.as_view()
 reading_list = ReadingListView.as_view(resource=ReadingResource)
 reading_live = ReadingLiveView.as_view(resource=FullReadingResource)
 customer_log = ReadingLiveView.as_view(resource=CustomerCallLogResource)
