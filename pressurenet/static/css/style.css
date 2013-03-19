@@ -221,8 +221,7 @@ a {
 		margin-bottom: 0.3125rem;
 		}
 
-	.closed:after {content: "/25B2";}
-	.open:after {content: "/25BC";}
+
 	#legal-notes {display: none;}
 
 footer {
