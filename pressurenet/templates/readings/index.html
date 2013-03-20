@@ -36,7 +36,7 @@
 </head>
 <body>
 	<header id="masthead">
-		<h1 id="site-title"><a href="http://pressurenet.cumulonimbus.ca">pressure<span>NET</span></a></h1>
+		<h1 id="site-title"><a href="/">pressure<span>NET</span></a></h1>
 		<nav>
 			<a href="/livestream/">Live Stream</a>
 			<a href="/about/">About</a>
@@ -49,17 +49,17 @@
 
 		<section id="intro" class="full">
 			<h2>Welcome to pressureNET</h2>
-			<p>We are collecting atmospheric pressure measurements from tens of thousands of <a href="https://play.google.com/store/apps/details?id=ca.cumulonimbus.barometernetwork" target="_blank">pressureNET</a> users. This information can be used to predict weather more accurately and to better understand weather patterns. Choose a date range and pan/zoom the map to any location of interest to view the data we have collected.</p>
+			<p>We are collecting atmospheric pressure measurements from many thousands of <a href="https://play.google.com/store/apps/details?id=ca.cumulonimbus.barometernetwork" target="_blank">pressureNET</a> users. We intend to use this data to help predict weather more accurately and to better understand Earth's atmosphere. Choose a date range and pan/zoom the map to any location of interest to view the data we have collected.</p>
 		</section>
 
 		<section id="date-range" class="full">
 			<div class="half">
 				<label for="start_date">From</label>
-				<input type="text" name="start_date" id="start_date" class="dateselector" placeholder="Start Date">
+				<input readonly="true" type="text" name="start_date" id="start_date" class="dateselector" placeholder="Start Date">
 			</div>
 			<div class="half">
 				<label for="end_date">To</label>
-				<input type="text" id="end_date" name="end_date" class="dateselector" placeholder="End Date">
+				<input readonly="true" type="text" id="end_date" name="end_date" class="dateselector" placeholder="End Date">
 			</div>
 			<input type="button" id="load" value="Load" onClick="PressureNET.loadAndUpdate(0);">
 		</section>
