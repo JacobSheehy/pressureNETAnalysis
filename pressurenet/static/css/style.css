@@ -267,7 +267,7 @@ footer {
 			margin: 0 0.3125rem;
 			}
 
-		#link-fb {background-image: url("../images/logo-fb.svg");}
-		#link-pl {background-image: url("../images/logo-pl.svg");}
-		#link-tw {background-image: url("../images/logo-tw.svg");}
+		#link-fb {background-image: url("../images/logo-fb.png");}
+		#link-pl {background-image: url("../images/logo-pl.png");}
+		#link-tw {background-image: url("../images/logo-tw.png");}
 			#link-fb:hover, #link-pl:hover, #link-tw:hover {background-position: center bottom;}
