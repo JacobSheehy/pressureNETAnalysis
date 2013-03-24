@@ -15,6 +15,7 @@ from readings.models import Reading
 from readings.models import CustomerCallLog
 from readings.models import Customer
 
+import datetime
 
 def add_from_pressurenet(request):
     """
@@ -68,6 +69,11 @@ def add_from_pressurenet(request):
             continue
     return HttpResponse('okay go, count '+ str(count))
 
+def get_last_api_call_time(request_api_key):
+    """Return the last API call time for the given key"""
+    call_log = CustomerCallLog.objects.filter(api_key=request_api_key).order_by('-id')[0]
+    stamped = call_log.timestamp
+    return int(stamped.strftime("%s")) * 1000
 
 class IndexView(TemplateView):
     template_name = 'readings/index.html'
@@ -94,12 +100,12 @@ class ReadingLiveView(ListModelView):
         request_global_data = self.request.GET.get('global', '')
         request_since_last_call =  self.request.GET.get('since_last_call', '')
         # request_use_utc = self.request.GET.get('use_utc', '') # no longer in the API
-        request_min_latitude = self.request.GET.get('min_lat', None)
-        request_max_latitude = self.request.GET.get('max_lat', None)
-        request_min_longitude = self.request.GET.get('min_lon', None)
-        request_max_longitude = self.request.GET.get('max_lon', None)
-        request_start_time = self.request.GET.get('start_time', None)
-        request_end_time = self.request.GET.get('end_time', None)
+        request_min_latitude = self.request.GET.get('min_lat', -180)
+        request_max_latitude = self.request.GET.get('max_lat', 180)
+        request_min_longitude = self.request.GET.get('min_lon', -180)
+        request_max_longitude = self.request.GET.get('max_lon', 180)
+        request_start_time = self.request.GET.get('start_time', 0)
+        request_end_time = self.request.GET.get('end_time', 1464140695894)
         request_results_limit = self.request.GET.get('limit', 1000000)
         request_api_key =  self.request.GET.get('api_key', '')
         request_data_format = self.request.GET.get('format', 'json')
@@ -110,6 +116,7 @@ class ReadingLiveView(ListModelView):
 
         # Perform the query
         # TODO: Ensure sharing privacy matches customer type
+        # rather than filter out the Cumulonimbus (Us)
         # Two dynamic parameters request_global_data and 
         # since_last_call combine to four distinct queries
         if not (request_global_data or request_since_last_call):
@@ -125,10 +132,9 @@ class ReadingLiveView(ListModelView):
         elif (request_global_data and request_since_last_call):
             # Check the timestamp of the last API call with this key
             # And then filter results by that timespan. Globally.
-            # TODO: Finish implementing.
+            last_customerapi_call_time = get_last_api_call_time(request_api_key)
             queryset = super(ReadingLiveView, self).get_queryset().filter(
-                daterecorded__gte=request_start_time,
-                daterecorded__lte=request_end_time,
+                daterecorded__gte=last_customerapi_call_time,
             ).order_by('user_id').exclude(sharing='Cumulonimbus (Us)')[:request_results_limit]
         elif (request_global_data and not request_since_last_call):
             # Return global data for the specified time parameters
@@ -140,23 +146,16 @@ class ReadingLiveView(ListModelView):
             # Check the timestamp of the last API call with this key
             # And then filter results by that timespan for the given
             # location parameters.
-            # TODO: Finish implementing.
+            last_customerapi_call_time = get_last_api_call_time(request_api_key)
             queryset = super(ReadingLiveView, self).get_queryset().filter(
                 latitude__gte=request_min_latitude,
                 latitude__lte=request_max_latitude,
                 longitude__gte=request_min_longitude,
                 longitude__lte=request_max_longitude,
-                daterecorded__gte=request_start_time,
-                daterecorded__lte=request_end_time,
+                daterecorded__gte=last_customerapi_call_time,
             ).order_by('user_id').exclude(sharing='Cumulonimbus (Us)')[:request_results_limit]   
-            
         
         # Keep a log of this event using CustomerCallLog
-        """
-        TODO: 
-        data_format = models.CharField(max_length=10)
-        # customer = models.ForeignKey(Customer)
-        """
         call_log = CustomerCallLog(
             min_latitude = request_min_latitude,
             max_latitude = request_max_latitude,
