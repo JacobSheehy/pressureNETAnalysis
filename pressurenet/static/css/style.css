@@ -192,13 +192,9 @@ a {
 			color: #fff;
 			background-color: #33b5e5;
 			}
-
-	#date-range {}
   
-	#query_results, #share_spot {background-color: #bbb;}
-
+	#query_results, #share_spot {background-color: #ddd;}
     #share_spot {display:none;}
-
 		#share_input {width: 100%;}
   
 	#map_canvas {
@@ -255,16 +251,23 @@ footer {
 			background: #33b5e5;
 			}
 
-	
-@media all and (max-width: 600px) {
-	body {
-		// extra styles for mobile
-	}
-}
+	#nav-social {
+		width: auto;
+		margin: 0.625rem auto 0;
+		}
 
-@media all and (min-width: 600px) {
-	body {
-		// extra styles for desktop
-	}
-}
+		.link-social {
+			display: block;
+			float: left;
+			width: 2rem;
+			height: 2rem;
+			background-position: center top;
+			background-repeat: no-repeat;
+			background-size: 2rem;
+			margin: 0 0.3125rem;
+			}
 
+		#link-fb {background-image: url("../images/logo-fb.png");}
+		#link-pl {background-image: url("../images/logo-pl.png");}
+		#link-tw {background-image: url("../images/logo-tw.png");}
+			#link-fb:hover, #link-pl:hover, #link-tw:hover {background-position: center bottom;}
