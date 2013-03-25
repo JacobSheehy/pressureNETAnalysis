@@ -15,7 +15,7 @@ from readings.models import Reading
 from readings.models import CustomerCallLog
 from readings.models import Customer
 
-import datetime
+import time
 
 def add_from_pressurenet(request):
     """
@@ -69,11 +69,10 @@ def add_from_pressurenet(request):
             continue
     return HttpResponse('okay go, count '+ str(count))
 
-def get_last_api_call_time(request_api_key):
-    """Return the last API call time for the given key"""
+def get_last_api_call_end_time(request_api_key):
+    """Return the last API call end time for the given key"""
     call_log = CustomerCallLog.objects.filter(api_key=request_api_key).order_by('-id')[0]
-    stamped = call_log.timestamp
-    return int(stamped.strftime("%s")) * 1000
+    return call_log.end_time
 
 class IndexView(TemplateView):
     template_name = 'readings/index.html'
@@ -104,8 +103,8 @@ class ReadingLiveView(ListModelView):
         request_max_latitude = self.request.GET.get('max_lat', 180)
         request_min_longitude = self.request.GET.get('min_lon', -180)
         request_max_longitude = self.request.GET.get('max_lon', 180)
-        request_start_time = self.request.GET.get('start_time', 0)
-        request_end_time = self.request.GET.get('end_time', 1464140695894)
+        request_start_time = self.request.GET.get('start_time', (time.time() - 3600*24) * 1000)
+        request_end_time = self.request.GET.get('end_time', time.time() * 1000)
         request_results_limit = self.request.GET.get('limit', 1000000)
         request_api_key =  self.request.GET.get('api_key', '')
         request_data_format = self.request.GET.get('format', 'json')
@@ -130,9 +129,12 @@ class ReadingLiveView(ListModelView):
                 daterecorded__lte=request_end_time,
             ).order_by('user_id').exclude(sharing='Cumulonimbus (Us)')[:request_results_limit]
         elif (request_global_data and request_since_last_call):
-            # Check the timestamp of the last API call with this key
+            # Check the end time of the last API call with this key
             # And then filter results by that timespan. Globally.
-            last_customerapi_call_time = get_last_api_call_time(request_api_key)
+            last_customerapi_call_time = get_last_api_call_end_time(request_api_key)
+            # Set the request values for the log
+            request_start_time = last_customerapi_call_time
+            request_end_time = time.time() * 1000
             queryset = super(ReadingLiveView, self).get_queryset().filter(
                 daterecorded__gte=last_customerapi_call_time,
             ).order_by('user_id').exclude(sharing='Cumulonimbus (Us)')[:request_results_limit]
@@ -143,10 +145,13 @@ class ReadingLiveView(ListModelView):
                 daterecorded__lte=request_end_time,
             ).order_by('user_id').exclude(sharing='Cumulonimbus (Us)')[:request_results_limit]
         elif (request_since_last_call and not request_global_data):
-            # Check the timestamp of the last API call with this key
+            # Check the end time of the last API call with this key
             # And then filter results by that timespan for the given
-            # location parameters.
-            last_customerapi_call_time = get_last_api_call_time(request_api_key)
+            # location parameters.            
+            last_customerapi_call_time = get_last_api_call_end_time(request_api_key)
+            # Set the request values for the log
+            request_start_time = last_customerapi_call_time
+            request_end_time = time.time() * 1000
             queryset = super(ReadingLiveView, self).get_queryset().filter(
                 latitude__gte=request_min_latitude,
                 latitude__lte=request_max_latitude,
