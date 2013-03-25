@@ -24,8 +24,8 @@ def add_from_pressurenet(request):
     """
     # print request
     # get <-> post with urlencode
-    get_data = [('pndv','buffer'),]
-    result = urllib2.urlopen('/BarometerServlet?pndv=buffer') #, urllib.urlencode(get_data))
+    get_data = [('pndv','buffer'),]     # a sequence of two element tuples
+    result = urllib2.urlopen('http://ec2-174-129-98-143.compute-1.amazonaws.com:8080/BarometerNetworkServer-3.1/BarometerServlet?pndv=buffer') #, urllib.urlencode(get_data))
     content = result.read()
     readings_list = content.split(';')
     count = 0
@@ -35,6 +35,7 @@ def add_from_pressurenet(request):
         raw_reading_accuracy = 0
         reading_data = reading.split('|')
         if reading_data[0] == '':
+            print 'no data. next reading'
             continue
         raw_latitude = float(reading_data[0])
         raw_longitude = float(reading_data[1])
@@ -48,6 +49,7 @@ def add_from_pressurenet(request):
           raw_location_accuracy = reading_data[8]
           raw_reading_accuracy = reading_data[9]
         except:
+          print 'no accuracy data'
           pass # backwards compatibility; do nothing, but don't crash doing it
         this_reading = Reading(
             latitude = raw_latitude,
