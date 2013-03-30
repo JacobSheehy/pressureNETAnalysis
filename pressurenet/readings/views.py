@@ -8,12 +8,12 @@ from djangorestframework.views import ListModelView
 from djangorestframework.reverse import reverse
 from djangorestframework.response import Response
 
-from readings.resources import ReadingResource
-from readings.resources import FullReadingResource
-from readings.resources import CustomerCallLogResource
-from readings.models import Reading
-from readings.models import CustomerCallLog
-from readings.models import Customer
+from pressurenet.readings.resources import ReadingResource
+from pressurenet.readings.resources import FullReadingResource
+from pressurenet.readings.resources import CustomerCallLogResource
+from pressurenet.readings.models import Reading
+from pressurenet.readings.models import CustomerCallLog
+from pressurenet.readings.models import Customer
 
 import time
 
