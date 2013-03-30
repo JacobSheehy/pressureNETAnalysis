@@ -110,7 +110,7 @@ MIDDLEWARE_CLASSES = (
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
 
-ROOT_URLCONF = 'pressurenet.urls'
+ROOT_URLCONF = 'urls'
 
 INSTALLED_APPS = (
     'django.contrib.admin',
@@ -129,7 +129,7 @@ INSTALLED_APPS = (
     'south',
     'urlobject',
 
-    'pressurenet.readings',
+    'readings',
 )
 
 try:

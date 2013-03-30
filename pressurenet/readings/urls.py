@@ -1,7 +1,7 @@
 from django.conf.urls import patterns, include, url
 
 
-urlpatterns = patterns('pressurenet.readings.views',
+urlpatterns = patterns('readings.views',
     url('^$', 'index', name='readings-index'),
     url('^livestream/$', 'livestream', name='readings-livestream'),
     url('^about/$', 'about', name='readings-about'),
