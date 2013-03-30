@@ -129,7 +129,7 @@ INSTALLED_APPS = (
     'south',
     'urlobject',
 
-    'readings',
+    'pressurenet.readings',
 )
 
 try:
