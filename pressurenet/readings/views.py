@@ -73,7 +73,7 @@ def add_from_pressurenet(request):
 
 def get_last_api_call_end_time(request_api_key):
     """Return the last API call end time for the given key"""
-    call_log = CustomerCallLog.objects.filter(api_key=request_api_key).order_by('-id')[0]
+    call_log = CustomerCallLog.objects.filter(api_key=request_api_key).order_by('-timestamp')[0]
     return call_log.end_time
 
 class IndexView(TemplateView):
