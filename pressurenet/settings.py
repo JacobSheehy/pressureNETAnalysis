@@ -2,7 +2,7 @@ import os
 
 # Django settings for pressurenet project.
 
-DEBUG = False 
+DEBUG = True 
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
