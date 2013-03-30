@@ -5,8 +5,8 @@ from django.conf.urls import patterns, include, url
 admin.autodiscover()
 
 urlpatterns = patterns('',
-    url(r'^api-auth/', include('djangorestframework.urls', namespace='djangorestframework')),
     url(r'^admin/', include(admin.site.urls)),
 
+    url(r'^api-auth/', include('djangorestframework.urls', namespace='djangorestframework')),
     url(r'^', include('readings.urls')),
 )
