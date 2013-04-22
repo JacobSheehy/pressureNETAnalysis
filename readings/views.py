@@ -86,13 +86,26 @@ class AboutView(TemplateView):
 class ReadingLiveView(ListModelView):
     """Handle requests for livestreaming"""
 
+    def __init__(self, *args, **kwargs):
+        self.call_log = CustomerCallLog()
+
+        super(ReadingLiveView, self).__init__(*args, **kwargs)
+
     def get(self, *args, **kwargs):
         request_api_key =  self.request.GET.get('api_key', '')
 
         if not Customer.objects.filter(api_key=request_api_key).exists():
             return HttpResponseNotAllowed('An API Key is required')
 
-        return super(ReadingLiveView, self).get(*args, **kwargs)
+        start = time.time()
+
+        response = super(ReadingLiveView, self).get(*args, **kwargs)
+
+        end = time.time()
+        self.call_log.processing_time = end - start
+        self.call_log.save()
+
+        return response
 
     def get_queryset(self):
         # Collect parameters
@@ -161,23 +174,19 @@ class ReadingLiveView(ListModelView):
             ).order_by('user_id').exclude(sharing='Cumulonimbus (Us)')[:request_results_limit]   
         
         # Keep a log of this event using CustomerCallLog
-        call_log = CustomerCallLog(
-            min_latitude = request_min_latitude,
-            max_latitude = request_max_latitude,
-            min_longitude = request_min_longitude,
-            max_longitude = request_max_longitude,
-            global_data = request_global_data,
-            since_last_call = request_since_last_call,
-            start_time = request_start_time,
-            end_time = request_end_time,
-            results_limit = request_results_limit,
-            api_key = request_api_key,
-            use_utc = '',
-            processing_time = 0,
-            results_returned = len(queryset),
-            data_format = request_data_format
-        )
-        call_log.save()
+        self.call_log.min_latitude = request_min_latitude
+        self.call_log.max_latitude = request_max_latitude
+        self.call_log.min_longitude = request_min_longitude
+        self.call_log.max_longitude = request_max_longitude
+        self.call_log.global_data = request_global_data
+        self.call_log.since_last_call = request_since_last_call
+        self.call_log.start_time = request_start_time
+        self.call_log.end_time = request_end_time
+        self.call_log.results_limit = request_results_limit
+        self.call_log.api_key = request_api_key
+        self.call_log.use_utc = ''
+        self.call_log.results_returned = len(queryset)
+        self.call_log.data_format = request_data_format
         
         return queryset
 

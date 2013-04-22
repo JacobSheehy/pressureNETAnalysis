@@ -68,4 +68,4 @@ class CustomerCallLog(models.Model):
         unique_together = ('timestamp','api_key')
     
     def __unicode__(self):
-        return '%s: %s %s' % (timestamp, results_returned, api_key) 
+        return '%s: %s %s' % (self.timestamp, self.results_returned, self.api_key) 
