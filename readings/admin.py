@@ -9,6 +9,6 @@ admin.site.register(Customer, CustomerAdmin)
 
 
 class CustomerCallLogAdmin(admin.ModelAdmin):
-    list_display = ('api_key', 'results_returned', 'processing_time')
+    list_display = ('customer', 'results_returned', 'processing_time', 'timestamp')
 
 admin.site.register(CustomerCallLog, CustomerCallLogAdmin)

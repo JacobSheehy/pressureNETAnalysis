@@ -46,6 +46,7 @@ class Customer(models.Model):
 
 class CustomerCallLog(models.Model):
     """Log data for each customer API call"""
+    customer = models.ForeignKey(Customer)
     timestamp = models.DateTimeField(auto_now_add=True)
     min_latitude = models.FloatField()
     max_latitude = models.FloatField()
@@ -57,15 +58,13 @@ class CustomerCallLog(models.Model):
     end_time = models.BigIntegerField()
     results_limit = models.IntegerField()
     data_format = models.CharField(max_length=10)
-    api_key = models.CharField(max_length=255)
     use_utc = models.BooleanField()
     processing_time = models.FloatField()
     results_returned = models.IntegerField()
 
     class Meta:
-        verbose_name = 'customercalllog'
-        verbose_name_plural = 'customercalllogs'
-        unique_together = ('timestamp','api_key')
+        verbose_name = 'Customer Call Log'
+        verbose_name_plural = 'Customer Call Logs'
     
     def __unicode__(self):
         return '%s: %s %s' % (self.timestamp, self.results_returned, self.api_key) 

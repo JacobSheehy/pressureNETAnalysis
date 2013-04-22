@@ -71,7 +71,7 @@ def add_from_pressurenet(request):
 
 def get_last_api_call_end_time(request_api_key):
     """Return the last API call end time for the given key"""
-    call_log = CustomerCallLog.objects.filter(api_key=request_api_key).order_by('-timestamp')[0]
+    call_log = CustomerCallLog.objects.filter(customer__api_key=request_api_key).order_by('-timestamp')[0]
     return call_log.end_time
 
 class IndexView(TemplateView):
@@ -174,6 +174,7 @@ class ReadingLiveView(ListModelView):
             ).order_by('user_id').exclude(sharing='Cumulonimbus (Us)')[:request_results_limit]   
         
         # Keep a log of this event using CustomerCallLog
+        self.call_log.customer = Customer.objects.get(api_key=request_api_key)
         self.call_log.min_latitude = request_min_latitude
         self.call_log.max_latitude = request_max_latitude
         self.call_log.min_longitude = request_min_longitude
@@ -183,7 +184,6 @@ class ReadingLiveView(ListModelView):
         self.call_log.start_time = request_start_time
         self.call_log.end_time = request_end_time
         self.call_log.results_limit = request_results_limit
-        self.call_log.api_key = request_api_key
         self.call_log.use_utc = ''
         self.call_log.results_returned = len(queryset)
         self.call_log.data_format = request_data_format
