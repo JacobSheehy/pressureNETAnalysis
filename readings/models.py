@@ -67,4 +67,4 @@ class CustomerCallLog(models.Model):
         verbose_name_plural = 'Customer Call Logs'
     
     def __unicode__(self):
-        return '%s: %s %s' % (self.timestamp, self.results_returned, self.api_key) 
+        return '%s: %s' % (self.customer, self.timestamp) 

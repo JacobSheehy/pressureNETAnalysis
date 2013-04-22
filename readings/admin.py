@@ -1,5 +1,11 @@
 from django.contrib import admin
-from readings.models import Customer, CustomerCallLog
+from readings.models import Reading, Customer, CustomerCallLog
+
+
+class ReadingAdmin(admin.ModelAdmin):
+    list_display = ('user_id', 'latitude', 'longitude', 'reading', 'daterecorded')
+
+admin.site.register(Reading, ReadingAdmin)
 
 
 class CustomerAdmin(admin.ModelAdmin):
