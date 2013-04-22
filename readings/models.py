@@ -23,39 +23,18 @@ class Reading(models.Model):
         return '%s: %s' % (self.user_id, self.reading)
 
 
-class CustomerPlan(models.Model):
-    plan_name = models.CharField(max_length=255)
-    plan_price = models.FloatField()
-    global_daily_calls = models.IntegerField()
-    regional_daily_calls = models.IntegerField()
-    region_count = models.IntegerField()
-    
-    class Meta:
-        verbose_name = 'customerplan'
-        verbose_name_plural = 'customerplans'
-        unique_together = ('plan_name', 'plan_price')
-
-    def __unicode__(self):
-        return '%s: %s' % (self.plan_name, self.plan_price)
-
-
 class Customer(models.Model):
     """Customer data"""
     company_name = models.CharField(max_length=255)
     contact_name = models.CharField(max_length=255)
     contact_mail = models.CharField(max_length=100)
-    contact_phone = models.CharField(max_length=25)
-    contact_address = models.CharField(max_length=255)
+    contact_phone = models.CharField(max_length=25, blank=True, null=True)
+    contact_address = models.CharField(max_length=255, blank=True, null=True)
     api_key = models.CharField(max_length=255)
-    #dev_key = models.CharField(max_length=255)
-    #plan = models.ForeignKey(CustomerPlan)
-    customer_type = models.CharField(max_length=20)
-    payment_status = models.CharField(max_length=20)
-    payment_confirmation = models.CharField(max_length=255)
+    customer_type = models.CharField(max_length=20, blank=True, null=True)
+    payment_status = models.CharField(max_length=20, blank=True, null=True)
+    payment_confirmation = models.CharField(max_length=255, blank=True, null=True)
 
-    def payment_is_good(self):
-        return True
-    
     class Meta:
         verbose_name = 'customer'
         verbose_name_plural = 'customers'

@@ -1,4 +1,5 @@
 import urllib2
+import time
     
 from django.conf import settings
 from django.http import HttpResponse, HttpResponseNotAllowed
@@ -11,11 +12,8 @@ from djangorestframework.response import Response
 from readings.resources import ReadingResource
 from readings.resources import FullReadingResource
 from readings.resources import CustomerCallLogResource
-from readings.models import Reading
-from readings.models import CustomerCallLog
-from readings.models import Customer
+from readings.models import Reading, Customer, CustomerCallLog
 
-import time
 
 def add_from_pressurenet(request):
     """
@@ -91,7 +89,7 @@ class ReadingLiveView(ListModelView):
     def get(self, *args, **kwargs):
         request_api_key =  self.request.GET.get('api_key', '')
 
-        if request_api_key not in settings.READINGS_API_KEYS:
+        if not Customer.objects.filter(api_key=request_api_key).exists():
             return HttpResponseNotAllowed('An API Key is required')
 
         return super(ReadingLiveView, self).get(*args, **kwargs)
