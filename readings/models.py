@@ -4,10 +4,10 @@ from django.db import models
 class Reading(models.Model):
     """Barometer reading from pressureNET"""
     user_id = models.CharField(max_length=255)
-    latitude = models.FloatField()
-    longitude = models.FloatField()
+    latitude = models.FloatField(db_index=True)
+    longitude = models.FloatField(db_index=True)
     reading = models.FloatField()
-    daterecorded = models.BigIntegerField()
+    daterecorded = models.BigIntegerField(db_index=True)
     tzoffset = models.BigIntegerField()
     sharing = models.CharField(max_length=255)
     client_key = models.CharField(max_length=255)
