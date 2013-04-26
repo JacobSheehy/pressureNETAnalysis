@@ -3,7 +3,7 @@ from django.db import models
 
 class Reading(models.Model):
     """Barometer reading from pressureNET"""
-    user_id = models.CharField(max_length=255)
+    user_id = models.CharField(max_length=255, db_index=True)
     latitude = models.FloatField(db_index=True)
     longitude = models.FloatField(db_index=True)
     reading = models.FloatField()
@@ -21,6 +21,19 @@ class Reading(models.Model):
 
     def __unicode__(self):
         return '%s: %s' % (self.user_id, self.reading)
+
+
+class ReadingSync(models.Model):
+    date = models.DateTimeField(auto_now_add=True)
+    readings = models.IntegerField()
+    processing_time = models.FloatField()
+
+    class Meta:
+        verbose_name = 'reading sync'
+        verbose_name_plural = 'reading syncs'
+
+    def __unicode__(self):
+        return '%s: %s' % (self.date, self.readings)
 
 
 class Customer(models.Model):

@@ -12,7 +12,7 @@ from djangorestframework.response import Response
 from readings.resources import ReadingResource
 from readings.resources import FullReadingResource
 from readings.resources import CustomerCallLogResource
-from readings.models import Reading, Customer, CustomerCallLog
+from readings.models import Reading, ReadingSync, Customer, CustomerCallLog
 
 
 def add_from_pressurenet(request):
@@ -20,6 +20,7 @@ def add_from_pressurenet(request):
     Data is incoming from pressureNET. 
     Authenticate and add it to the database.
     """
+    start = time.time()
     # print request
     # get <-> post with urlencode
     get_data = [('pndv','buffer'),]     # a sequence of two element tuples
@@ -67,6 +68,9 @@ def add_from_pressurenet(request):
             count += 1
         except:
             continue
+
+    processing_time = time.time() - start
+    ReadingSync.objects.create(readings=count, processing_time=processing_time)
     return HttpResponse('okay go, count '+ str(count))
 
 def get_last_api_call_end_time(request_api_key):
