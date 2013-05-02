@@ -6,7 +6,7 @@ from readings.models import Reading, ReadingSync, Customer, CustomerCallLog
 
 
 class ReadingAdmin(admin.ModelAdmin):
-    list_display = ('user_id', 'latitude', 'longitude', 'reading', 'daterecorded')
+    list_display = ('user_id', 'latitude', 'longitude', 'reading', 'date')
 
     def changelist_view(self, request, extra_context=None):
         hour_ago = datetime.datetime.now() - datetime.timedelta(hours=1)

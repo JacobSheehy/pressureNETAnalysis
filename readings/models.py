@@ -4,6 +4,7 @@ from django.db import models
 class Reading(models.Model):
     """Barometer reading from pressureNET"""
     user_id = models.CharField(max_length=255, db_index=True)
+    date = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     latitude = models.FloatField(db_index=True)
     longitude = models.FloatField(db_index=True)
     reading = models.FloatField()
