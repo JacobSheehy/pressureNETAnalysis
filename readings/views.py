@@ -4,14 +4,15 @@ import time
 from django.conf import settings
 from django.http import HttpResponse, HttpResponseNotAllowed
 from django.views.generic.base import TemplateView
+from django.views.generic.edit import CreateView
+from django.utils import simplejson as json
 
 from djangorestframework.views import ListModelView
 from djangorestframework.reverse import reverse
 from djangorestframework.response import Response
 
-from readings.resources import ReadingResource
-from readings.resources import FullReadingResource
-from readings.resources import CustomerCallLogResource
+from readings.forms import ReadingForm
+from readings.resources import ReadingResource, FullReadingResource, CustomerCallLogResource
 from readings.models import Reading, ReadingSync, Customer, CustomerCallLog
 
 
@@ -217,6 +218,28 @@ class ReadingListView(ListModelView):
 
         return queryset
 
+
+class CreateReadingView(CreateView):
+    model = Reading
+    form = ReadingForm
+
+    def form_valid(self, form):
+        form.save()
+        response = json.dumps({
+            'success': True,
+            'errors': '',
+        })
+        return HttpResponse(response, mimetype='application/json')
+
+    def form_invalid(self, form):
+        response = json.dumps({
+            'success': True,
+            'errors': form._errors,
+        })
+        return HttpResponse(response, mimetype='application/json')
+
+
+create_reading = CreateReadingView.as_view()
 
 index = IndexView.as_view()
 livestream = LivestreamView.as_view()
