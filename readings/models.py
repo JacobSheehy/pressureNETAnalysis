@@ -57,7 +57,7 @@ class Customer(models.Model):
         verbose_name = 'customer'
         verbose_name_plural = 'customers'
         unique_together = ('company_name', 'contact_name', 'contact_mail')
-    
+
     def __unicode__(self):
         return '%s: %s' % (self.company_name, self.contact_mail)
 
@@ -83,6 +83,6 @@ class CustomerCallLog(models.Model):
     class Meta:
         verbose_name = 'Customer Call Log'
         verbose_name_plural = 'Customer Call Logs'
-    
+
     def __unicode__(self):
-        return '%s: %s' % (self.customer, self.timestamp) 
+        return '%s: %s' % (self.customer, self.timestamp)

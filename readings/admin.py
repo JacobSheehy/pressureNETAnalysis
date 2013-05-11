@@ -11,7 +11,7 @@ class ReadingAdmin(admin.ModelAdmin):
     def changelist_view(self, request, extra_context=None):
         hour_ago = datetime.datetime.now() - datetime.timedelta(hours=1)
         hour_ago = time.mktime(hour_ago.timetuple())
-        readings = Reading.objects.filter(daterecorded__gte=(hour_ago*1000)).count()
+        readings = Reading.objects.filter(daterecorded__gte=(hour_ago * 1000)).count()
 
         active_users = Reading.objects.all().values_list('user_id').distinct().count()
 
@@ -24,7 +24,7 @@ class ReadingAdmin(admin.ModelAdmin):
             context.update(extra_context)
 
         return super(ReadingAdmin, self).changelist_view(request, context)
-        
+
 
 admin.site.register(Reading, ReadingAdmin)
 

@@ -32,7 +32,7 @@ class FullReadingResource(ModelResource):
 
 class CustomerCallLogResource(ModelResource):
     model = CustomerCallLog
-    
+
     fields = (
         'timestamp',
         'min_latitude',
