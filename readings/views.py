@@ -5,6 +5,7 @@ from django.conf import settings
 from django.http import HttpResponse, HttpResponseNotAllowed
 from django.views.generic.base import TemplateView
 from django.views.generic.edit import CreateView
+from django.views.decorators.csrf import csrf_exempt
 from django.utils import simplejson as json
 
 from djangorestframework.views import ListModelView
@@ -239,7 +240,7 @@ class CreateReadingView(CreateView):
         return HttpResponse(response, mimetype='application/json')
 
 
-create_reading = CreateReadingView.as_view()
+create_reading = csrf_exempt(CreateReadingView.as_view())
 
 index = IndexView.as_view()
 livestream = LivestreamView.as_view()
