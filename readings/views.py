@@ -9,9 +9,10 @@ from django.utils import simplejson as json
 
 from djangorestframework.views import ListModelView
 
+from customers.models import Customer, CustomerCallLog
 from readings.forms import ReadingForm
-from readings.resources import ReadingResource, FullReadingResource, CustomerCallLogResource
-from readings.models import Reading, ReadingSync, Customer, CustomerCallLog
+from readings.resources import ReadingResource, FullReadingResource
+from readings.models import Reading, ReadingSync
 
 
 def add_from_pressurenet(request):
@@ -246,4 +247,3 @@ livestream = LivestreamView.as_view()
 about = AboutView.as_view()
 reading_list = ReadingListView.as_view(resource=ReadingResource)
 reading_live = ReadingLiveView.as_view(resource=FullReadingResource)
-customer_log = ReadingLiveView.as_view(resource=CustomerCallLogResource)

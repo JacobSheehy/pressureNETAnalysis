@@ -2,7 +2,7 @@ import datetime
 import time
 
 from django.contrib import admin
-from readings.models import Reading, ReadingSync, Customer, CustomerCallLog
+from readings.models import Reading, ReadingSync
 
 
 class ReadingAdmin(admin.ModelAdmin):
@@ -33,15 +33,3 @@ class ReadingSyncAdmin(admin.ModelAdmin):
     list_display = ('date', 'readings', 'processing_time')
 
 admin.site.register(ReadingSync, ReadingSyncAdmin)
-
-
-class CustomerAdmin(admin.ModelAdmin):
-    pass
-
-admin.site.register(Customer, CustomerAdmin)
-
-
-class CustomerCallLogAdmin(admin.ModelAdmin):
-    list_display = ('customer', 'results_returned', 'processing_time', 'timestamp')
-
-admin.site.register(CustomerCallLog, CustomerCallLogAdmin)

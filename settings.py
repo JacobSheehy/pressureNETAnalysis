@@ -129,6 +129,7 @@ INSTALLED_APPS = (
     'south',
     'urlobject',
 
+    'customers',
     'readings',
     'utils',
 )
