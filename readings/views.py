@@ -21,7 +21,6 @@ def add_from_pressurenet(request):
     Authenticate and add it to the database.
     """
     start = time.time()
-    # print request
     # get <-> post with urlencode
     result = urllib2.urlopen('http://ec2-174-129-98-143.compute-1.amazonaws.com:8080/BarometerNetworkServer-3.1/BarometerServlet?pndv=buffer')
     content = result.read()
@@ -32,7 +31,6 @@ def add_from_pressurenet(request):
         raw_reading_accuracy = 0
         reading_data = reading.split('|')
         if reading_data[0] == '':
-            print 'no data. next reading'
             continue
         raw_latitude = float(reading_data[0])
         raw_longitude = float(reading_data[1])
@@ -46,7 +44,7 @@ def add_from_pressurenet(request):
             raw_location_accuracy = reading_data[8]
             raw_reading_accuracy = reading_data[9]
         except:
-            print 'no accuracy data'
+            pass
         this_reading = Reading(
             latitude=raw_latitude,
             longitude=raw_longitude,
@@ -137,47 +135,29 @@ class ReadingLiveView(ListModelView):
         # rather than filter out the Cumulonimbus (Us)
         # Two dynamic parameters request_global_data and
         # since_last_call combine to four distinct queries
-        if not (request_global_data or request_since_last_call):
-            # Use the start_time and end_time values along with all location parameters
-            queryset = super(ReadingLiveView, self).get_queryset().filter(
+
+        queryset = super(ReadingLiveView, self).get_queryset()
+
+        if not request_global_data:
+            queryset = queryset.filter(
                 latitude__gte=request_min_latitude,
                 latitude__lte=request_max_latitude,
                 longitude__gte=request_min_longitude,
                 longitude__lte=request_max_longitude,
+            )
+
+        if request_since_last_call:
+            last_customerapi_call_time = get_last_api_call_end_time(request_api_key)
+            queryset = queryset.filter(
+                daterecorded__gte=last_customerapi_call_time
+            )
+        else:
+            queryset = queryset.filter(
                 daterecorded__gte=request_start_time,
                 daterecorded__lte=request_end_time,
-            ).order_by('user_id').exclude(sharing='Cumulonimbus (Us)')[:request_results_limit]
-        elif (request_global_data and request_since_last_call):
-            # Check the end time of the last API call with this key
-            # And then filter results by that timespan. Globally.
-            last_customerapi_call_time = get_last_api_call_end_time(request_api_key)
-            # Set the request values for the log
-            request_start_time = last_customerapi_call_time
-            request_end_time = time.time() * 1000
-            queryset = super(ReadingLiveView, self).get_queryset().filter(
-                daterecorded__gte=last_customerapi_call_time,
-            ).order_by('user_id').exclude(sharing='Cumulonimbus (Us)')[:request_results_limit]
-        elif (request_global_data and not request_since_last_call):
-            # Return global data for the specified time parameters
-            queryset = super(ReadingLiveView, self).get_queryset().filter(
-                daterecorded__gte=request_start_time,
-                daterecorded__lte=request_end_time,
-            ).order_by('user_id').exclude(sharing='Cumulonimbus (Us)')[:request_results_limit]
-        elif (request_since_last_call and not request_global_data):
-            # Check the end time of the last API call with this key
-            # And then filter results by that timespan for the given
-            # location parameters.
-            last_customerapi_call_time = get_last_api_call_end_time(request_api_key)
-            # Set the request values for the log
-            request_start_time = last_customerapi_call_time
-            request_end_time = time.time() * 1000
-            queryset = super(ReadingLiveView, self).get_queryset().filter(
-                latitude__gte=request_min_latitude,
-                latitude__lte=request_max_latitude,
-                longitude__gte=request_min_longitude,
-                longitude__lte=request_max_longitude,
-                daterecorded__gte=last_customerapi_call_time,
-            ).order_by('user_id').exclude(sharing='Cumulonimbus (Us)')[:request_results_limit]
+            )
+
+        queryset = queryset[:request_results_limit]
 
         # Keep a log of this event using CustomerCallLog
         self.call_log.customer = Customer.objects.get(api_key=request_api_key)
