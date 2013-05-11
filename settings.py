@@ -130,6 +130,7 @@ INSTALLED_APPS = (
     'urlobject',
 
     'readings',
+    'utils',
 )
 
 try:
