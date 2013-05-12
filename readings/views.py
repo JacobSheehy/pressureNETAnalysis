@@ -11,6 +11,7 @@ from djangorestframework.views import ListModelView
 
 from customers import choices as customer_choices
 from customers.models import Customer, CustomerCallLog
+from readings import choices as readings_choices
 from readings.forms import ReadingForm, ConditionForm
 from readings.resources import ReadingResource, FullReadingResource, ConditionResource
 from readings.models import Reading, ReadingSync, Condition
@@ -73,9 +74,9 @@ def add_from_pressurenet(request):
 class APIKeyViewMixin(object):
 
     def get(self, *args, **kwargs):
-        request_api_key = self.request.GET.get('api_key', '')
+        api_key = self.request.GET.get('api_key', '')
 
-        if not Customer.objects.filter(api_key=request_api_key).exists():
+        if not Customer.objects.filter(api_key=api_key).exists():
             return HttpResponseNotAllowed('An API Key is required')
 
         return super(APIKeyViewMixin, self).get(*args, **kwargs)
@@ -86,17 +87,17 @@ class LoggedLocationListView(ListModelView):
 
     def unpack_parameters(self):
         return {
-            'request_global_data': self.request.GET.get('global', False) == 'true',
-            'request_since_last_call': self.request.GET.get('since_last_call', False) == 'true',
-            'request_min_latitude': self.request.GET.get('min_lat', -180),
-            'request_max_latitude': self.request.GET.get('max_lat', 180),
-            'request_min_longitude': self.request.GET.get('min_lon', -180),
-            'request_max_longitude': self.request.GET.get('max_lon', 180),
-            'request_start_time': self.request.GET.get('start_time', (time.time() - 3600 * 24) * 1000),
-            'request_end_time': self.request.GET.get('end_time', time.time() * 1000),
-            'request_results_limit': self.request.GET.get('limit', 1000000),
-            'request_api_key': self.request.GET.get('api_key', ''),
-            'request_data_format': self.request.GET.get('format', 'json'),
+            'global_data': self.request.GET.get('global', False) == 'true',
+            'since_last_call': self.request.GET.get('since_last_call', False) == 'true',
+            'min_latitude': self.request.GET.get('min_lat', -180),
+            'max_latitude': self.request.GET.get('max_lat', 180),
+            'min_longitude': self.request.GET.get('min_lon', -180),
+            'max_longitude': self.request.GET.get('max_lon', 180),
+            'start_time': self.request.GET.get('start_time', (time.time() - 3600 * 24) * 1000),
+            'end_time': self.request.GET.get('end_time', time.time() * 1000),
+            'results_limit': self.request.GET.get('limit', 1000000),
+            'api_key': self.request.GET.get('api_key', ''),
+            'data_format': self.request.GET.get('format', 'json'),
         }
 
     def get(self, *args, **kwargs):
@@ -108,19 +109,19 @@ class LoggedLocationListView(ListModelView):
 
         parameters = self.unpack_parameters()
         call_log = CustomerCallLog(call_type=self.call_type)
-        call_log.customer = Customer.objects.get(api_key=parameters['request_api_key'])
+        call_log.customer = Customer.objects.get(api_key=parameters['api_key'])
         call_log.processing_time = end - start
         call_log.results_returned = len(self.get_queryset())
-        call_log.data_format = parameters['request_data_format']
-        call_log.min_latitude = parameters['request_min_latitude']
-        call_log.max_latitude = parameters['request_max_latitude']
-        call_log.min_longitude = parameters['request_min_longitude']
-        call_log.max_longitude = parameters['request_max_longitude']
-        call_log.global_data = parameters['request_global_data']
-        call_log.since_last_call = parameters['request_since_last_call']
-        call_log.start_time = parameters['request_start_time']
-        call_log.end_time = parameters['request_end_time']
-        call_log.results_limit = parameters['request_results_limit']
+        call_log.data_format = parameters['data_format']
+        call_log.min_latitude = parameters['min_latitude']
+        call_log.max_latitude = parameters['max_latitude']
+        call_log.min_longitude = parameters['min_longitude']
+        call_log.max_longitude = parameters['max_longitude']
+        call_log.global_data = parameters['global_data']
+        call_log.since_last_call = parameters['since_last_call']
+        call_log.start_time = parameters['start_time']
+        call_log.end_time = parameters['end_time']
+        call_log.results_limit = parameters['results_limit']
         call_log.use_utc = ''
         call_log.save()
 
@@ -129,19 +130,20 @@ class LoggedLocationListView(ListModelView):
     def get_queryset(self):
         parameters = self.unpack_parameters()
 
+        customer = Customer.objects.get(api_key=parameters['api_key'])
         queryset = super(LoggedLocationListView, self).get_queryset()
 
-        if not parameters['request_global_data']:
+        if not parameters['global_data']:
             queryset = queryset.filter(
-                latitude__gte=parameters['request_min_latitude'],
-                latitude__lte=parameters['request_max_latitude'],
-                longitude__gte=parameters['request_min_longitude'],
-                longitude__lte=parameters['request_max_longitude'],
+                latitude__gte=parameters['min_latitude'],
+                latitude__lte=parameters['max_latitude'],
+                longitude__gte=parameters['min_longitude'],
+                longitude__lte=parameters['max_longitude'],
             )
 
-        if parameters['request_since_last_call']:
+        if parameters['since_last_call']:
             try:
-                call_log = CustomerCallLog.objects.filter(customer__api_key=parameters['request_api_key']).order_by('-timestamp').limit(1).get()
+                call_log = CustomerCallLog.objects.filter(customer=customer).order_by('-timestamp').limit(1).get()
                 last_customerapi_call_time = call_log.timestamp
             except CustomerCallLog.DoesNotExist:
                 last_customerapi_call_time = datetime.datetime.now() - datetime.timedelta(hours=1)
@@ -151,11 +153,27 @@ class LoggedLocationListView(ListModelView):
             )
         else:
             queryset = queryset.filter(
-                daterecorded__gte=parameters['request_start_time'],
-                daterecorded__lte=parameters['request_end_time'],
+                daterecorded__gte=parameters['start_time'],
+                daterecorded__lte=parameters['end_time'],
             )
 
-        return queryset[:parameters['request_results_limit']]
+        if customer.customer_type == customer_choices.CUSTOMER_PUBLIC:
+            queryset = queryset.filter(sharing=readings_choices.SHARING_PUBLIC)
+
+        elif customer.customer_type == customer_choices.CUSTOMER_RESEARCHER:
+            queryset = queryset.filter(sharing__in=[
+                readings_choices.SHARING_PUBLIC,
+                readings_choices.SHARING_RESEARCHERS_FORECASTERS,
+                readings_choices.SHARING_RESEARCHERS,
+            ])
+
+        elif customer.customer_type == customer_choices.CUSTOMER_FORECASTER:
+            queryset = queryset.filter(sharing__in=[
+                readings_choices.SHARING_PUBLIC,
+                readings_choices.SHARING_RESEARCHERS_FORECASTERS,
+            ])
+
+        return queryset[:parameters['results_limit']]
 
 
 class ReadingLiveView(APIKeyViewMixin, LoggedLocationListView):
