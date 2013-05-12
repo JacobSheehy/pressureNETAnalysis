@@ -21,7 +21,7 @@ class Customer(models.Model):
         unique_together = ('company_name', 'contact_name', 'contact_mail')
 
     def __unicode__(self):
-        return '%s: %s' % (self.company_name, self.contact_mail)
+        return self.company_name
 
 
 class CustomerCallLog(models.Model):
