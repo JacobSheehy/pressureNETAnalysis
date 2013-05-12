@@ -21,9 +21,12 @@ class FullReadingResource(ModelResource):
         'user_id',
         'tzoffset',
         'sharing',
+        'provider',
         'client_key',
         'location_accuracy',
         'reading_accuracy',
+        'observation_type',
+        'observation_unit',
     )
 
 
