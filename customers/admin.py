@@ -3,7 +3,7 @@ from customers.models import Customer, CustomerCallLog
 
 
 class CustomerAdmin(admin.ModelAdmin):
-    pass
+    list_display = ('company_name', 'contact_name', 'contact_mail')
 
 admin.site.register(Customer, CustomerAdmin)
 

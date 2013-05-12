@@ -25,7 +25,6 @@ class ReadingAdmin(admin.ModelAdmin):
 
         return super(ReadingAdmin, self).changelist_view(request, context)
 
-
 admin.site.register(Reading, ReadingAdmin)
 
 
@@ -37,6 +36,5 @@ admin.site.register(ReadingSync, ReadingSyncAdmin)
 
 class ConditionAdmin(admin.ModelAdmin):
     list_display = ('user_id', 'latitude', 'longitude', 'general_condition', 'date')
-
 
 admin.site.register(Condition, ConditionAdmin)
