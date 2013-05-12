@@ -119,7 +119,7 @@
     PressureNET.loadMapWithUserLocation = function(position) {
         var latitude = position.coords.latitude;
         var longitude = position.coords.longitude;
-        PressureNET.setMapPosition(latitude, longitude, 5, ((new Date()).getTime() - 86400000), ((new Date()).getTime() + 86400000));
+        PressureNET.setMapPosition(latitude, longitude, 13, ((new Date()).getTime() - 86400000), ((new Date()).getTime() + 86400000));
     }
     
     PressureNET.getLocation = function() {
@@ -127,19 +127,6 @@
             navigator.geolocation.getCurrentPosition(PressureNET.loadMapWithUserLocation);
         }
     }
-
-    PressureNET.loadMapWithUserLocation = function(position) {
-        var latitude = position.coords.latitude;
-        var longitude = position.coords.longitude;
-        PressureNET.setMapPosition(latitude, longitude, 5, ((new Date()).getTime() - 86400000), ((new Date()).getTime() + 86400000));
-    }
-    
-    PressureNET.getLocation = function() {
-        if ('geolocation' in navigator) {
-            navigator.geolocation.getCurrentPosition(PressureNET.loadMapWithUserLocation);
-        }
-    }
-
 
     PressureNET.getUrlVars = function() {
         var vars = {};
