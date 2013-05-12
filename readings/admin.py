@@ -34,4 +34,9 @@ class ReadingSyncAdmin(admin.ModelAdmin):
 
 admin.site.register(ReadingSync, ReadingSyncAdmin)
 
-admin.site.register(Condition)
+
+class ConditionAdmin(admin.ModelAdmin):
+    list_display = ('user_id', 'latitude', 'longitude', 'general_condition', 'date')
+
+
+admin.site.register(Condition, ConditionAdmin)
