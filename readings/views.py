@@ -10,9 +10,9 @@ from django.utils import simplejson as json
 from djangorestframework.views import ListModelView
 
 from customers.models import Customer, CustomerCallLog
-from readings.forms import ReadingForm
+from readings.forms import ReadingForm, ConditionForm
 from readings.resources import ReadingResource, FullReadingResource
-from readings.models import Reading, ReadingSync
+from readings.models import Reading, ReadingSync, Condition
 
 
 def add_from_pressurenet(request):
@@ -214,13 +214,36 @@ class CreateReadingView(CreateView):
 
     def form_invalid(self, form):
         response = json.dumps({
-            'success': True,
+            'success': False,
             'errors': form._errors,
         })
         return HttpResponse(response, mimetype='application/json')
 
 
 create_reading = csrf_exempt(CreateReadingView.as_view())
+
+
+class CreateConditionView(CreateView):
+    model = Condition
+    form = ConditionForm
+
+    def form_valid(self, form):
+        form.save()
+        response = json.dumps({
+            'success': True,
+            'errors': '',
+        })
+        return HttpResponse(response, mimetype='application/json')
+
+    def form_invalid(self, form):
+        response = json.dumps({
+            'success': False,
+            'errors': form._errors,
+        })
+        return HttpResponse(response, mimetype='application/json')
+
+
+create_condition = csrf_exempt(CreateConditionView.as_view())
 
 index = IndexView.as_view()
 livestream = LivestreamView.as_view()

@@ -2,7 +2,7 @@ import datetime
 import time
 
 from django.contrib import admin
-from readings.models import Reading, ReadingSync
+from readings.models import Reading, ReadingSync, Condition
 
 
 class ReadingAdmin(admin.ModelAdmin):
@@ -33,3 +33,5 @@ class ReadingSyncAdmin(admin.ModelAdmin):
     list_display = ('date', 'readings', 'processing_time')
 
 admin.site.register(ReadingSync, ReadingSyncAdmin)
+
+admin.site.register(Condition)

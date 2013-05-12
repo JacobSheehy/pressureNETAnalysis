@@ -1,7 +1,7 @@
 from django.test import TestCase
 from django.core.urlresolvers import reverse
 
-from readings.models import Reading
+from readings.models import Reading, Condition
 
 
 class CreateReadingTests(TestCase):
@@ -30,3 +30,35 @@ class CreateReadingTests(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(Reading.objects.count(), 1)
+
+
+class CreateConditionTests(TestCase):
+
+    def get_post_data(self):
+        return {
+            'user_id': 'abc',
+            'latitude': 1.0,
+            'longitude': 1.0,
+            'altitude': 1.0,
+            'daterecorded': 123,
+            'tzoffset': 123,
+            'accuracy': 1.0,
+            'provider': 'abc',
+            'sharing': 'abc',
+            'client_key': 'abc',
+            'general_condition': 'abc',
+            'windy': 'abc',
+            'fog_thickness': 'abc',
+            'precipitation_type': 'abc',
+            'precipitation_amount': 1.0,
+            'precipitation_unit': 'abc',
+            'thunderstorm_intensity': 'abc',
+            'user_comment': 'abc',
+        }
+
+    def test_create_reading_inserts_into_db(self):
+        post_data = self.get_post_data()
+        response = self.client.post(reverse('readings-create-condition'), post_data)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(Condition.objects.count(), 1)

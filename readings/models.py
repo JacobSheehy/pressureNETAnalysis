@@ -39,3 +39,33 @@ class ReadingSync(models.Model):
 
     def __unicode__(self):
         return '%s: %s' % (self.date, self.readings)
+
+
+class Condition(models.Model):
+    """Barometer reading from pressureNET"""
+    date = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+    user_id = models.CharField(max_length=255, db_index=True)
+    latitude = models.FloatField(db_index=True)
+    longitude = models.FloatField(db_index=True)
+    altitude = models.FloatField(default=0.0)
+    daterecorded = models.BigIntegerField(db_index=True)
+    tzoffset = models.BigIntegerField()
+    accuracy = models.FloatField()
+    provider = models.CharField(max_length=255, default='')
+    sharing = models.CharField(max_length=255)
+    client_key = models.CharField(max_length=255)
+    general_condition = models.CharField(max_length=255)
+    windy = models.CharField(max_length=255)
+    fog_thickness = models.CharField(max_length=255)
+    precipitation_type = models.CharField(max_length=255)
+    precipitation_amount = models.FloatField()
+    precipitation_unit = models.CharField(max_length=255)
+    thunderstorm_intensity = models.CharField(max_length=255)
+    user_comment = models.CharField(max_length=255)
+
+    class Meta:
+        verbose_name = 'condition'
+        verbose_name_plural = 'conditions'
+
+    def __unicode__(self):
+        return '%s: %s' % (self.user_id, self.general_condition)
