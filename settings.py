@@ -67,23 +67,16 @@ STATIC_ROOT = os.path.join(PROJECT_PATH, 'served/static')
 # Example: "http://example.com/static/", "http://static.example.com/"
 STATIC_URL = '/static/'
 
-MAPS_API = 'TODO'
-ANALYTICS_API = 'UA-78967-8'
-PRESSURENET_DATA_URL = 'TODO' 
-
 STATICFILES_DIRS = (
     os.path.join(PROJECT_PATH, 'static/'),
 )
 
 # Make this unique, and don't share it with anybody.
-SECRET_KEY = 'TODO'
+SECRET_KEY = os.environ.get('SECRET_KEY', 'TODO') 
 
 TEMPLATE_DIRS = (
     os.path.join(PROJECT_PATH, 'templates/'),
 )
-
-READINGS_API_KEYS = [
-]
 
 # List of finder classes that know how to find static files in
 # various locations.
@@ -120,10 +113,6 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    # Uncomment the next line to enable the admin:
-    # 'django.contrib.admin',
-    # Uncomment the next line to enable admin documentation:
-    # 'django.contrib.admindocs',
 
     'djangorestframework',
     'south',
