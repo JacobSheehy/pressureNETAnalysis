@@ -1,5 +1,7 @@
 from django.db import models
 
+from readings import choices as readings_choices
+
 
 class Reading(models.Model):
     """Barometer reading from pressureNET"""
@@ -13,7 +15,7 @@ class Reading(models.Model):
     provider = models.CharField(max_length=255, default='')
     observation_type = models.CharField(max_length=255, default='')
     observation_unit = models.CharField(max_length=255, default='')
-    sharing = models.CharField(max_length=255)
+    sharing = models.CharField(max_length=255, choices=readings_choices.SHARING_CHOICES)
     daterecorded = models.BigIntegerField(db_index=True)
     tzoffset = models.BigIntegerField()
     location_accuracy = models.FloatField()

@@ -1,6 +1,7 @@
 from django.test import TestCase
 from django.core.urlresolvers import reverse
 
+from readings import choices as readings_choices
 from readings.models import Reading, Condition
 
 
@@ -17,7 +18,7 @@ class CreateReadingTests(TestCase):
             'provider': 'abc',
             'observation_type': 'abc',
             'observation_unit': 'abc',
-            'sharing': 'abc',
+            'sharing': readings_choices.SHARING_PUBLIC,
             'daterecorded': 123,
             'tzoffset': 123,
             'location_accuracy': 1.0,

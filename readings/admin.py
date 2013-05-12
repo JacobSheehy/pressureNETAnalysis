@@ -6,7 +6,8 @@ from readings.models import Reading, ReadingSync, Condition
 
 
 class ReadingAdmin(admin.ModelAdmin):
-    list_display = ('user_id', 'latitude', 'longitude', 'reading', 'date')
+    list_display = ('user_id', 'latitude', 'longitude', 'reading', 'date', 'sharing')
+    list_filter = ('sharing',)
 
     def changelist_view(self, request, extra_context=None):
         hour_ago = datetime.datetime.now() - datetime.timedelta(hours=1)

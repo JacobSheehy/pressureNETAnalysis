@@ -3,7 +3,8 @@ from customers.models import Customer, CustomerCallLog
 
 
 class CustomerAdmin(admin.ModelAdmin):
-    list_display = ('company_name', 'contact_name', 'contact_mail')
+    list_display = ('company_name', 'contact_name', 'contact_mail', 'customer_type')
+    list_filter = ('customer_type',)
 
 admin.site.register(Customer, CustomerAdmin)
 
