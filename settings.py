@@ -130,6 +130,7 @@ INSTALLED_APPS = (
     'urlobject',
 
     'customers',
+    'home',
     'readings',
     'utils',
 )

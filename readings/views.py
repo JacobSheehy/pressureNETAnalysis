@@ -2,7 +2,6 @@ import urllib2
 import time
 
 from django.http import HttpResponse, HttpResponseNotAllowed
-from django.views.generic.base import TemplateView
 from django.views.generic.edit import CreateView
 from django.views.decorators.csrf import csrf_exempt
 from django.utils import simplejson as json
@@ -74,18 +73,6 @@ def get_last_api_call_end_time(request_api_key):
     """Return the last API call end time for the given key"""
     call_log = CustomerCallLog.objects.filter(customer__api_key=request_api_key).order_by('-timestamp')[0]
     return call_log.end_time
-
-
-class IndexView(TemplateView):
-    template_name = 'readings/index.html'
-
-
-class LivestreamView(TemplateView):
-    template_name = 'readings/livestream.html'
-
-
-class AboutView(TemplateView):
-    template_name = 'readings/about.html'
 
 
 class ReadingLiveView(ListModelView):
@@ -335,10 +322,6 @@ class CreateConditionView(CreateView):
 
 
 create_condition = csrf_exempt(CreateConditionView.as_view())
-
-index = IndexView.as_view()
-livestream = LivestreamView.as_view()
-about = AboutView.as_view()
 reading_list = ReadingListView.as_view(resource=ReadingResource)
 reading_live = ReadingLiveView.as_view(resource=FullReadingResource)
 condition_live = ConditionLiveView.as_view(resource=ConditionResource)
