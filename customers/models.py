@@ -1,5 +1,7 @@
 from django.db import models
 
+from customers import choices as customer_choices
+
 
 class Customer(models.Model):
     """Customer data"""
@@ -24,6 +26,7 @@ class Customer(models.Model):
 
 class CustomerCallLog(models.Model):
     """Log data for each customer API call"""
+    call_type = models.CharField(max_length=255, choices=customer_choices.CALL_TYPES, default=customer_choices.CALL_READINGS)
     customer = models.ForeignKey(Customer)
     timestamp = models.DateTimeField(auto_now_add=True)
     min_latitude = models.FloatField()
