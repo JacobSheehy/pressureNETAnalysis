@@ -202,13 +202,13 @@ class ReadingListView(ListModelView):
         limit = self.request.GET.get('limit', None)
 
         queryset = super(ReadingListView, self).get_queryset().filter(
+            daterecorded__gte=start_time,
+            daterecorded__lte=end_time,
             latitude__gte=min_lat,
             latitude__lte=max_lat,
             longitude__gte=min_lon,
             longitude__lte=max_lon,
-            daterecorded__gte=start_time,
-            daterecorded__lte=end_time,
-        ).order_by('user_id')[:limit]
+        ).values('daterecorded', 'reading')[:limit]
 
         return queryset
 
