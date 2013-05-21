@@ -24,7 +24,6 @@ class Reading(models.Model):
     class Meta:
         verbose_name = 'reading'
         verbose_name_plural = 'readings'
-        unique_together = ('latitude', 'longitude', 'daterecorded', 'user_id')
 
     def __unicode__(self):
         return '%s: %s' % (self.user_id, self.reading)
