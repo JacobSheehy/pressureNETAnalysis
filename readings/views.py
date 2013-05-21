@@ -107,13 +107,12 @@ class LoggedLocationListView(ListModelView):
 
         response = super(LoggedLocationListView, self).get(*args, **kwargs)
 
-        end = time.time()
-
         parameters = self.unpack_parameters()
         call_log = CustomerCallLog(call_type=self.call_type)
         call_log.customer = Customer.objects.get(api_key=parameters['api_key'])
-        call_log.processing_time = end - start
         call_log.results_returned = len(self.get_queryset())
+        call_log.query = self.get_queryset().query
+        call_log.path = '%s?%s' % (self.request.path, self.request.META['QUERY_STRING'])
         call_log.data_format = parameters['data_format']
         call_log.min_latitude = parameters['min_latitude']
         call_log.max_latitude = parameters['max_latitude']
@@ -125,6 +124,7 @@ class LoggedLocationListView(ListModelView):
         call_log.end_time = parameters['end_time']
         call_log.results_limit = parameters['results_limit']
         call_log.use_utc = ''
+        call_log.processing_time = time.time() - start
         call_log.save()
 
         return response

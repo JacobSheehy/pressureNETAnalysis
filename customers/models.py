@@ -40,6 +40,8 @@ class CustomerCallLog(models.Model):
     results_limit = models.IntegerField()
     data_format = models.CharField(max_length=10)
     use_utc = models.BooleanField()
+    path = models.TextField()
+    query = models.TextField()
     processing_time = models.FloatField()
     results_returned = models.IntegerField()
 
