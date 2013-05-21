@@ -212,7 +212,6 @@
 
         $.ajax({
             url: readingsUrl,
-            cache: false,
             data: query_params,
             dataType: 'json',
             success: function(readings, status) {
