@@ -4,4 +4,9 @@ South==0.7.6
 URLObject==2.1.0
 argparse==1.2.1
 djangorestframework==0.4.0
+factory-boy==2.0.2
+ipython==0.13.1
+pep8==1.4.5
+pyflakes==0.7
+python-memcached==1.51
 wsgiref==0.1.2

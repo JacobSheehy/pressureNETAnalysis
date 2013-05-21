@@ -2,9 +2,11 @@ import datetime
 import time
 import urllib2
 
+from django.conf import settings
 from django.http import HttpResponse, HttpResponseNotAllowed
-from django.views.generic.edit import CreateView
+from django.views.decorators.cache import cache_page
 from django.views.decorators.csrf import csrf_exempt
+from django.views.generic.edit import CreateView
 from django.utils import simplejson as json
 
 from djangorestframework.views import ListModelView
@@ -212,7 +214,7 @@ class ReadingListView(ListModelView):
 
         return queryset
 
-reading_list = ReadingListView.as_view(resource=ReadingResource)
+reading_list = cache_page(ReadingListView.as_view(resource=ReadingResource), settings.CACHE_TIMEOUT)
 
 
 class JSONCreateView(CreateView):
