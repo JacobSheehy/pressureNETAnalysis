@@ -29,7 +29,7 @@ CACHE_TIMEOUT = 60 * 5
 CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
-        'LOCATION': 'pressurenet-live.egumzu.cfg.use1.cache.amazonaws.com:11211',
+        'LOCATION': 'aws-pn-cgekrg0dxurw.egumzu.cfg.use1.cache.amazonaws.com:11211',
     }
 }
 
