@@ -1,8 +1,266 @@
-from django.test import TestCase
+import datetime
+import time
+
 from django.core.urlresolvers import reverse
+from django.test import TestCase
+from django.utils import simplejson as json
+
+import factory
 
 from readings import choices as readings_choices
 from readings.models import Reading, Condition
+
+
+def to_unix(date):
+    return long(time.mktime(date.timetuple()) * 1000.0)
+
+
+def from_unix(timestamp):
+    return long(datetime.datetime.fromtimestamp(timestamp / 1000.0))
+
+
+class ReadingFactory(factory.Factory):
+    FACTORY_FOR = Reading
+
+    date = to_unix(datetime.datetime.now())
+    user_id = 'abc'
+    latitude = 1.0
+    longitude = 1.0
+    altitude = 1.0
+    daterecorded = to_unix(datetime.datetime.now())
+    tzoffset = 0.0
+    client_key = 'ca.cumulonimbus.barometernetwork'
+    sharing = readings_choices.SHARING_PUBLIC
+    provider = ''
+
+    reading = 1.0
+    reading_accuracy = 1.0
+    observation_type = 'pressure'
+    observation_unit = 'mbars'
+    location_accuracy = 0.0
+
+
+class ConditionFactory(factory.Factory):
+    FACTORY_FOR = Condition
+
+    date = to_unix(datetime.datetime.now())
+    user_id = 'abc'
+    latitude = 1.0
+    longitude = 1.0
+    altitude = 1.0
+    daterecorded = to_unix(datetime.datetime.now())
+    tzoffset = 0.0
+    client_key = 'ca.cumulonimbus.barometernetwork'
+    sharing = readings_choices.SHARING_PUBLIC
+    provider = ''
+
+    accuracy = 1.0
+    general_condition = 'condition'
+    windy = ''
+    fog_thickness = ''
+    precipitation_type = ''
+    precipitation_amount = 1.0
+    precipitation_unit = ''
+    thunderstorm_intensity = ''
+    user_comment = ''
+
+
+class DateLocationFilteredListTests(object):
+
+    def test_list_view_returns_readings_above_min_lat(self):
+        now = to_unix(datetime.datetime.now())
+
+        self.factory(latitude=1.0, longitude=1.0, daterecorded=now).save()
+        self.factory(latitude=2.0, longitude=1.0, daterecorded=now).save()
+
+        response = self.client.get(reverse(self.url_name), {
+            'minVisLat': 2.0,
+            'maxVisLat': 2.0,
+            'minVisLon': 1.0,
+            'maxVisLon': 1.0,
+            'startTime': now,
+            'endTime': now,
+            'limit': 1000,
+        })
+
+        data = json.loads(response.content)
+
+        self.assertEquals(len(data), 1)
+
+    def test_list_view_returns_readings_below_max_lat(self):
+        now = to_unix(datetime.datetime.now())
+
+        self.factory(latitude=1.0, longitude=1.0, daterecorded=now).save()
+        self.factory(latitude=2.0, longitude=1.0, daterecorded=now).save()
+
+        response = self.client.get(reverse(self.url_name), {
+            'minVisLat': 1.0,
+            'maxVisLat': 1.0,
+            'minVisLon': 1.0,
+            'maxVisLon': 1.0,
+            'startTime': now,
+            'endTime': now,
+            'limit': 1000,
+        })
+
+        data = json.loads(response.content)
+
+        self.assertEquals(len(data), 1)
+
+    def test_list_view_returns_readings_above_min_lon(self):
+        now = to_unix(datetime.datetime.now())
+
+        self.factory(latitude=1.0, longitude=1.0, daterecorded=now).save()
+        self.factory(latitude=1.0, longitude=2.0, daterecorded=now).save()
+
+        response = self.client.get(reverse(self.url_name), {
+            'minVisLat': 1.0,
+            'maxVisLat': 1.0,
+            'minVisLon': 2.0,
+            'maxVisLon': 2.0,
+            'startTime': now,
+            'endTime': now,
+            'limit': 1000,
+        })
+
+        data = json.loads(response.content)
+
+        self.assertEquals(len(data), 1)
+
+    def test_list_view_returns_readings_below_max_lon(self):
+        now = to_unix(datetime.datetime.now())
+
+        self.factory(latitude=1.0, longitude=1.0, daterecorded=now).save()
+        self.factory(latitude=1.0, longitude=2.0, daterecorded=now).save()
+
+        response = self.client.get(reverse(self.url_name), {
+            'minVisLat': 1.0,
+            'maxVisLat': 1.0,
+            'minVisLon': 1.0,
+            'maxVisLon': 1.0,
+            'startTime': now,
+            'endTime': now,
+            'limit': 1000,
+        })
+
+        data = json.loads(response.content)
+
+        self.assertEquals(len(data), 1)
+
+    def test_list_view_returns_readings_after_starttime(self):
+        now = to_unix(datetime.datetime.now())
+
+        self.factory(latitude=1.0, longitude=1.0, daterecorded=now).save()
+        self.factory(latitude=1.0, longitude=1.0, daterecorded=now + 1).save()
+
+        response = self.client.get(reverse(self.url_name), {
+            'minVisLat': 1.0,
+            'maxVisLat': 1.0,
+            'minVisLon': 1.0,
+            'maxVisLon': 1.0,
+            'startTime': now + 1,
+            'endTime': now + 1,
+            'limit': 1000,
+        })
+
+        data = json.loads(response.content)
+
+        self.assertEquals(len(data), 1)
+
+    def test_list_view_returns_readings_before_endtime(self):
+        now = to_unix(datetime.datetime.now())
+
+        self.factory(latitude=1.0, longitude=1.0, daterecorded=now).save()
+        self.factory(latitude=1.0, longitude=1.0, daterecorded=now + 1).save()
+
+        response = self.client.get(reverse(self.url_name), {
+            'minVisLat': 1.0,
+            'maxVisLat': 1.0,
+            'minVisLon': 1.0,
+            'maxVisLon': 1.0,
+            'startTime': now,
+            'endTime': now,
+            'limit': 1000,
+        })
+
+        data = json.loads(response.content)
+
+        self.assertEquals(len(data), 1)
+
+    def test_list_view_returns_at_most_limit_readings(self):
+        now = to_unix(datetime.datetime.now())
+
+        for i in range(3):
+            self.factory(latitude=1.0, longitude=1.0, daterecorded=now).save()
+
+        response = self.client.get(reverse(self.url_name), {
+            'minVisLat': 1.0,
+            'maxVisLat': 1.0,
+            'minVisLon': 1.0,
+            'maxVisLon': 1.0,
+            'startTime': now,
+            'endTime': now,
+            'limit': 1000,
+        })
+
+        data = json.loads(response.content)
+
+        self.assertEquals(len(data), 3)
+
+        response = self.client.get(reverse(self.url_name), {
+            'minVisLat': 1.0,
+            'maxVisLat': 1.0,
+            'minVisLon': 1.0,
+            'maxVisLon': 1.0,
+            'startTime': now,
+            'endTime': now,
+            'limit': 1,
+        })
+
+        data = json.loads(response.content)
+
+        self.assertEquals(len(data), 1)
+
+    def test_list_view_returns_readings_within_query_parameters(self):
+        now = to_unix(datetime.datetime.now())
+
+        for lat in range(5):
+            for lon in range(5):
+                for days_delta in range(-2, 3):
+                    daterecorded = now + days_delta
+                    self.factory(
+                        latitude=lat,
+                        longitude=lon,
+                        daterecorded=daterecorded,
+                    ).save()
+
+        response = self.client.get(reverse(self.url_name), {
+            'minVisLat': 2.0,
+            'maxVisLat': 4.0,
+            'minVisLon': 2.0,
+            'maxVisLon': 4.0,
+            'startTime': now - 1,
+            'endTime': now + 1,
+            'limit': 1000,
+        })
+
+        data = json.loads(response.content)
+
+        self.assertEquals(len(data), 27)
+
+
+class ReadingsListTests(DateLocationFilteredListTests, TestCase):
+    url_name = 'readings-list'
+    factory = ReadingFactory
+
+
+class ConditionsListTests(DateLocationFilteredListTests, TestCase):
+    url_name = 'readings-conditions-list'
+    factory = ConditionFactory
+
+
+class ReadingLiveTests(TestCase):
+    pass
 
 
 class CreateReadingTests(TestCase):
@@ -45,7 +303,7 @@ class CreateConditionTests(TestCase):
             'tzoffset': 123,
             'accuracy': 1.0,
             'provider': 'abc',
-            'sharing': 'abc',
+            'sharing': readings_choices.SHARING_PUBLIC,
             'client_key': 'abc',
             'general_condition': 'abc',
             'windy': 'abc',

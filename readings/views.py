@@ -9,13 +9,13 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.generic.edit import CreateView
 from django.utils import simplejson as json
 
-from djangorestframework.views import ListModelView
+from rest_framework.generics import ListAPIView
 
 from customers import choices as customer_choices
 from customers.models import Customer, CustomerCallLog
 from readings import choices as readings_choices
 from readings.forms import ReadingForm, ConditionForm
-from readings.resources import ReadingResource, FullReadingResource, ConditionResource
+from readings.serializers import ReadingListSerializer, ReadingLiveSerializer, ConditionListSerializer
 from readings.models import Reading, ReadingSync, Condition
 
 
@@ -73,6 +73,56 @@ def add_from_pressurenet(request):
     return HttpResponse('okay go, count ' + str(count))
 
 
+class FilteredListAPIView(ListAPIView):
+
+    def get_queryset(self):
+        serializer = self.get_serializer_class()
+        queryset = super(FilteredListAPIView, self).get_queryset()
+
+        if hasattr(serializer.Meta, 'fields'):
+            fields = serializer.Meta.fields
+            queryset = queryset.only(*fields)
+
+        return queryset
+
+
+class DateLocationFilteredListView(FilteredListAPIView):
+
+    def get_queryset(self):
+        min_lat = self.request.GET.get('minVisLat', None)
+        max_lat = self.request.GET.get('maxVisLat', None)
+        min_lon = self.request.GET.get('minVisLon', None)
+        max_lon = self.request.GET.get('maxVisLon', None)
+        start_time = self.request.GET.get('startTime', None)
+        end_time = self.request.GET.get('endTime', None)
+        limit = self.request.GET.get('limit', None)
+
+        queryset = super(DateLocationFilteredListView, self).get_queryset().filter(
+            daterecorded__gte=start_time,
+            daterecorded__lte=end_time,
+            latitude__gte=min_lat,
+            latitude__lte=max_lat,
+            longitude__gte=min_lon,
+            longitude__lte=max_lon,
+        )[:limit]
+
+        return queryset
+
+
+class ReadingListView(DateLocationFilteredListView):
+    model = Reading
+    serializer_class = ReadingListSerializer
+
+reading_list = cache_page(ReadingListView.as_view(), settings.CACHE_TIMEOUT)
+
+
+class ConditionListView(DateLocationFilteredListView):
+    model = Condition
+    serializer_class = ConditionListSerializer
+
+condition_list = ConditionListView.as_view()
+
+
 class APIKeyViewMixin(object):
 
     def get(self, *args, **kwargs):
@@ -84,7 +134,7 @@ class APIKeyViewMixin(object):
         return super(APIKeyViewMixin, self).get(*args, **kwargs)
 
 
-class LoggedLocationListView(ListModelView):
+class LoggedLocationListView(FilteredListAPIView):
     """Handle requests for livestreaming"""
 
     def unpack_parameters(self):
@@ -181,40 +231,10 @@ class LoggedLocationListView(ListModelView):
 class ReadingLiveView(APIKeyViewMixin, LoggedLocationListView):
     """Handle requests for livestreaming"""
     call_type = customer_choices.CALL_READINGS
+    model = Reading
+    serializer_class = ReadingLiveSerializer
 
-reading_live = ReadingLiveView.as_view(resource=FullReadingResource)
-
-
-class ConditionLiveView(APIKeyViewMixin, LoggedLocationListView):
-    """Handle requests for livestreaming"""
-    call_type = customer_choices.CALL_CONDITIONS
-
-condition_live = ConditionLiveView.as_view(resource=ConditionResource)
-
-
-class ReadingListView(ListModelView):
-
-    def get_queryset(self):
-        min_lat = self.request.GET.get('minVisLat', None)
-        max_lat = self.request.GET.get('maxVisLat', None)
-        min_lon = self.request.GET.get('minVisLon', None)
-        max_lon = self.request.GET.get('maxVisLon', None)
-        start_time = self.request.GET.get('startTime', None)
-        end_time = self.request.GET.get('endTime', None)
-        limit = self.request.GET.get('limit', None)
-
-        queryset = super(ReadingListView, self).get_queryset().filter(
-            daterecorded__gte=start_time,
-            daterecorded__lte=end_time,
-            latitude__gte=min_lat,
-            latitude__lte=max_lat,
-            longitude__gte=min_lon,
-            longitude__lte=max_lon,
-        ).values('daterecorded', 'reading')[:limit]
-
-        return queryset
-
-reading_list = cache_page(ReadingListView.as_view(resource=ReadingResource), settings.CACHE_TIMEOUT)
+reading_live = ReadingLiveView.as_view()
 
 
 class JSONCreateView(CreateView):

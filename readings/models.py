@@ -3,23 +3,34 @@ from django.db import models
 from readings import choices as readings_choices
 
 
-class Reading(models.Model):
-    """Barometer reading from pressureNET"""
+class DateLocationMeasurementModel(models.Model):
+    """
+    Abstract base class for PressureNET measurements.
+    """
     date = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     user_id = models.CharField(max_length=255, db_index=True)
     latitude = models.FloatField(db_index=True)
     longitude = models.FloatField(db_index=True)
     altitude = models.FloatField(default=0.0)
-    reading = models.FloatField()
-    reading_accuracy = models.FloatField()
-    provider = models.CharField(max_length=255, default='')
-    observation_type = models.CharField(max_length=255, default='')
-    observation_unit = models.CharField(max_length=255, default='')
-    sharing = models.CharField(max_length=255, choices=readings_choices.SHARING_CHOICES)
     daterecorded = models.BigIntegerField(db_index=True)
     tzoffset = models.BigIntegerField()
-    location_accuracy = models.FloatField()
     client_key = models.CharField(max_length=255)
+    sharing = models.CharField(max_length=255, choices=readings_choices.SHARING_CHOICES)
+    provider = models.CharField(max_length=255, default='')
+
+    class Meta:
+        abstract = True
+
+
+class Reading(DateLocationMeasurementModel):
+    """
+    Barometer reading from pressureNET
+    """
+    reading = models.FloatField()
+    reading_accuracy = models.FloatField()
+    observation_type = models.CharField(max_length=255, default='')
+    observation_unit = models.CharField(max_length=255, default='')
+    location_accuracy = models.FloatField()
 
     class Meta:
         verbose_name = 'reading'
@@ -29,32 +40,11 @@ class Reading(models.Model):
         return '%s: %s' % (self.user_id, self.reading)
 
 
-class ReadingSync(models.Model):
-    date = models.DateTimeField(auto_now_add=True)
-    readings = models.IntegerField()
-    processing_time = models.FloatField()
-
-    class Meta:
-        verbose_name = 'reading sync'
-        verbose_name_plural = 'reading syncs'
-
-    def __unicode__(self):
-        return '%s: %s' % (self.date, self.readings)
-
-
-class Condition(models.Model):
-    """Barometer reading from pressureNET"""
-    date = models.DateTimeField(auto_now_add=True, null=True, blank=True)
-    user_id = models.CharField(max_length=255, db_index=True)
-    latitude = models.FloatField(db_index=True)
-    longitude = models.FloatField(db_index=True)
-    altitude = models.FloatField(default=0.0)
-    daterecorded = models.BigIntegerField(db_index=True)
-    tzoffset = models.BigIntegerField()
+class Condition(DateLocationMeasurementModel):
+    """
+    Condition reading from pressureNET
+    """
     accuracy = models.FloatField()
-    provider = models.CharField(max_length=255, default='')
-    sharing = models.CharField(max_length=255)
-    client_key = models.CharField(max_length=255)
     general_condition = models.CharField(max_length=255)
     windy = models.CharField(max_length=255)
     fog_thickness = models.CharField(max_length=255)
@@ -70,3 +60,19 @@ class Condition(models.Model):
 
     def __unicode__(self):
         return '%s: %s' % (self.user_id, self.general_condition)
+
+
+class ReadingSync(models.Model):
+    """
+    Reading synchronization from Tomcat Server
+    """
+    date = models.DateTimeField(auto_now_add=True)
+    readings = models.IntegerField()
+    processing_time = models.FloatField()
+
+    class Meta:
+        verbose_name = 'reading sync'
+        verbose_name_plural = 'reading syncs'
+
+    def __unicode__(self):
+        return '%s: %s' % (self.date, self.readings)
