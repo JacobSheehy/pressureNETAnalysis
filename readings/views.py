@@ -101,7 +101,7 @@ class ConditionListView(FilteredListAPIView):
     serializer_class = ConditionListSerializer
     filter_class = ConditionListFilter
 
-condition_list = ConditionListView.as_view()
+condition_list = cache_page(ConditionListView.as_view(), settings.CACHE_TIMEOUT)
 
 
 class APIKeyViewMixin(object):
