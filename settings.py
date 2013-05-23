@@ -133,6 +133,10 @@ INSTALLED_APPS = (
     'utils',
 )
 
+REST_FRAMEWORK = {
+    'DEFAULT_FILTER_BACKENDS': ('rest_framework.filters.DjangoFilterBackend',)
+}
+
 try:
     from settings_local import *
 except:

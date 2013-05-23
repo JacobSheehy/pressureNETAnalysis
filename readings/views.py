@@ -13,8 +13,10 @@ from rest_framework.generics import ListAPIView
 
 from customers import choices as customer_choices
 from customers.models import Customer, CustomerCallLog
+
 from readings import choices as readings_choices
 from readings.forms import ReadingForm, ConditionForm
+from readings.filters import ReadingListFilter, ConditionListFilter
 from readings.serializers import ReadingListSerializer, ReadingLiveSerializer, ConditionListSerializer
 from readings.models import Reading, ReadingSync, Condition
 
@@ -86,39 +88,18 @@ class FilteredListAPIView(ListAPIView):
         return queryset
 
 
-class DateLocationFilteredListView(FilteredListAPIView):
-
-    def get_queryset(self):
-        min_lat = self.request.GET.get('minVisLat', None)
-        max_lat = self.request.GET.get('maxVisLat', None)
-        min_lon = self.request.GET.get('minVisLon', None)
-        max_lon = self.request.GET.get('maxVisLon', None)
-        start_time = self.request.GET.get('startTime', None)
-        end_time = self.request.GET.get('endTime', None)
-        limit = self.request.GET.get('limit', None)
-
-        queryset = super(DateLocationFilteredListView, self).get_queryset().filter(
-            daterecorded__gte=start_time,
-            daterecorded__lte=end_time,
-            latitude__gte=min_lat,
-            latitude__lte=max_lat,
-            longitude__gte=min_lon,
-            longitude__lte=max_lon,
-        )[:limit]
-
-        return queryset
-
-
-class ReadingListView(DateLocationFilteredListView):
+class ReadingListView(FilteredListAPIView):
     model = Reading
     serializer_class = ReadingListSerializer
+    filter_class = ReadingListFilter
 
 reading_list = cache_page(ReadingListView.as_view(), settings.CACHE_TIMEOUT)
 
 
-class ConditionListView(DateLocationFilteredListView):
+class ConditionListView(FilteredListAPIView):
     model = Condition
     serializer_class = ConditionListSerializer
+    filter_class = ConditionListFilter
 
 condition_list = ConditionListView.as_view()
 

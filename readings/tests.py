@@ -74,12 +74,12 @@ class DateLocationFilteredListTests(object):
         self.factory(latitude=2.0, longitude=1.0, daterecorded=now).save()
 
         response = self.client.get(reverse(self.url_name), {
-            'minVisLat': 2.0,
-            'maxVisLat': 2.0,
-            'minVisLon': 1.0,
-            'maxVisLon': 1.0,
-            'startTime': now,
-            'endTime': now,
+            'min_latitude': 2.0,
+            'max_latitude': 2.0,
+            'min_longitude': 1.0,
+            'max_longitude': 1.0,
+            'start_time': now,
+            'end_time': now,
             'limit': 1000,
         })
 
@@ -94,12 +94,12 @@ class DateLocationFilteredListTests(object):
         self.factory(latitude=2.0, longitude=1.0, daterecorded=now).save()
 
         response = self.client.get(reverse(self.url_name), {
-            'minVisLat': 1.0,
-            'maxVisLat': 1.0,
-            'minVisLon': 1.0,
-            'maxVisLon': 1.0,
-            'startTime': now,
-            'endTime': now,
+            'min_latitude': 1.0,
+            'max_latitude': 1.0,
+            'min_longitude': 1.0,
+            'max_longitude': 1.0,
+            'start_time': now,
+            'end_time': now,
             'limit': 1000,
         })
 
@@ -114,12 +114,12 @@ class DateLocationFilteredListTests(object):
         self.factory(latitude=1.0, longitude=2.0, daterecorded=now).save()
 
         response = self.client.get(reverse(self.url_name), {
-            'minVisLat': 1.0,
-            'maxVisLat': 1.0,
-            'minVisLon': 2.0,
-            'maxVisLon': 2.0,
-            'startTime': now,
-            'endTime': now,
+            'min_latitude': 1.0,
+            'max_latitude': 1.0,
+            'min_longitude': 2.0,
+            'max_longitude': 2.0,
+            'start_time': now,
+            'end_time': now,
             'limit': 1000,
         })
 
@@ -134,12 +134,12 @@ class DateLocationFilteredListTests(object):
         self.factory(latitude=1.0, longitude=2.0, daterecorded=now).save()
 
         response = self.client.get(reverse(self.url_name), {
-            'minVisLat': 1.0,
-            'maxVisLat': 1.0,
-            'minVisLon': 1.0,
-            'maxVisLon': 1.0,
-            'startTime': now,
-            'endTime': now,
+            'min_latitude': 1.0,
+            'max_latitude': 1.0,
+            'min_longitude': 1.0,
+            'max_longitude': 1.0,
+            'start_time': now,
+            'end_time': now,
             'limit': 1000,
         })
 
@@ -154,12 +154,12 @@ class DateLocationFilteredListTests(object):
         self.factory(latitude=1.0, longitude=1.0, daterecorded=now + 1).save()
 
         response = self.client.get(reverse(self.url_name), {
-            'minVisLat': 1.0,
-            'maxVisLat': 1.0,
-            'minVisLon': 1.0,
-            'maxVisLon': 1.0,
-            'startTime': now + 1,
-            'endTime': now + 1,
+            'min_latitude': 1.0,
+            'max_latitude': 1.0,
+            'min_longitude': 1.0,
+            'max_longitude': 1.0,
+            'start_time': now + 1,
+            'end_time': now + 1,
             'limit': 1000,
         })
 
@@ -174,12 +174,12 @@ class DateLocationFilteredListTests(object):
         self.factory(latitude=1.0, longitude=1.0, daterecorded=now + 1).save()
 
         response = self.client.get(reverse(self.url_name), {
-            'minVisLat': 1.0,
-            'maxVisLat': 1.0,
-            'minVisLon': 1.0,
-            'maxVisLon': 1.0,
-            'startTime': now,
-            'endTime': now,
+            'min_latitude': 1.0,
+            'max_latitude': 1.0,
+            'min_longitude': 1.0,
+            'max_longitude': 1.0,
+            'start_time': now,
+            'end_time': now,
             'limit': 1000,
         })
 
@@ -194,12 +194,12 @@ class DateLocationFilteredListTests(object):
             self.factory(latitude=1.0, longitude=1.0, daterecorded=now).save()
 
         response = self.client.get(reverse(self.url_name), {
-            'minVisLat': 1.0,
-            'maxVisLat': 1.0,
-            'minVisLon': 1.0,
-            'maxVisLon': 1.0,
-            'startTime': now,
-            'endTime': now,
+            'min_latitude': 1.0,
+            'max_latitude': 1.0,
+            'min_longitude': 1.0,
+            'max_longitude': 1.0,
+            'start_time': now,
+            'end_time': now,
             'limit': 1000,
         })
 
@@ -208,12 +208,12 @@ class DateLocationFilteredListTests(object):
         self.assertEquals(len(data), 3)
 
         response = self.client.get(reverse(self.url_name), {
-            'minVisLat': 1.0,
-            'maxVisLat': 1.0,
-            'minVisLon': 1.0,
-            'maxVisLon': 1.0,
-            'startTime': now,
-            'endTime': now,
+            'min_latitude': 1.0,
+            'max_latitude': 1.0,
+            'min_longitude': 1.0,
+            'max_longitude': 1.0,
+            'start_time': now,
+            'end_time': now,
             'limit': 1,
         })
 
@@ -235,12 +235,12 @@ class DateLocationFilteredListTests(object):
                     ).save()
 
         response = self.client.get(reverse(self.url_name), {
-            'minVisLat': 2.0,
-            'maxVisLat': 4.0,
-            'minVisLon': 2.0,
-            'maxVisLon': 4.0,
-            'startTime': now - 1,
-            'endTime': now + 1,
+            'min_latitude': 2.0,
+            'max_latitude': 4.0,
+            'min_longitude': 2.0,
+            'max_longitude': 4.0,
+            'start_time': now - 1,
+            'end_time': now + 1,
             'limit': 1000,
         })
 
