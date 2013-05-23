@@ -3,6 +3,7 @@ import time
 
 from django.core.urlresolvers import reverse
 from django.test import TestCase
+from django.test.utils import override_settings
 from django.utils import simplejson as json
 
 import factory
@@ -220,6 +221,40 @@ class DateLocationFilteredListTests(object):
         data = json.loads(response.content)
 
         self.assertEquals(len(data), 1)
+
+    @override_settings(MAX_CALL_LENGTH=10)
+    def test_list_view_without_limit_defaults_to_global_limit(self):
+        now = to_unix(datetime.datetime.now())
+
+        for i in range(11):
+            self.factory(latitude=1.0, longitude=1.0, daterecorded=now).save()
+
+        response = self.client.get(reverse(self.url_name), {
+            'min_latitude': 1.0,
+            'max_latitude': 1.0,
+            'min_longitude': 1.0,
+            'max_longitude': 1.0,
+            'start_time': now,
+            'end_time': now,
+            'limit': 3,
+        })
+
+        data = json.loads(response.content)
+
+        self.assertEquals(len(data), 3)
+
+        response = self.client.get(reverse(self.url_name), {
+            'min_latitude': 1.0,
+            'max_latitude': 1.0,
+            'min_longitude': 1.0,
+            'max_longitude': 1.0,
+            'start_time': now,
+            'end_time': now,
+        })
+
+        data = json.loads(response.content)
+
+        self.assertEquals(len(data), 10)
 
     def test_list_view_returns_readings_within_query_parameters(self):
         now = to_unix(datetime.datetime.now())

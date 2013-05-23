@@ -1,9 +1,11 @@
+from django.conf import settings
+
 import django_filters
 
 from readings.models import Reading, Condition
 
 
-class DateLocationFilter(django_filters.FilterSet):
+class DateLocationFilterSet(django_filters.FilterSet):
     min_latitude = django_filters.NumberFilter(name='latitude', lookup_type='gte')
     max_latitude = django_filters.NumberFilter(name='latitude', lookup_type='lte')
     min_longitude = django_filters.NumberFilter(name='longitude', lookup_type='gte')
@@ -12,8 +14,12 @@ class DateLocationFilter(django_filters.FilterSet):
     end_time = django_filters.NumberFilter(name='daterecorded', lookup_type='lte')
     limit = django_filters.NumberFilter(action=lambda queryset, limit: queryset[:limit])
 
+    @property
+    def qs(self):
+        return super(DateLocationFilterSet, self).qs[:settings.MAX_CALL_LENGTH]
 
-class ReadingListFilter(DateLocationFilter):
+
+class ReadingListFilter(DateLocationFilterSet):
 
     class Meta:
         model = Reading
@@ -28,7 +34,7 @@ class ReadingListFilter(DateLocationFilter):
         )
 
 
-class ConditionListFilter(DateLocationFilter):
+class ConditionListFilter(DateLocationFilterSet):
 
     class Meta:
         model = Condition
