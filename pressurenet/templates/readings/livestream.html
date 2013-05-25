@@ -21,6 +21,16 @@
 				$( '#legal-notes' ).slideToggle( 'fast' );
 				e.preventDefault();
 			});
+
+			$( '#signup-nav a' ).click(function(e) {
+				$( '#signup-nav a' ).removeClass( 'selected' );
+				$(this).addClass( 'selected' );
+				var current = $(this).data( 'select' );
+				console.log( current );
+				$( 'form.signup' ).removeClass( 'current' );
+				$( '#' + current ).addClass( 'current' );
+				e.preventDefault();
+			});
 		});
 
 		var _gaq = _gaq || [];
@@ -64,6 +74,105 @@
 				<li>By accepting use of our live stream, you accept the terms above.</li>
 			</ul>
 		</section>
+
+		<nav id="signup-nav" class="full">
+			<a id="res-tab" class="selected" data-select="res-signup">Researcher</a>
+			<a id="com-tab" data-select="com-signup">Company</a>
+			<a id="pub-tab" data-select="pub-signup">Public</a>
+		</nav>
+
+		<form id="res-signup" class="signup current full">
+
+			<div class="form-field">
+				<label for="res-inst">Institute</label>
+				<input id="res-inst" name="res-inst" class="required" type="text" />
+			</div>
+
+			<div class="form-field">
+				<label for="res-name">Name</label>
+				<input id="res-name" name="res-name" class="required" type="text" />
+			</div>
+
+			<div class="form-field">
+				<label for="res-email">E-mail</label>
+				<input id="res-email" name="res-email" class="required" type="text" />
+			</div>
+
+			<div class="form-field">
+				<label for="res-phone">Phone</label>
+				<input id="res-phone" name="res-phone" type="text" />
+			</div>
+
+			<div class="form-field">
+				<label for="res-address">Address</label>
+				<textarea id="res-address" name="res-address" class="address"></textarea>
+			</div>
+
+			<div class="form-field">
+				<label for="res-comments">Comments</label>
+				<textarea id="res-comments" name="res-comments" class="comments"></textarea>
+			</div>
+
+			<input id="res-submit" name="res-submit" type="submit" value="Sign up!" />
+
+		</form>
+
+		<form id="com-signup" class="signup full">
+
+			<div class="form-field">
+				<label for="com-comp">Company</label>
+				<input id="com-comp" name="com-comp" class="required" type="text" />
+			</div>
+
+			<div class="form-field">
+				<label for="com-name">Name</label>
+				<input id="com-name" name="com-name" class="required" type="text" />
+			</div>
+
+			<div class="form-field">
+				<label for="com-email">E-mail</label>
+				<input id="com-email" name="com-email" class="required" type="text" />
+			</div>
+
+			<div class="form-field">
+				<label for="com-phone">Phone</label>
+				<input id="com-phone" name="com-phone" type="text" />
+			</div>
+
+			<div class="form-field">
+				<label for="com-address">Address</label>
+				<textarea id="com-address" name="com-address" class="address"></textarea>
+			</div>
+
+			<div class="form-field">
+				<label for="com-comments">Comments</label>
+				<textarea id="com-comments" name="com-comments" class="comments"></textarea>
+			</div>
+
+			<input id="com-submit" name="com-submit" type="submit" value="Sign up!" />
+
+		</form>
+
+		<form id="pub-signup" class="signup full">
+
+			<div class="form-field">
+				<label for="pub-name">Name</label>
+				<input id="pub-name" name="pub-name" class="required" type="text" />
+			</div>
+
+			<div class="form-field">
+				<label for="pub-email">E-mail</label>
+				<input id="pub-email" name="pub-email" class="required" type="text" />
+			</div>
+
+			<div class="form-field">
+				<label for="pub-comments">Comments</label>
+				<textarea id="pub-comments" name="pub-comments" class="comments"></textarea>
+			</div>
+
+			<input id="pub-submit" name="pub-submit" type="submit" value="Sign up!" />
+
+		</form>
 
 	</section>
 
