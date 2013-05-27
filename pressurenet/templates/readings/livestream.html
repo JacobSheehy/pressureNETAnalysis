@@ -22,14 +22,25 @@
 				e.preventDefault();
 			});
 
-			$( '#signup-nav a' ).click(function(e) {
+			$( '#signup-nav a' ).click(function() {
 				$( '#signup-nav a' ).removeClass( 'selected' );
 				$(this).addClass( 'selected' );
 				var current = $(this).data( 'select' );
-				console.log( current );
 				$( 'form.signup' ).removeClass( 'current' );
 				$( '#' + current ).addClass( 'current' );
-				e.preventDefault();
+			});
+
+			function showDescription() {
+				
+				var description = '#' + $( '#plan-choices input[type="radio"]:checked' ).attr( 'id' ) + '-desc';
+				$( '#plan-description p' ).hide( 'fast' );
+				$( description ).show( 'fast' );
+			};
+
+			showDescription();
+
+			$( '#plan-choices input[type="radio"]' ).click(function() {
+				showDescription();
 			});
 		});
 
@@ -60,9 +71,6 @@
 
 		<section id="live-intro" class="full">
 			<h3>pressureNET Live Stream Service</h3>
-			<p>Our live stream of atmospheric pressure will allow you to access our global dataset with a simple API. The archive consists of about 20 million measurements from 2012-2013 and we’re currently receiving about 12,000 per hour.</p>
-			<p>We’re going to ensure that this data is as accessible as possible. If there’s anything that we can do to make this service easier to use, please let us know. We’re offering a stable and simple service that we are quickly improving.</p>
-			<p>This live stream is accessed through a simple HTTPS API. Please email <a href="mailto:livestream@cumulonimbus.ca">livestream@cumulonimbus.ca</a> if you're interested.</p>
 
 			<h4 id="legal-title"><a class="closed">Legal Notes</a></h4>
 			<ul id="legal-notes">
@@ -81,20 +89,30 @@
 			<a id="pub-tab" data-select="pub-signup">Public</a>
 		</nav>
 
-		<form id="res-signup" class="signup current full">
+		<form id="res-signup" class="signup full">
+
+			<ul class="error-log full">
+			</ul>
+
+			<div class="full required-example">Required</div>
+
+			<div class="full">
+				<h4>Your plan:</h4>
+				<p></p>
+			</div>
 
 			<div class="form-field">
-				<label for="res-inst">Institute</label>
+				<label for="res-inst" class="required-label">Institute</label>
 				<input id="res-inst" name="res-inst" class="required" type="text" />
 			</div>
 
 			<div class="form-field">
-				<label for="res-name">Name</label>
+				<label for="res-name" class="required-label">Name</label>
 				<input id="res-name" name="res-name" class="required" type="text" />
 			</div>
 
 			<div class="form-field">
-				<label for="res-email">E-mail</label>
+				<label for="res-email" class="required-label">E-mail</label>
 				<input id="res-email" name="res-email" class="required" type="text" />
 			</div>
 
@@ -117,19 +135,50 @@
 
 		</form>
 
-		<form id="com-signup" class="signup full">
+		<form id="com-signup" class="signup current full">
+
+			<ul class="error-log full">
+			</ul>
+
+			<div class="full required-example">Required</div>
+
+			<div class="full">
+				<h4 class="required-label">Choose your plan:</h4>
+
+				<div id="plan-choices">
+					<input id="lg" name="plan" class="required" checked="checked" type="radio" />
+					<label for="lg">Live Global</label>
+
+					<input id="lr" name="plan" class="required" type="radio" />
+					<label for="lr">Live Regional</label>
+
+					<input id="hg" name="plan" class="required" type="radio" />
+					<label for="hg">Hourly Global</label>
+
+					<input id="hr" name="plan" class="required" type="radio" />
+					<label for="hr">Hourly Regional</label>
+				</div>
+
+				<div id="plan-description">
+					<p id="lg-desc">Ut in nulla enim. Phasellus molestie magna.</p>
+					<p id="lr-desc">Duis aliquet egestas purus in blandit. Curabitur vulputate, ligula.</p>
+					<p id="hg-desc">Suspendisse dictum feugiat nisl ut dapibus. Mauris.</p>
+					<p id="hr-desc">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam in dui mauris. Vivamus hendrerit arcu.</p>
+				</div>
+			</div>
+
 
 			<div class="form-field">
-				<label for="com-comp">Company</label>
+				<label for="com-comp" class="required-label">Company</label>
 				<input id="com-comp" name="com-comp" class="required" type="text" />
 			</div>
 
 			<div class="form-field">
-				<label for="com-name">Name</label>
+				<label for="com-name" class="required-label">Name</label>
 				<input id="com-name" name="com-name" class="required" type="text" />
 			</div>
 
-			<div class="form-field">
+			<div class="form-field" class="required-label">
 				<label for="com-email">E-mail</label>
 				<input id="com-email" name="com-email" class="required" type="text" />
 			</div>
@@ -155,13 +204,23 @@
 
 		<form id="pub-signup" class="signup full">
 
+			<ul class="error-log full">
+			</ul>
+
+			<div class="full required-example">Required</div>
+
+			<div class="full">
+				<h4>Your plan:</h4>
+				<p></p>
+			</div>
+
 			<div class="form-field">
-				<label for="pub-name">Name</label>
+				<label for="pub-name" class="required-label">Name</label>
 				<input id="pub-name" name="pub-name" class="required" type="text" />
 			</div>
 
 			<div class="form-field">
-				<label for="pub-email">E-mail</label>
+				<label for="pub-email" class="required-label">E-mail</label>
 				<input id="pub-email" name="pub-email" class="required" type="text" />
 			</div>
 
@@ -177,7 +236,7 @@
 	</section>
 
 	<footer id="colophon" class="group">
-		<a class="contact" href="mailto:livestream@cumulonimbus.ca?subject=Live%20Stream%20Sign-Up&body=Please%20list%20your%20name,%20the%20e-mail%20address%20we%20should%20contact%20you%20at,%20and%20your%20academic%20affiliation,%20if%20any.%20A%20short%20description%20of%20your%20research%20would%20also%20be%20appreciated.">Sign up for the live stream!</a>
+		<a class="contact" href="mailto:livestream@cumulonimbus.ca?subject=Live%20Stream%20Sign-Up">Contact us!</a>
 		<nav id="social">
 			<a id="link-tw" class="link-social" href="https://twitter.com/Cumulonimbus_ca" title="Follow us on Twitter!"></a>
 			<a id="link-pl" class="link-social" href="https://plus.google.com/105785057346543310426/" title="Follow us on Google Plus!"></a>
