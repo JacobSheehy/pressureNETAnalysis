@@ -22,12 +22,13 @@
 				e.preventDefault();
 			});
 
-			$( '#signup-nav a' ).click(function() {
+			$( '#signup-nav a' ).click(function(e) {
 				$( '#signup-nav a' ).removeClass( 'selected' );
 				$(this).addClass( 'selected' );
 				var current = $(this).data( 'select' );
 				$( 'form.signup' ).removeClass( 'current' );
 				$( '#' + current ).addClass( 'current' );
+				e.preventDefault();
 			});
 
 			function showDescription() {
