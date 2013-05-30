@@ -1,4 +1,5 @@
 {% load url from future %}
+{% load customers_tags %}
 
 <!DOCTYPE html>
 <html>
@@ -164,28 +165,22 @@
 				<p>The researcher plan is blah blah blah.</p>
 			</div>
 
+      {% get_customer_plans as customer_plans %}
 			<div id="plan-com" class="full plan">
 				<h4 class="required-label">Choose your plan:</h4>
 
 				<div id="plan-choices" class="choices">
-					<input id="lg" name="plan" class="required" checked="checked" type="radio" data-desc="lg" />
-					<label for="lg">Live Global</label>
+          {% for customer_plan in customer_plans %}
+              <input id="plan-{{ customer_plan.id }}" name="plan" class="required" checked="checked" type="radio" data-desc="plan-{{ customer_plan.id }}" />
+              <label for="plan-{{ customer_plan.id }}">{{ customer_plan.name }}</label>
+          {% endfor %}
 
-					<input id="lr" name="plan" class="required" type="radio" data-desc="lr" />
-					<label for="lr">Live Regional</label>
-
-					<input id="hg" name="plan" class="required" type="radio" data-desc="hg" />
-					<label for="hg">Hourly Global</label>
-
-					<input id="hr" name="plan" class="required" type="radio" data-desc="hr" />
-					<label for="hr">Hourly Regional</label>
 				</div>
 
 				<div id="plan-descriptions" class="descriptions">
-					<p id="lg-desc">Ut in nulla enim. Phasellus molestie magna.</p>
-					<p id="lr-desc">Duis aliquet egestas purus in blandit. Curabitur vulputate, ligula.</p>
-					<p id="hg-desc">Suspendisse dictum feugiat nisl ut dapibus. Mauris.</p>
-					<p id="hr-desc">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam in dui mauris. Vivamus hendrerit arcu.</p>
+          {% for customer_plan in customer_plans %}
+              <p id="plan-{{ customer_plan.id }}-desc">{{ customer_plan.description }}</p>
+          {% endfor %}
 				</div>
 			</div>
 
@@ -197,13 +192,19 @@
 			<div id="form-name" class="form-field {% if form.contact_name.errors %}error{% endif %}">
 				<label for="id_contact_name" class="required-label">Name</label>
 				<input id="id_contact_name" name="contact_name" value="{% if form.contact_name.value %}{{ form.contact_name.value }}{% endif %}" class="required" type="text" />
-				<label for="id_contact_name" class="error-label"></label>
+				<label for="id_contact_name" class="error-label">
+            {% for error in form.contact_name.errors %}
+                {{ error }}
+            {% endfor %}
+        </label>
 			</div>
 
 			<div id="form-mail" class="form-field {% if form.contact_mail.errors %}error{% endif %}">
 				<label for="id_contact_mail" class="required-label">E-mail</label>
 				<input id="id_contact_mail" name="contact_mail" value="{% if form.contact_mail.value %}{{ form.contact_mail.value }}{% endif %}" class="required" type="text" />
-				<label for="id_contact_mail" class="error-label"></label>
+				<label for="id_contact_mail" class="error-label">
+            {{ form.contact_mail.errors }}
+        </label>
 			</div>
 
 			<div id="form-company" class="form-field">

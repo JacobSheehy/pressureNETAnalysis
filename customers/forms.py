@@ -18,6 +18,7 @@ class CustomerForm(forms.ModelForm):
             'contact_mail',
             'contact_phone',
             'contact_address',
+            'comments',
             'api_key',
         )
 
