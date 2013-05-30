@@ -13,7 +13,7 @@
     <title>pressureNET | Live Stream</title>
 
 	<link rel="shortcut icon" href="http://www.cumulonimbus.ca/favicon.gif">
-    
+
     <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/style.css">
     <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Roboto:300,400,700,900,400italic">
 
@@ -37,11 +37,12 @@
 				e.preventDefault();
 			});
 
-			function showDescription( parent ) {
-				$( parent + ' .choices' ).each(function() {
-					var description = $(this).children( 'input[type="radio"]:checked' ).data( 'desc' );
-					$( parent + ' .descriptions p' ).text(description);
-				});
+			function showDescription() {
+          var selected = $('input[type="radio"]:checked');
+          selected.each(function () {
+              var description = $(this).data('desc');
+              $(this).parent().parent().find('.descriptions p').text(description);
+          });
 			};
 
 			function showPlans() {
@@ -49,9 +50,9 @@
 
 				switch ( customer ) {
 					{% for customer_type_value, customer_type_name, customer_type_description in customer_types %}
-					case '{{ customer_type_value }}':
+					case 'customer-type-{{ customer_type_value }}':
 						$( '.plan' ).hide();
-						$( '#{{ customer_type_value }}' ).show();
+						$( '#plan-{{ customer_type_value }}' ).show();
 						break;
 					{% endfor %}
 					default:
@@ -60,10 +61,11 @@
 			};
 
 			showPlans();
+      showDescription();
 
 			$( '.choices input[type="radio"]' ).click(function() {
-				var parent = '#' + $(this).parent().parent().attr( 'id' );
-				showDescription( parent );
+				showDescription();
+        showPlans();
 			});
 
 		});
@@ -121,7 +123,7 @@
       {% csrf_token %}
 
 			<ul class="error-log full">
-        {{ form.errors }}
+          Please correct the highlighted errors.
 			</ul>
 
 			<div class="full required-example">Required</div>
@@ -131,7 +133,13 @@
 
 				<div id="customer-choices" class="choices">
           {% for customer_type_value, customer_type_name, customer_type_desc in customer_types %}
-              <input id="customer-type-{{ customer_type_value }}" name="customer_type" class="required" type="radio" value="{{ customer_type_value }}" data-desc="{{ customer_type_desc }}" />
+              <input id="customer-type-{{ customer_type_value }}" name="customer_type" class="required"
+                  {% if form.customer_type.value %}
+                      {% ifequal form.customer_type.value customer_type_value %}checked="checked"{% endifequal %}
+                  {% else %}
+                      {% ifequal forloop.counter0 0 %}checked="checked"{% endifequal %}
+                  {% endif %}
+                  type="radio" value="{{ customer_type_value }}" data-desc="{{ customer_type_desc }}" />
               <label for="customer-type-{{ customer_type_value }}">{{ customer_type_name }}</label>
           {% endfor %}
 				</div>
@@ -150,7 +158,13 @@
 
 				<div id="plan-choices" class="choices">
           {% for customer_plan in customer_plans %}
-              <input id="plan-{{ customer_plan.id }}" name="customer_plan" value="{{ customer_plan.id }}" class="required" type="radio" data-desc="{{ customer_plan.description }}" />
+              <input id="plan-{{ customer_plan.id }}" name="customer_plan" value="{{ customer_plan.id }}" class="required"
+                  {% if form.customer_plan.value %}
+                      {% ifequal form.customer_plan.value|add:0 customer_plan.id|add:0 %}checked="checked"{% endifequal %}
+                  {% else %}
+                      {% ifequal forloop.counter0 0 %}checked="checked"{% endifequal %}
+                  {% endif %}
+                  type="radio" data-desc="{{ customer_plan.description }}" />
               <label for="plan-{{ customer_plan.id }}">{{ customer_plan.name }}</label>
           {% endfor %}
 
