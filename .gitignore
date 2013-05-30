@@ -1,4 +1,6 @@
 *.pyc
 settings_local*.py
-.DS_Store.elasticbeanstalk/.elasticbeanstalk/.elasticbeanstalk/.elasticbeanstalk/.elasticbeanstalk/.elasticbeanstalk/.elasticbeanstalk/
+.DS_Store
+.elasticbeanstalk/.elasticbeanstalk/.elasticbeanstalk/.elasticbeanstalk/.elasticbeanstalk/.elasticbeanstalk/.elasticbeanstalk/
 .elasticbeanstalk/
+

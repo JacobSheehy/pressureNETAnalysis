@@ -17,11 +17,65 @@
     <script type="text/javascript">
 
 		$(function() {
+
+			var success = window.location.pathname.split( '?' );
+			if ( success[1] == 'success=1' ) {
+				$( '#signup-form' ).hide();
+				$( '#success' ).fadeIn( 'slow' );
+			}
+
+			$( '#res-desc, #lg-desc' ).show();
+			$( '#plan-com, #plan-pub' ).hide();
+
 			$( '#legal-title a' ).click(function(e) {
 				$( '#legal-notes' ).slideToggle( 'fast' );
 				e.preventDefault();
 			});
+
+			$( '#signup-nav a' ).click(function(e) {
+				$( '#signup-nav a' ).removeClass( 'selected' );
+				$(this).addClass( 'selected' );
+				var current = $(this).data( 'select' );
+				$( 'form.signup' ).removeClass( 'current' );
+				$( '#' + current ).addClass( 'current' );
+				e.preventDefault();
+			});
+
+			function showDescription( parent ) {
+				$( parent + ' .choices' ).each(function() {
+					var description = '#' + $(this).children('input[type="radio"]:checked' ).data( 'desc' ) + '-desc';
+					$( parent + ' .descriptions p' ).hide();
+					$( description ).show();
+				});
+			};
+
+			$( '.choices input[type="radio"]' ).click(function() {
+				var parent = '#' + $(this).parent().parent().attr( 'id' );
+				showDescription( parent );
+
+				var choice = $(this).data( 'desc' );
+				switch (choice) {
+					case "res":
+						$( '.plan' ).hide();
+						$( '#plan-res, #company, #phone, #address' ).show();
+						$( 'label[for="id_company_name"]' ).text( 'Institute' );
+						break;
+					case "com":
+						$( '.plan' ).hide();
+						$( '#plan-com, #company, #phone, #address' ).show();
+						$( 'label[for="id_company_name"]' ).text( 'Company' );
+						break;
+					case "pub":
+						$( '.plan, #company, #phone, #address' ).hide();
+						$( '#plan-pub' ).show();
+						break;
+					default:
+						break;
+				}
+			});
+
 		});
+
 
 		var _gaq = _gaq || [];
 		_gaq.push(['_setAccount', 'UA-78967-8']);
@@ -48,6 +102,11 @@
 
 	<section id="main" class="group">
 
+		<div id="success">
+			<h3>Thanks for signing up!</h3>
+			<p>You'll receive your API key by e-mail shortly.</p>
+		</div>
+
 		<section id="live-intro" class="full">
 			<h3>pressureNET Live Stream Service</h3>
 			<p>Our live stream of atmospheric pressure will allow you to access our global dataset with a simple API.</p>
@@ -65,10 +124,107 @@
 			</ul>
 		</section>
 
+		<form id="signup-form" class="signup full">
+
+			<ul class="error-log full">
+			</ul>
+
+			<div class="full required-example">Required</div>
+
+			<div id="customer-type" class="full">
+				<h4 class="required-label">Choose your [better word here] type:</h4>
+
+				<div id="customer-choices" class="choices">
+					<input id="customer-type-res" name="customer_type" class="required" checked="checked" type="radio" value="researcher" data-desc="res" />
+					<label for="customer-type-res">Researcher</label>
+
+					<input id="customer-type-com" name="customer_type" class="required" type="radio" value="company" data-desc="com" />
+					<label for="customer-type-com">Company</label>
+
+					<input id="customer-type-pub" name="customer_type" class="required" type="radio" value="public" data-desc="pub" />
+					<label for="customer-type-pub">Public</label>
+				</div>
+
+				<div id="customer-descriptions" class="descriptions">
+					<p id="res-desc">For researchers</p>
+					<p id="com-desc">For companies</p>
+					<p id="pub-desc">For the public</p>
+				</div>
+			</div>
+
+			<div id="plan-res" class="full plan">
+				<h4>Your plan:</h4>
+				<p>The researcher plan is blah blah blah.</p>
+			</div>
+
+			<div id="plan-com" class="full plan">
+				<h4 class="required-label">Choose your plan:</h4>
+
+				<div id="plan-choices" class="choices">
+					<input id="lg" name="plan" class="required" checked="checked" type="radio" data-desc="lg" />
+					<label for="lg">Live Global</label>
+
+					<input id="lr" name="plan" class="required" type="radio" data-desc="lr" />
+					<label for="lr">Live Regional</label>
+
+					<input id="hg" name="plan" class="required" type="radio" data-desc="hg" />
+					<label for="hg">Hourly Global</label>
+
+					<input id="hr" name="plan" class="required" type="radio" data-desc="hr" />
+					<label for="hr">Hourly Regional</label>
+				</div>
+
+				<div id="plan-descriptions" class="descriptions">
+					<p id="lg-desc">Ut in nulla enim. Phasellus molestie magna.</p>
+					<p id="lr-desc">Duis aliquet egestas purus in blandit. Curabitur vulputate, ligula.</p>
+					<p id="hg-desc">Suspendisse dictum feugiat nisl ut dapibus. Mauris.</p>
+					<p id="hr-desc">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam in dui mauris. Vivamus hendrerit arcu.</p>
+				</div>
+			</div>
+
+			<div id="plan-pub" class="full plan">
+				<h4>Your plan:</h4>
+				<p>The public plan is blah blah blah.</p>
+			</div>
+
+			<div id="company" class="form-field">
+				<label for="id_company_name" class="required-label">Institute</label>
+				<input id="id_company_name" name="company_name" class="required" type="text" />
+			</div>
+
+			<div class="form-field">
+				<label for="id_contact_name" class="required-label">Name</label>
+				<input id="id_contact_name" name="contact_name" class="required" type="text" />
+			</div>
+
+			<div class="form-field">
+				<label for="id_contact_mail" class="required-label">E-mail</label>
+				<input id="id_contact_mail" name="contact_mail" class="required" type="text" />
+			</div>
+
+			<div id="phone" class="form-field">
+				<label for="id_contact_phone">Phone</label>
+				<input id="id_contact_phone" name="contact_phone" type="text" />
+			</div>
+
+			<div id="address" class="form-field">
+				<label for="id_contact_address">Address</label>
+				<textarea id="id_contact_address" name="contact_address" class="address"></textarea>
+			</div>
+
+			<div class="form-field">
+				<label for="id_comments">Comments</label>
+				<textarea id="id_comments" name="comments" class="comments"></textarea>
+			</div>
+
+			<input type="submit" value="Sign up!" />
+
+		</form>
+
 	</section>
 
 	<footer id="colophon" class="group">
-		<a class="contact" href="mailto:livestream@cumulonimbus.ca?subject=Live%20Stream%20Sign-Up&body=Please%20list%20your%20name,%20the%20e-mail%20address%20we%20should%20contact%20you%20at,%20and%20your%20academic%20affiliation,%20if%20any.%20A%20short%20description%20of%20your%20research%20would%20also%20be%20appreciated.">Sign up for the live stream!</a>
+		<a class="contact" href="mailto:livestream@cumulonimbus.ca?subject=Live%20Stream%20Sign-Up">Contact us!</a>
 		<br/>
 		<nav id="social">
 			<a id="link-tw" class="link-social" href="https://twitter.com/Cumulonimbus_ca" title="Follow us on Twitter!"></a>
