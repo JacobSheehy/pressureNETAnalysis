@@ -44,16 +44,22 @@
 				});
 			};
 
-			var customer = $( '#customer-type input[type="radio"]:checked' ).id;
+			function showPlans() {
+				var customer = $( '#customer-type input[type="radio"]:checked' ).attr( 'id' );
 
-			switch ( customer ) {
-        {% for customer_type_value, customer_type_name, customer_type_description in customer_types %}
-          case '{{ customer_type_value }}':
-            $( '.plan' ).hide();
-            $( '#{{ customer_type_value }}' ).show();
-            break;
-        {% endfor %}
-			}
+				switch ( customer ) {
+					{% for customer_type_value, customer_type_name, customer_type_description in customer_types %}
+					case '{{ customer_type_value }}':
+						$( '.plan' ).hide();
+						$( '#{{ customer_type_value }}' ).show();
+						break;
+					{% endfor %}
+					default:
+						$( '.plan' ).hide();
+				}
+			};
+
+			showPlans();
 
 			$( '.choices input[type="radio"]' ).click(function() {
 				var parent = '#' + $(this).parent().parent().attr( 'id' );
