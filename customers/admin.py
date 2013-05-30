@@ -9,7 +9,7 @@ admin.site.register(CustomerPlan, CustomerPlanAdmin)
 
 
 class CustomerAdmin(admin.ModelAdmin):
-    list_display = ('company_name', 'contact_name', 'contact_mail', 'customer_type')
+    list_display = ('contact_name', 'company_name', 'contact_mail', 'customer_type')
     list_filter = ('customer_type',)
 
 admin.site.register(Customer, CustomerAdmin)

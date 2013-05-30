@@ -19,8 +19,3 @@ class IndexTests(TemplateTestMixin, TestCase):
 class AboutTests(TemplateTestMixin, TestCase):
     url_name = 'home-about'
     template_name = 'home/about.html'
-
-
-class LiveStreamTests(TemplateTestMixin, TestCase):
-    url_name = 'home-livestream'
-    template_name = 'home/livestream.html'

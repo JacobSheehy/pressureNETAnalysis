@@ -6,6 +6,7 @@ from customers import choices as customer_choices
 class CustomerPlan(models.Model):
     """Customer plan"""
     name = models.CharField(max_length=255)
+    description = models.TextField()
     global_calls = models.IntegerField(blank=True, null=True)
     region_calls = models.IntegerField(blank=True, null=True)
     regions = models.IntegerField(blank=True, null=True)
@@ -21,15 +22,17 @@ class CustomerPlan(models.Model):
 
 class Customer(models.Model):
     """Customer data"""
-    company_name = models.CharField(max_length=255)
+    customer_type = models.CharField(max_length=20, choices=customer_choices.CUSTOMER_TYPES)
+    customer_plan = models.ForeignKey(CustomerPlan, blank=True, null=True)
+    company_name = models.CharField(max_length=255, blank=True, null=True)
     contact_name = models.CharField(max_length=255)
-    contact_mail = models.CharField(max_length=100)
+    contact_mail = models.EmailField(max_length=100)
     contact_phone = models.CharField(max_length=25, blank=True, null=True)
     contact_address = models.CharField(max_length=255, blank=True, null=True)
     api_key = models.CharField(max_length=255)
-    customer_type = models.CharField(max_length=20, choices=customer_choices.CUSTOMER_TYPES)
     payment_status = models.CharField(max_length=20, blank=True, null=True)
     payment_confirmation = models.CharField(max_length=255, blank=True, null=True)
+    comments = models.TextField()
 
     class Meta:
         verbose_name = 'customer'
