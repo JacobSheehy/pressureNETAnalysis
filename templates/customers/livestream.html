@@ -24,6 +24,10 @@
 				$( '#success' ).fadeIn( 'slow' );
 			}
 
+			if ( form.errors ) {
+				$( '.error-log' ).show();
+			}
+
 			$( '#res-desc, #lg-desc' ).show();
 			$( '#plan-com, #plan-pub' ).hide();
 
