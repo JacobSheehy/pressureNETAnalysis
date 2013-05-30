@@ -1,5 +1,11 @@
 from django.contrib import admin
-from customers.models import Customer, CustomerCallLog
+from customers.models import CustomerPlan, Customer, CustomerCallLog
+
+
+class CustomerPlanAdmin(admin.ModelAdmin):
+    list_display = ('name', 'global_calls', 'region_calls', 'regions', 'price')
+
+admin.site.register(CustomerPlan, CustomerPlanAdmin)
 
 
 class CustomerAdmin(admin.ModelAdmin):

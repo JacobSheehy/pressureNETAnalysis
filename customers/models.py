@@ -3,6 +3,22 @@ from django.db import models
 from customers import choices as customer_choices
 
 
+class CustomerPlan(models.Model):
+    """Customer plan"""
+    name = models.CharField(max_length=255)
+    global_calls = models.IntegerField(blank=True, null=True)
+    region_calls = models.IntegerField(blank=True, null=True)
+    regions = models.IntegerField(blank=True, null=True)
+    price = models.IntegerField(blank=True, null=True)
+
+    class Meta:
+        verbose_name = 'customer plan'
+        verbose_name_plural = 'customer plans'
+
+    def __unicode__(self):
+        return self.name
+
+
 class Customer(models.Model):
     """Customer data"""
     company_name = models.CharField(max_length=255)
