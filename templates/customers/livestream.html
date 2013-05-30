@@ -18,8 +18,8 @@
 
 		$(function() {
 
-			var success = window.location.pathname.split( '?' );
-			if ( success[1] == 'success=1' ) {
+			var success = window.location.search;
+			if ( success == '?success=1' ) {
 				$( '#signup-form' ).hide();
 				$( '#success' ).fadeIn( 'slow' );
 			}
