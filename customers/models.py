@@ -13,8 +13,8 @@ class CustomerPlan(models.Model):
     price = models.IntegerField(blank=True, null=True)
 
     class Meta:
-        verbose_name = 'customer plan'
-        verbose_name_plural = 'customer plans'
+        verbose_name = 'Customer Plan'
+        verbose_name_plural = 'Customer Plans'
 
     def __unicode__(self):
         return self.name
@@ -35,8 +35,8 @@ class Customer(models.Model):
     comments = models.TextField()
 
     class Meta:
-        verbose_name = 'customer'
-        verbose_name_plural = 'customers'
+        verbose_name = 'Customer'
+        verbose_name_plural = 'Customers'
         unique_together = ('company_name', 'contact_name', 'contact_mail')
 
     def __unicode__(self):
