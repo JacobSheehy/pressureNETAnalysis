@@ -29,9 +29,6 @@
 				$( '.error-log, .error-label' ).show();
 			}
 
-			$( '#res-desc, #lg-desc' ).show();
-			$( '#plan-com, #plan-pub' ).hide();
-
 			$( '#legal-title a' ).click(function(e) {
 				$( '#legal-notes' ).slideToggle( 'fast' );
 				e.preventDefault();
@@ -48,35 +45,14 @@
 
 			function showDescription( parent ) {
 				$( parent + ' .choices' ).each(function() {
-					var description = '#' + $(this).children('input[type="radio"]:checked' ).data( 'desc' ) + '-desc';
-					$( parent + ' .descriptions p' ).hide();
-					$( description ).show();
+					var description = $(this).children('input[type="radio"]:checked' ).data( 'desc' );
+					$( parent + ' .descriptions p' ).text(description);
 				});
 			};
 
 			$( '.choices input[type="radio"]' ).click(function() {
 				var parent = '#' + $(this).parent().parent().attr( 'id' );
 				showDescription( parent );
-
-				var choice = $(this).data( 'desc' );
-				switch (choice) {
-					case "res":
-						$( '.plan' ).hide();
-						$( '#plan-res, #form-company, #form-phone, #form-address' ).show();
-						$( 'label[for="id_company_name"]' ).text( 'Institute' );
-						break;
-					case "com":
-						$( '.plan' ).hide();
-						$( '#plan-com, #form-company, #form-phone, #form-address' ).show();
-						$( 'label[for="id_company_name"]' ).text( 'Company' );
-						break;
-					case "pub":
-						$( '.plan, #form-company, #form-phone, #form-address' ).hide();
-						$( '#plan-pub' ).show();
-						break;
-					default:
-						break;
-				}
 			});
 
 		});
@@ -139,24 +115,18 @@
 
 			<div class="full required-example">Required</div>
 
+      {% get_customer_types as customer_types %}
 			<div id="customer-type" class="full">
-				<h4 class="required-label">Choose your [better word here] type:</h4>
+				<h4 class="required-label">Select the applicable option:</h4>
 
 				<div id="customer-choices" class="choices">
-					<input id="customer-type-res" name="customer_type" class="required" checked="checked" type="radio" value="researcher" data-desc="res" />
-					<label for="customer-type-res">Researcher</label>
-
-					<input id="customer-type-com" name="customer_type" class="required" type="radio" value="forecaster" data-desc="com" />
-					<label for="customer-type-com">Forecaster</label>
-
-					<input id="customer-type-pub" name="customer_type" class="required" type="radio" value="public" data-desc="pub" />
-					<label for="customer-type-pub">Public</label>
+          {% for customer_type_value, customer_type_name, customer_type_desc in customer_types %}
+              <input id="customer-type-{{ customer_type_value }}" name="customer_type" class="required" type="radio" value="{{ customer_type_value }}" data-desc="{{ customer_type_desc }}" />
+              <label for="customer-type-{{ customer_type_value }}">{{ customer_type_name }}</label>
+          {% endfor %}
 				</div>
-
 				<div id="customer-descriptions" class="descriptions">
-					<p id="res-desc">For researchers</p>
-					<p id="com-desc">For forecasters</p>
-					<p id="pub-desc">For the public</p>
+          <p></p>
 				</div>
 			</div>
 
@@ -171,16 +141,14 @@
 
 				<div id="plan-choices" class="choices">
           {% for customer_plan in customer_plans %}
-              <input id="plan-{{ customer_plan.id }}" name="plan" class="required" checked="checked" type="radio" data-desc="plan-{{ customer_plan.id }}" />
+              <input id="plan-{{ customer_plan.id }}" name="customer_plan" value="{{ customer_plan.id }}" class="required" type="radio" data-desc="{{ customer_plan.description }}" />
               <label for="plan-{{ customer_plan.id }}">{{ customer_plan.name }}</label>
           {% endfor %}
 
 				</div>
 
 				<div id="plan-descriptions" class="descriptions">
-          {% for customer_plan in customer_plans %}
-              <p id="plan-{{ customer_plan.id }}-desc">{{ customer_plan.description }}</p>
-          {% endfor %}
+          <p></p>
 				</div>
 			</div>
 
@@ -208,7 +176,7 @@
 			</div>
 
 			<div id="form-company" class="form-field">
-				<label for="id_company_name">Institute</label>
+				<label for="id_company_name">Organization</label>
 				<input id="id_company_name" name="company_name" type="text" />
 			</div>
 

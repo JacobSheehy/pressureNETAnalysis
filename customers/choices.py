@@ -18,3 +18,9 @@ CUSTOMER_TYPES = (
     (CUSTOMER_RESEARCHER, 'Researcher'),
     (CUSTOMER_FORECASTER, 'Forecaster'),
 )
+
+CUSTOMER_FORM_TYPES = (
+    (CUSTOMER_RESEARCHER, 'Researcher', 'For Researchers'),
+    (CUSTOMER_FORECASTER, 'Forecaster', 'For Forecasters'),
+    (CUSTOMER_PUBLIC, 'Public', 'For the Public'),
+)

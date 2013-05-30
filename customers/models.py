@@ -32,7 +32,7 @@ class Customer(models.Model):
     api_key = models.CharField(max_length=255)
     payment_status = models.CharField(max_length=20, blank=True, null=True)
     payment_confirmation = models.CharField(max_length=255, blank=True, null=True)
-    comments = models.TextField()
+    comments = models.TextField(blank=True, null=True)
 
     class Meta:
         verbose_name = 'Customer'
