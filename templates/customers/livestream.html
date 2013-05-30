@@ -1,6 +1,9 @@
 {% load url from future %}
 {% load customers_tags %}
 
+{% get_customer_types as customer_types %}
+{% get_customer_plans as customer_plans %}
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -44,10 +47,12 @@
 			var customer = $( '#customer-type input[type="radio"]:checked' ).id;
 
 			switch ( customer ) {
-				case '':
-					$( '.plan' ).hide();
-					$( '#' ).show();
-					break;
+        {% for customer_type_value, customer_type_name, customer_type_description in customer_types %}
+          case '{{ customer_type_value }}':
+            $( '.plan' ).hide();
+            $( '#{{ customer_type_value }}' ).show();
+            break;
+        {% endfor %}
 			}
 
 			$( '.choices input[type="radio"]' ).click(function() {
@@ -115,7 +120,6 @@
 
 			<div class="full required-example">Required</div>
 
-      {% get_customer_types as customer_types %}
 			<div id="customer-type" class="full">
 				<h4 class="required-label">Select the applicable option:</h4>
 
@@ -130,13 +134,12 @@
 				</div>
 			</div>
 
-			<div id="plan-res" class="full plan">
+			<div id="plan-researcher" class="full plan">
 				<h4>Your plan:</h4>
 				<p>The researcher plan is blah blah blah.</p>
 			</div>
 
-      {% get_customer_plans as customer_plans %}
-			<div id="plan-com" class="full plan">
+			<div id="plan-forecaster" class="full plan">
 				<h4 class="required-label">Choose your plan:</h4>
 
 				<div id="plan-choices" class="choices">
@@ -152,7 +155,7 @@
 				</div>
 			</div>
 
-			<div id="plan-pub" class="full plan">
+			<div id="plan-public" class="full plan">
 				<h4>Your plan:</h4>
 				<p>The public plan is blah blah blah.</p>
 			</div>
