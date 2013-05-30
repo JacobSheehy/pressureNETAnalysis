@@ -288,10 +288,10 @@ a {
 			padding: 0.25rem;
 			}
 
-		.error-label {
+		.signup .error-label {
 			display: none;
 			color: #800;
-			width: 18.75rem;
+			width: 18.75rem !important;
 			}
 
 		.required-example {font-size: 0.75rem;}
