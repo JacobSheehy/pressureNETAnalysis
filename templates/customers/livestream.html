@@ -34,21 +34,21 @@
 				e.preventDefault();
 			});
 
-			$( '#signup-nav a' ).click(function(e) {
-				$( '#signup-nav a' ).removeClass( 'selected' );
-				$(this).addClass( 'selected' );
-				var current = $(this).data( 'select' );
-				$( 'form.signup' ).removeClass( 'current' );
-				$( '#' + current ).addClass( 'current' );
-				e.preventDefault();
-			});
-
 			function showDescription( parent ) {
 				$( parent + ' .choices' ).each(function() {
-					var description = $(this).children('input[type="radio"]:checked' ).data( 'desc' );
+					var description = $(this).children( 'input[type="radio"]:checked' ).data( 'desc' );
 					$( parent + ' .descriptions p' ).text(description);
 				});
 			};
+
+			var customer = $( '#customer-type input[type="radio"]:checked' ).id;
+
+			switch ( customer ) {
+				case '':
+					$( '.plan' ).hide();
+					$( '#' ).show();
+					break;
+			}
 
 			$( '.choices input[type="radio"]' ).click(function() {
 				var parent = '#' + $(this).parent().parent().attr( 'id' );
