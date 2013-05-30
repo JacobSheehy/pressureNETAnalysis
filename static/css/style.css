@@ -274,29 +274,6 @@ a {
 			margin-bottom: 0.625rem;
 			}
 
-	#signup-nav {margin-bottom: -0.625rem;}
-
-		#signup-nav a {
-			display: block;
-			float: left;
-			color: #333;
-			font-size: 1rem;
-			width: auto;
-			background-color: #ddd;
-			padding: 0.3125rem 0.625rem;
-			margin-right: 0.25rem;
-			}
-
-			#signup-nav a:hover {
-				color: #fff;
-				background-color: #33b5e5;
-				}
-
-			#signup-nav a.selected {
-				color: #000;
-				background-color: #eee;
-				}
-
 	form.signup {
 		background-color: #eee;
 		padding: 0.625rem 0;
@@ -309,6 +286,12 @@ a {
 		.signup input[type="text"] {
 			width: 13.25rem;
 			padding: 0.25rem;
+			}
+
+		.error-label {
+			display: none;
+			color: #800;
+			width: 18.75rem;
 			}
 
 		.required-example {font-size: 0.75rem;}

@@ -26,6 +26,7 @@
 
 			if ( {% if form.errors %}true{% else %}false{% endif %} ) {
 				$( '.error-log' ).show();
+				$( '#form-name, #form-mail, #form-company, #form-phone' ).height( $(this).height() + 24 );
 			}
 
 			$( '#res-desc, #lg-desc' ).show();
@@ -61,16 +62,16 @@
 				switch (choice) {
 					case "res":
 						$( '.plan' ).hide();
-						$( '#plan-res, #company, #phone, #address' ).show();
+						$( '#plan-res, #form-company, #form-phone, #form-address' ).show();
 						$( 'label[for="id_company_name"]' ).text( 'Institute' );
 						break;
 					case "com":
 						$( '.plan' ).hide();
-						$( '#plan-com, #company, #phone, #address' ).show();
+						$( '#plan-com, #form-company, #form-phone, #form-address' ).show();
 						$( 'label[for="id_company_name"]' ).text( 'Company' );
 						break;
 					case "pub":
-						$( '.plan, #company, #phone, #address' ).hide();
+						$( '.plan, #form-company, #form-phone, #form-address' ).hide();
 						$( '#plan-pub' ).show();
 						break;
 					default:
@@ -193,33 +194,36 @@
 				<h4>Your plan:</h4>
 				<p>The public plan is blah blah blah.</p>
 			</div>
-			
-      <div class="form-field {% if form.contact_name.errors %}error{% endif %}">
+
+			<div id="form-name" class="form-field {% if form.contact_name.errors %}error{% endif %}">
 				<label for="id_contact_name" class="required-label">Name</label>
 				<input id="id_contact_name" name="contact_name" value="{% if form.contact_name.value %}{{ form.contact_name.value }}{% endif %}" class="required" type="text" />
+				<label for="id_contact_name" class="error-label"></label>
 			</div>
 
-			<div class="form-field {% if form.contact_mail.errors %}error{% endif %}">
+			<div id="form-mail" class="form-field {% if form.contact_mail.errors %}error{% endif %}">
 				<label for="id_contact_mail" class="required-label">E-mail</label>
 				<input id="id_contact_mail" name="contact_mail" value="{% if form.contact_mail.value %}{{ form.contact_mail.value }}{% endif %}" class="required" type="text" />
+				<label for="id_contact_mail" class="error-label"></label>
 			</div>
 
-			<div id="company" class="form-field">
+			<div id="form-company" class="form-field">
 				<label for="id_company_name">Institute</label>
 				<input id="id_company_name" name="company_name" type="text" />
 			</div>
 
-			<div id="phone" class="form-field">
+			<div id="form-phone" class="form-field">
 				<label for="id_contact_phone">Phone</label>
 				<input id="id_contact_phone" name="contact_phone" type="text" />
+				<label for="id_contact_phone" class="error-label"></label>
 			</div>
 
-			<div id="address" class="form-field">
+			<div id="form-address" class="form-field">
 				<label for="id_contact_address">Address</label>
 				<textarea id="id_contact_address" name="contact_address" class="address"></textarea>
 			</div>
 
-			<div class="form-field">
+			<div id="form-comments" class="form-field">
 				<label for="id_comments">Comments</label>
 				<textarea id="id_comments" name="comments" value="{% if form.comments.value %}{{ form.comments.value }}{% endif %}" class="comments"></textarea>
 			</div>
