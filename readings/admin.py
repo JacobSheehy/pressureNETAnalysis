@@ -20,11 +20,12 @@ class ReadingAdmin(admin.ModelAdmin):
         current_date = datetime.datetime(now.year, now.month, now.day, now.hour)
 
         readings_per_hour = []
+        active_users_per_hour = []
         for num_hours in range(1, 150):
             start_date = to_unix(current_date - datetime.timedelta(hours=num_hours))
             end_date = to_unix(current_date - datetime.timedelta(hours=(num_hours - 1)))
 
-            cache_key = 'admin:%s:%s' % (start_date, end_date)
+            cache_key = 'admin:active_users:%s:%s' % (start_date, end_date)
             readings = cache.get(cache_key)
 
             if not readings:
@@ -33,12 +34,7 @@ class ReadingAdmin(admin.ModelAdmin):
 
             readings_per_hour.append([end_date, readings])
 
-        active_users_per_hour = []
-        for num_hours in range(1, 150):
-            start_date = to_unix(current_date - datetime.timedelta(hours=num_hours))
-            end_date = to_unix(current_date - datetime.timedelta(hours=(num_hours - 1)))
-
-            cache_key = 'admin:%s:%s' % (start_date, end_date)
+            cache_key = 'admin:readings_per_hour:%s:%s' % (start_date, end_date)
             active_users = cache.get(cache_key)
 
             if not active_users:
