@@ -257,14 +257,14 @@
         });
     }
 
-    PressureNET.updateGraph = function(min_latitude, max_latitude, min_longitude, MaxVisLon, start_time, end_time, length) {
-      $('#min_latitudeCell').html(parseFloat(min_latitude).toFixed(6));
-      $('#max_latitudeCell').html(parseFloat(max_latitude).toFixed(6));
-      $('#min_longitudeCell').html(parseFloat(min_longitude).toFixed(6));
-      $('#max_longitudeCell').html(parseFloat(max_longitude).toFixed(6));
-      $('#start_timeCell').html($.datepicker.formatDate('MM dd yy', new Date(start_time)));
-      $('#end_timeCell').html($.datepicker.formatDate('MM dd yy', new Date(end_time)));
-      $('#resultsCountCell').html(length);
+    PressureNET.updateGraph = function(min_latitude, max_latitude, min_longitude, max_longitude, start_time, end_time, length) {
+      $('#min_latitude_cell').html(parseFloat(min_latitude).toFixed(6));
+      $('#max_latitude_cell').html(parseFloat(max_latitude).toFixed(6));
+      $('#min_longitude_cell').html(parseFloat(min_longitude).toFixed(6));
+      $('#max_longitude_cell').html(parseFloat(max_longitude).toFixed(6));
+      $('#start_time_cell').html($.datepicker.formatDate('MM dd yy', new Date(start_time)));
+      $('#end_time_cell').html($.datepicker.formatDate('MM dd yy', new Date(end_time)));
+      $('#resultsCount_cell').html(length);
     }
 
     PressureNET.showShareLink = function(link) {
