@@ -2,23 +2,36 @@ import datetime
 import time
 
 from django.contrib import admin
-from readings.models import Reading, ReadingSync, Condition
+from django.utils import simplejson as json
 
+from readings.models import Reading, ReadingSync, Condition
+from readings.tests import to_unix, from_unix
 
 class ReadingAdmin(admin.ModelAdmin):
     list_display = ('user_id', 'latitude', 'longitude', 'reading', 'date', 'sharing')
     list_filter = ('sharing',)
 
-    def changelist_view(self, request, extra_context=None):
-        hour_ago = datetime.datetime.now() - datetime.timedelta(hours=1)
-        hour_ago = time.mktime(hour_ago.timetuple())
-        readings = Reading.objects.filter(daterecorded__gte=(hour_ago * 1000)).count()
+    def has_add_permission(self, *args, **kwargs):
+        return False
 
-        active_users = Reading.objects.all().values_list('user_id').distinct().count()
+    def changelist_view(self, request, extra_context=None):
+        readings_per_day = []
+        for num_days in range(1, 20):
+            start_date = to_unix(datetime.date.today() - datetime.timedelta(days=num_days))
+            end_date = to_unix(datetime.date.today() - datetime.timedelta(days=(num_days-1)))
+            readings = Reading.objects.all().filter(daterecorded__gte=start_date, daterecorded__lte=end_date).count()
+            readings_per_day.append([end_date, readings])
+
+        active_users = []
+        for num_days in range(1, 20):
+            start_date = to_unix(datetime.date.today() - datetime.timedelta(days=num_days))
+            end_date = to_unix(datetime.date.today() - datetime.timedelta(days=(num_days-1)))
+            users = Reading.objects.all().filter(daterecorded__gte=start_date, daterecorded__lte=end_date).values_list('user_id').distinct().count()
+            active_users.append([end_date, users])
 
         context = {
-            'readings_per_hour': readings,
-            'active_users': active_users,
+            'readings_data': json.dumps(readings_per_day),
+            'active_user_data': json.dumps(active_users),
         }
 
         if extra_context:

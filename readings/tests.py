@@ -17,7 +17,7 @@ def to_unix(date):
 
 
 def from_unix(timestamp):
-    return long(datetime.datetime.fromtimestamp(timestamp / 1000.0))
+    return datetime.datetime.fromtimestamp(timestamp / 1000.0)
 
 
 class ReadingFactory(factory.Factory):
