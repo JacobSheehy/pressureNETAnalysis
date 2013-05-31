@@ -1,11 +1,12 @@
 import datetime
-import time
 
+from django.core.cache import cache
 from django.contrib import admin
 from django.utils import simplejson as json
 
 from readings.models import Reading, ReadingSync, Condition
-from readings.tests import to_unix, from_unix
+from readings.tests import to_unix
+
 
 class ReadingAdmin(admin.ModelAdmin):
     list_display = ('user_id', 'latitude', 'longitude', 'reading', 'date', 'sharing')
@@ -18,15 +19,29 @@ class ReadingAdmin(admin.ModelAdmin):
         readings_per_day = []
         for num_days in range(1, 20):
             start_date = to_unix(datetime.date.today() - datetime.timedelta(days=num_days))
-            end_date = to_unix(datetime.date.today() - datetime.timedelta(days=(num_days-1)))
-            readings = Reading.objects.all().filter(daterecorded__gte=start_date, daterecorded__lte=end_date).count()
+            end_date = to_unix(datetime.date.today() - datetime.timedelta(days=(num_days - 1)))
+
+            cache_key = 'admin:%s:%s' % (start_date, end_date)
+            readings = cache.get(cache_key)
+
+            if not readings:
+                readings = Reading.objects.all().filter(daterecorded__gte=start_date, daterecorded__lte=end_date).count()
+                cache.set(cache_key, readings, 9999999999)
+
             readings_per_day.append([end_date, readings])
 
         active_users = []
         for num_days in range(1, 20):
             start_date = to_unix(datetime.date.today() - datetime.timedelta(days=num_days))
-            end_date = to_unix(datetime.date.today() - datetime.timedelta(days=(num_days-1)))
-            users = Reading.objects.all().filter(daterecorded__gte=start_date, daterecorded__lte=end_date).values_list('user_id').distinct().count()
+            end_date = to_unix(datetime.date.today() - datetime.timedelta(days=(num_days - 1)))
+
+            cache_key = 'admin:%s:%s' % (start_date, end_date)
+            users = cache.get(cache_key)
+
+            if not users:
+                users = Reading.objects.all().filter(daterecorded__gte=start_date, daterecorded__lte=end_date).values_list('user_id').distinct().count()
+                cache.set(cache_key, users, 9999999999)
+
             active_users.append([end_date, users])
 
         context = {
