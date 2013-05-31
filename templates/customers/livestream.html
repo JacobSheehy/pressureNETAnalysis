@@ -7,131 +7,131 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <title>pressureNET | Live Stream</title>
 
-	<link rel="shortcut icon" href="http://www.cumulonimbus.ca/favicon.gif">
+  <link rel="shortcut icon" href="http://www.cumulonimbus.ca/favicon.gif">
 
     <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/style.css">
     <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Roboto:300,400,700,900,400italic">
 
-	<script language="Javascript" type="text/javascript" src="http://code.jquery.com/jquery-1.9.1.js"></script>
+  <script language="Javascript" type="text/javascript" src="http://code.jquery.com/jquery-1.9.1.js"></script>
     <script type="text/javascript">
 
-		$(function() {
+    $(function() {
 
-			var success = window.location.search;
-			if ( success == '?success=1' ) {
-				$( '#signup-form' ).hide();
-				$( '#success' ).fadeIn( 'slow' );
-			}
+      var success = window.location.search;
+      if ( success == '?success=1' ) {
+        $( '#signup-form' ).hide();
+        $( '#success' ).fadeIn( 'slow' );
+      }
 
-			if ( {% if form.errors %}true{% else %}false{% endif %} ) {
-				$( '.error-log, .error-label' ).show();
-			}
+      if ( {% if form.errors %}true{% else %}false{% endif %} ) {
+        $( '.error-log, .error-label' ).show();
+      }
 
-			$( '#legal-title a' ).click(function(e) {
-				$( '#legal-notes' ).slideToggle( 'fast' );
-				e.preventDefault();
-			});
+      $( '#legal-title a' ).click(function(e) {
+        $( '#legal-notes' ).slideToggle( 'fast' );
+        e.preventDefault();
+      });
 
-			function showDescription() {
+      function showDescription() {
           var selected = $('input[type="radio"]:checked');
           selected.each(function () {
               var description = $(this).data('desc');
               $(this).parent().parent().find('.descriptions p').text(description);
           });
-			};
+      };
 
-			function showPlans() {
-				var customer = $( '#customer-type input[type="radio"]:checked' ).attr( 'id' );
+      function showPlans() {
+        var customer = $( '#customer-type input[type="radio"]:checked' ).attr( 'id' );
 
-				switch ( customer ) {
-					{% for customer_type_value, customer_type_name, customer_type_description in customer_types %}
-					case 'customer-type-{{ customer_type_value }}':
-						$( '.plan' ).hide();
-						$( '#plan-{{ customer_type_value }}' ).show();
-						break;
-					{% endfor %}
-					default:
-						$( '.plan' ).hide();
-				}
-			};
+        switch ( customer ) {
+          {% for customer_type_value, customer_type_name, customer_type_description in customer_types %}
+          case 'customer-type-{{ customer_type_value }}':
+            $( '.plan' ).hide();
+            $( '#plan-{{ customer_type_value }}' ).show();
+            break;
+          {% endfor %}
+          default:
+            $( '.plan' ).hide();
+        }
+      };
 
-			showPlans();
+      showPlans();
       showDescription();
 
-			$( '.choices input[type="radio"]' ).click(function() {
-				showDescription();
+      $( '.choices input[type="radio"]' ).click(function() {
+        showDescription();
         showPlans();
-			});
+      });
 
-		});
+    });
 
 
-		var _gaq = _gaq || [];
-		_gaq.push(['_setAccount', 'UA-78967-8']);
-		_gaq.push(['_trackPageview']);
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-78967-8']);
+    _gaq.push(['_trackPageview']);
 
-		(function() {
-			var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-			ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-			var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-		})();
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
 
-	</script>
+  </script>
 </head>
 <body>
-	<header id="masthead">
-		<h1 id="site-title"><a href="/">pressure<span>NET</span></a></h1>
-		<nav>
-			<a href="{% url 'customers-livestream'%}">Live Stream</a>
-			<a href="{% url 'home-about' %}">About</a>
-			<a id="link-cb" class="link-logo" href="http://cumulonimbus.ca">Cumulonimbus</a>
-			<a id="link-gp" class="link-logo" href="https://play.google.com/store/apps/details?id=ca.cumulonimbus.barometernetwork" target="_blank">Download pressureNET</a>
-		</nav>
-	</header>
+  <header id="masthead">
+    <h1 id="site-title"><a href="/">pressure<span>NET</span></a></h1>
+    <nav>
+      <a href="{% url 'customers-livestream'%}">Live Stream</a>
+      <a href="{% url 'home-about' %}">About</a>
+      <a id="link-cb" class="link-logo" href="http://cumulonimbus.ca">Cumulonimbus</a>
+      <a id="link-gp" class="link-logo" href="https://play.google.com/store/apps/details?id=ca.cumulonimbus.barometernetwork" target="_blank">Download pressureNET</a>
+    </nav>
+  </header>
 
-	<section id="main" class="group">
+  <section id="main" class="group">
 
-		<div id="success">
-			<h3>Thanks for signing up!</h3>
-			<p>You'll receive your API key by e-mail shortly.</p>
-		</div>
+    <div id="success">
+      <h3>Thanks for signing up!</h3>
+      <p>You'll receive your API key by e-mail shortly.</p>
+    </div>
 
-		<section id="live-intro" class="full">
-			<h3>pressureNET Live Stream Service</h3>
-			<p>Our live stream of atmospheric pressure will allow you to access our global dataset with a simple API.</p>
-			<p>We’re going to ensure that this data is as accessible as possible. If there’s anything that we can do to make this service easier to use, please let us know. We’re offering a stable and simple service that we are quickly improving.</p>
-			<p>This live stream is accessed through a simple <a href="http://pressurenet.cumulonimbus.ca/static/docs/pressureNET-Live-API-2.0.pdf">HTTPS API</a> (pdf). Please email <a href="mailto:livestream@cumulonimbus.ca">livestream@cumulonimbus.ca</a> if you're interested.</p>
+    <section id="live-intro" class="full">
+      <h3>pressureNET Live Stream Service</h3>
+      <p>Our live stream of atmospheric pressure will allow you to access our global dataset with a simple API.</p>
+      <p>We’re going to ensure that this data is as accessible as possible. If there’s anything that we can do to make this service easier to use, please let us know. We’re offering a stable and simple service that we are quickly improving.</p>
+      <p>This live stream is accessed through a simple <a href="http://pressurenet.cumulonimbus.ca/static/docs/pressureNET-Live-API-2.0.pdf">HTTPS API</a> (pdf). Please email <a href="mailto:livestream@cumulonimbus.ca">livestream@cumulonimbus.ca</a> if you're interested.</p>
 
-			<h4 id="legal-title"><a class="closed">Legal Notes</a></h4>
-			<ul id="legal-notes">
-				<li>Cumulonimbus has been primarily motivated by and is committed foremost to improving the world and advancing scientific progress. We are therefore happy to supply our live stream free of charge for scientific and non-commercial use only.</li>
-				<li>We are proud to have been providing a continuous live stream to researchers at the University of Washington for the past month. However, in a project like this, technical or human error can interrupt, distort, or otherwise interfere with our live stream, and Cumulonimbus makes no representations as to the quality, consistency, or continuity of our live stream, whether affected by negligence or otherwise. Cumulonimbus assumes no liability whatsoever in supplying our live stream free of charge to researchers.</li>
-				<li>We reserve all rights to the data supplied in our live stream and may withdraw access to the live stream at any time and for any reason.</li>
-				<li>Please let us know if you’d like to redistribute the data supplied in our live stream, and we’ll be happy to discuss!</li>
-				<li>As the project grows, our operational needs may change, so we may charge a fee for our live stream in the future. We will of course always remain foremost committed to promoting scientific progress, so we will ever endeavour to help advance your research objectives.</li>
-				<li>By accepting use of our live stream, you accept the terms above.</li>
-			</ul>
-		</section>
+      <h4 id="legal-title"><a class="closed">Legal Notes</a></h4>
+      <ul id="legal-notes">
+        <li>Cumulonimbus has been primarily motivated by and is committed foremost to improving the world and advancing scientific progress. We are therefore happy to supply our live stream free of charge for scientific and non-commercial use only.</li>
+        <li>We are proud to have been providing a continuous live stream to researchers at the University of Washington for the past month. However, in a project like this, technical or human error can interrupt, distort, or otherwise interfere with our live stream, and Cumulonimbus makes no representations as to the quality, consistency, or continuity of our live stream, whether affected by negligence or otherwise. Cumulonimbus assumes no liability whatsoever in supplying our live stream free of charge to researchers.</li>
+        <li>We reserve all rights to the data supplied in our live stream and may withdraw access to the live stream at any time and for any reason.</li>
+        <li>Please let us know if you’d like to redistribute the data supplied in our live stream, and we’ll be happy to discuss!</li>
+        <li>As the project grows, our operational needs may change, so we may charge a fee for our live stream in the future. We will of course always remain foremost committed to promoting scientific progress, so we will ever endeavour to help advance your research objectives.</li>
+        <li>By accepting use of our live stream, you accept the terms above.</li>
+      </ul>
+    </section>
 
-		<form id="signup-form" class="signup full" method="POST" action="{% url 'customers-livestream' %}">
+    <form id="signup-form" class="signup full" method="POST" action="{% url 'customers-livestream' %}">
 
       {% csrf_token %}
 
-			<ul class="error-log full">
+      <ul class="error-log full">
           Please correct the highlighted errors.
-			</ul>
+      </ul>
 
-			<div class="full required-example">Required</div>
+      <div class="full required-example">Required</div>
 
-			<div id="customer-type" class="full">
-				<h4 class="required-label">Select the applicable option:</h4>
+      <div id="customer-type" class="full">
+        <h4 class="required-label">Select the applicable option:</h4>
 
-				<div id="customer-choices" class="choices">
+        <div id="customer-choices" class="choices">
           {% for customer_type_value, customer_type_name, customer_type_desc in customer_types %}
               <input id="customer-type-{{ customer_type_value }}" name="customer_type" class="required"
                   {% if form.customer_type.value %}
@@ -142,21 +142,21 @@
                   type="radio" value="{{ customer_type_value }}" data-desc="{{ customer_type_desc }}" />
               <label for="customer-type-{{ customer_type_value }}">{{ customer_type_name }}</label>
           {% endfor %}
-				</div>
-				<div id="customer-descriptions" class="descriptions">
+        </div>
+        <div id="customer-descriptions" class="descriptions">
           <p></p>
-				</div>
-			</div>
+        </div>
+      </div>
 
-			<div id="plan-researcher" class="full plan">
-				<h4>Your plan:</h4>
-				<p>The researcher plan is blah blah blah.</p>
-			</div>
+      <div id="plan-researcher" class="full plan">
+        <h4>Your plan:</h4>
+        <p>The researcher plan is blah blah blah.</p>
+      </div>
 
-			<div id="plan-forecaster" class="full plan">
-				<h4 class="required-label">Choose your plan:</h4>
+      <div id="plan-forecaster" class="full plan">
+        <h4 class="required-label">Choose your plan:</h4>
 
-				<div id="plan-choices" class="choices">
+        <div id="plan-choices" class="choices">
           {% for customer_plan in customer_plans %}
               <input id="plan-{{ customer_plan.id }}" name="customer_plan" value="{{ customer_plan.id }}" class="required"
                   {% if form.customer_plan.value %}
@@ -168,72 +168,69 @@
               <label for="plan-{{ customer_plan.id }}">{{ customer_plan.name }}</label>
           {% endfor %}
 
-				</div>
+        </div>
 
-				<div id="plan-descriptions" class="descriptions">
+        <div id="plan-descriptions" class="descriptions">
           <p></p>
-				</div>
-			</div>
+        </div>
+      </div>
 
-			<div id="plan-public" class="full plan">
-				<h4>Your plan:</h4>
-				<p>The public plan is blah blah blah.</p>
-			</div>
+      <div id="plan-public" class="full plan">
+        <h4>Your plan:</h4>
+        <p>The public plan is blah blah blah.</p>
+      </div>
 
-			<div id="form-name" class="form-field {% if form.contact_name.errors %}error{% endif %}">
-				<label for="id_contact_name" class="required-label">Name</label>
-				<input id="id_contact_name" name="contact_name" value="{% if form.contact_name.value %}{{ form.contact_name.value }}{% endif %}" class="required" type="text" />
-				<label for="id_contact_name" class="error-label">
-            {% for error in form.contact_name.errors %}
-                {{ error }}
-            {% endfor %}
+      <div id="form-name" class="form-field {% if form.contact_name.errors %}error{% endif %}">
+        <label for="id_contact_name" class="required-label">Name</label>
+        {{ form.contact_name }}
+        <label for="id_contact_name" class="error-label">
+            {{ form.contact_name.errors }}
         </label>
-			</div>
+      </div>
 
-			<div id="form-mail" class="form-field {% if form.contact_mail.errors %}error{% endif %}">
-				<label for="id_contact_mail" class="required-label">E-mail</label>
-				<input id="id_contact_mail" name="contact_mail" value="{% if form.contact_mail.value %}{{ form.contact_mail.value }}{% endif %}" class="required" type="text" />
-				<label for="id_contact_mail" class="error-label">
+      <div id="form-mail" class="form-field {% if form.contact_mail.errors %}error{% endif %}">
+        <label for="id_contact_mail" class="required-label">E-mail</label>
+        {{ form.contact_mail }}
+        <label for="id_contact_mail" class="error-label">
             {{ form.contact_mail.errors }}
         </label>
-			</div>
+      </div>
 
-			<div id="form-company" class="form-field">
-				<label for="id_company_name">Organization</label>
-				<input id="id_company_name" name="company_name" type="text" />
-			</div>
+      <div id="form-company" class="form-field">
+        <label for="id_company_name">Organization</label>
+        {{ form.company_name }}
+      </div>
 
-			<div id="form-phone" class="form-field">
-				<label for="id_contact_phone">Phone</label>
-				<input id="id_contact_phone" name="contact_phone" type="text" />
-				<label for="id_contact_phone" class="error-label"></label>
-			</div>
+      <div id="form-phone" class="form-field">
+        <label for="id_contact_phone">Phone</label>
+        {{ form.contact_phone }}
+      </div>
 
-			<div id="form-address" class="form-field">
-				<label for="id_contact_address">Address</label>
-				<textarea id="id_contact_address" name="contact_address" class="address"></textarea>
-			</div>
+      <div id="form-address" class="form-field">
+        <label for="id_contact_address">Address</label>
+        {{ form.contact_address }}
+      </div>
 
-			<div id="form-comments" class="form-field">
-				<label for="id_comments">Comments</label>
-				<textarea id="id_comments" name="comments" value="{% if form.comments.value %}{{ form.comments.value }}{% endif %}" class="comments"></textarea>
-			</div>
+      <div id="form-comments" class="form-field">
+        <label for="id_comments">Comments</label>
+        {{ form.comments }}
+      </div>
 
-			<input type="submit" value="Sign up!" />
+      <input type="submit" value="Sign up!" />
 
-		</form>
+    </form>
 
-	</section>
+  </section>
 
-	<footer id="colophon" class="group">
-		<a class="contact" href="mailto:livestream@cumulonimbus.ca?subject=Live%20Stream%20Sign-Up">Contact us!</a>
-		<br/>
-		<nav id="social">
-			<a id="link-tw" class="link-social" href="https://twitter.com/Cumulonimbus_ca" title="Follow us on Twitter!"></a>
-			<a id="link-pl" class="link-social" href="https://plus.google.com/105785057346543310426/" title="Follow us on Google Plus!"></a>
-			<a id="link-fb" class="link-social" href="http://www.facebook.com/Cumulonimbus.ca" title="Follow us on Facebook!"></a>
-		</nav>
-	</footer>
+  <footer id="colophon" class="group">
+    <a class="contact" href="mailto:livestream@cumulonimbus.ca?subject=Live%20Stream%20Sign-Up">Contact us!</a>
+    <br/>
+    <nav id="social">
+      <a id="link-tw" class="link-social" href="https://twitter.com/Cumulonimbus_ca" title="Follow us on Twitter!"></a>
+      <a id="link-pl" class="link-social" href="https://plus.google.com/105785057346543310426/" title="Follow us on Google Plus!"></a>
+      <a id="link-fb" class="link-social" href="http://www.facebook.com/Cumulonimbus.ca" title="Follow us on Facebook!"></a>
+    </nav>
+  </footer>
 
 </body>
 </html>

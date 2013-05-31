@@ -26,7 +26,7 @@ class Customer(models.Model):
     customer_plan = models.ForeignKey(CustomerPlan, blank=True, null=True)
     company_name = models.CharField(max_length=255, blank=True, null=True)
     contact_name = models.CharField(max_length=255)
-    contact_mail = models.EmailField(max_length=100)
+    contact_mail = models.EmailField(max_length=100, unique=True)
     contact_phone = models.CharField(max_length=25, blank=True, null=True)
     contact_address = models.CharField(max_length=255, blank=True, null=True)
     api_key = models.CharField(max_length=255)
@@ -37,7 +37,6 @@ class Customer(models.Model):
     class Meta:
         verbose_name = 'Customer'
         verbose_name_plural = 'Customers'
-        unique_together = ('company_name', 'contact_name', 'contact_mail')
 
     def __unicode__(self):
         return self.company_name

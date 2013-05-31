@@ -18,6 +18,8 @@ ALLOWED_HOSTS = (
     'pressurenet-staging.elasticbeanstalk.com'
 )
 
+DEFAULT_FROM_EMAIL = 'noreply@pressurenet.cumulonimbus.ca'
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
