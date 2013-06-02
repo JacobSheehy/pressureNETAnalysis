@@ -148,6 +148,10 @@ INSTALLED_APPS = (
     'utils',
 )
 
+# AWS Settings
+AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID', '') 
+AWS_SECRET_KEY = os.environ.get('AWS_SECRET_KEY', '')
+
 
 # Grappelli Admin
 GRAPPELLI_ADMIN_TITLE = 'PressureNET Admin'
