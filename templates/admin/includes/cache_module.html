@@ -1,0 +1,18 @@
+{% extends "grappelli/dashboard/module.html" %}
+{% load i18n %}
+{% block module_content %}
+    <ul class="grp-listing-small">
+        {% spaceless %}
+            <li class="grp-row">
+                <p class="grp-font-color-quiet">
+                    Cache Online:
+                    {% if cache_online %}
+                        <img src="{{ STATIC_URL }}admin/img/icon-yes.gif" />
+                    {% else %}
+                        <img src="{{ STATIC_URL }}admin/img/icon-no.gif" />
+                    {% endif %}
+                </p>
+            </li>
+        {% endspaceless %}
+    </ul>
+{% endblock %}

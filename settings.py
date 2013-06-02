@@ -117,9 +117,19 @@ MIDDLEWARE_CLASSES = (
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
 
+TEMPLATE_CONTEXT_PROCESSORS = (
+    'django.contrib.auth.context_processors.auth',
+    'django.core.context_processors.request',
+    'django.core.context_processors.i18n',
+    'django.contrib.messages.context_processors.messages',
+)
+
 ROOT_URLCONF = 'urls'
 
 INSTALLED_APPS = (
+    'grappelli.dashboard',
+    'grappelli',
+
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -138,6 +148,14 @@ INSTALLED_APPS = (
     'utils',
 )
 
+
+# Grappelli Admin
+GRAPPELLI_ADMIN_TITLE = 'PressureNET Admin'
+
+GRAPPELLI_INDEX_DASHBOARD = 'dashboard.PressureNETIndexDashboard'
+
+
+# Django Rest Framework
 REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS': ('rest_framework.filters.DjangoFilterBackend',)
 }
