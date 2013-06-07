@@ -1,11 +1,12 @@
 import datetime
-import time
 
+from django.core.cache import cache
 from django.contrib import admin
 from django.utils import simplejson as json
 
 from readings.models import Reading, ReadingSync, Condition
-from readings.tests import to_unix, from_unix
+from readings.tests import to_unix
+
 
 class ReadingAdmin(admin.ModelAdmin):
     list_display = ('user_id', 'latitude', 'longitude', 'reading', 'date', 'sharing')
@@ -15,23 +16,36 @@ class ReadingAdmin(admin.ModelAdmin):
         return False
 
     def changelist_view(self, request, extra_context=None):
-        readings_per_day = []
-        for num_days in range(1, 20):
-            start_date = to_unix(datetime.date.today() - datetime.timedelta(days=num_days))
-            end_date = to_unix(datetime.date.today() - datetime.timedelta(days=(num_days-1)))
-            readings = Reading.objects.all().filter(daterecorded__gte=start_date, daterecorded__lte=end_date).count()
-            readings_per_day.append([end_date, readings])
+        now = datetime.datetime.now()
+        current_date = datetime.datetime(now.year, now.month, now.day, now.hour)
 
-        active_users = []
-        for num_days in range(1, 20):
-            start_date = to_unix(datetime.date.today() - datetime.timedelta(days=num_days))
-            end_date = to_unix(datetime.date.today() - datetime.timedelta(days=(num_days-1)))
-            users = Reading.objects.all().filter(daterecorded__gte=start_date, daterecorded__lte=end_date).values_list('user_id').distinct().count()
-            active_users.append([end_date, users])
+        readings_per_hour = []
+        active_users_per_hour = []
+        for num_hours in range(1, 150):
+            start_date = to_unix(current_date - datetime.timedelta(hours=num_hours))
+            end_date = to_unix(current_date - datetime.timedelta(hours=(num_hours - 1)))
+
+            cache_key = 'admin:active_users:%s:%s' % (start_date, end_date)
+            readings = cache.get(cache_key)
+
+            if not readings:
+                readings = Reading.objects.all().filter(daterecorded__gte=start_date, daterecorded__lte=end_date).count()
+                cache.set(cache_key, readings, 9999999999)
+
+            readings_per_hour.append([end_date, readings])
+
+            cache_key = 'admin:readings_per_hour:%s:%s' % (start_date, end_date)
+            active_users = cache.get(cache_key)
+
+            if not active_users:
+                active_users = Reading.objects.all().filter(daterecorded__gte=start_date, daterecorded__lte=end_date).values_list('user_id').distinct().count()
+                cache.set(cache_key, active_users, 9999999999)
+
+            active_users_per_hour.append([end_date, active_users])
 
         context = {
-            'readings_data': json.dumps(readings_per_day),
-            'active_user_data': json.dumps(active_users),
+            'readings_data': json.dumps(readings_per_hour),
+            'active_user_data': json.dumps(active_users_per_hour),
         }
 
         if extra_context:
