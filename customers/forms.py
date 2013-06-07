@@ -1,4 +1,4 @@
-import hashlib
+import uuid
 
 from django import forms
 from django.conf import settings
@@ -30,7 +30,7 @@ class CustomerForm(forms.ModelForm):
         recipient = self.cleaned_data.get('contact_mail', '')
         subject = 'pressureNET Live API'
         content = render_to_string('customers/email/registration.html', {
-            'customer': self.instance, 
+            'customer': self.instance,
         })
 
         email = EmailMultiAlternatives(subject, '', sender, [recipient])
@@ -45,9 +45,7 @@ class CustomerForm(forms.ModelForm):
         contact_name = cleaned_data.get('contact_name')
         contact_email = cleaned_data.get('contact_mail')
 
-        customer_info = '%s;%s;%s' % (company_name, contact_name, contact_email)
-        message = hashlib.md5(customer_info)
-        api_key = message.hexdigest()
+        api_key = uuid.uuid4().get_hex()
 
         cleaned_data['api_key'] = api_key
 
