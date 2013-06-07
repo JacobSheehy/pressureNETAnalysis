@@ -1,3 +1,23 @@
-Thank you for registering for the PressureNET API.
+<p>Hello {{ customer.contact_name }},</p>
 
-Your API key is: {{ customer.api_key }}
+<p>Thank you for signing up for the pressureNET Live API.</p> 
+
+<p>
+  Your API key is:<br/> 
+  <strong>{{ customer.api_key}}</strong>
+</p> 
+
+<p>We plan to continually improve our service and add features to our Live API. If you have comments, questions, feature requests, bug reports, etc, please email us. You can always find our Live API documentation on our website, http://pressurenet.cumulonimbus.ca.</p> 
+
+<p>You can test with the link below. We’re excited to see how you use our data at {{ customer.company_name}}!</p>
+
+<p>
+  API Demo Link:<br/> 
+  https://pressurenet.cumulonimbus.ca/live/?min_lat=29&amp;max_lat=31&amp;min_lon=-82&amp;max_lon=-79&amp;start_time=1370390400000&amp;end_time=1370397600000&amp;api_key={{ customer.api_key }}&amp;format=json
+</p>
+
+<p>
+  Thanks,<br/>
+  The Cumulonimbus Team<br/>
+  http://www.cumulonimbus.ca/<br/>
+</p>

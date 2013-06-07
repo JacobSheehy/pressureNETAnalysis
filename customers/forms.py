@@ -28,7 +28,7 @@ class CustomerForm(forms.ModelForm):
     def send_email(self):
         sender = settings.DEFAULT_FROM_EMAIL
         recipient = self.cleaned_data.get('contact_mail', '')
-        subject = 'PressureNET API Registration'
+        subject = 'pressureNET Live API'
         content = render_to_string('customers/email/registration.html', {
             'customer': self.instance, 
         })
@@ -55,4 +55,4 @@ class CustomerForm(forms.ModelForm):
 
     def save(self, *args, **kwargs):
         super(CustomerForm, self).save(*args, **kwargs)
-        #self.send_email()
+        self.send_email()
