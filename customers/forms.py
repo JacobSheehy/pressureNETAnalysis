@@ -16,7 +16,6 @@ class CustomerForm(forms.ModelForm):
         model = Customer
         fields = (
             'customer_type',
-            'customer_plan',
             'company_name',
             'contact_name',
             'contact_mail',

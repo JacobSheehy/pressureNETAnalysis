@@ -148,38 +148,6 @@
         </div>
       </div>
 
-      <div id="plan-researcher" class="full plan">
-        <h4>Your plan:</h4>
-        <p>The researcher plan is blah blah blah.</p>
-      </div>
-
-      <div id="plan-forecaster" class="full plan">
-        <h4 class="required-label">Choose your plan:</h4>
-
-        <div id="plan-choices" class="choices">
-          {% for customer_plan in customer_plans %}
-              <input id="plan-{{ customer_plan.id }}" name="customer_plan" value="{{ customer_plan.id }}" class="required"
-                  {% if form.customer_plan.value %}
-                      {% ifequal form.customer_plan.value|add:0 customer_plan.id|add:0 %}checked="checked"{% endifequal %}
-                  {% else %}
-                      {% ifequal forloop.counter0 0 %}checked="checked"{% endifequal %}
-                  {% endif %}
-                  type="radio" data-desc="{{ customer_plan.description }}" />
-              <label for="plan-{{ customer_plan.id }}">{{ customer_plan.name }}</label>
-          {% endfor %}
-
-        </div>
-
-        <div id="plan-descriptions" class="descriptions">
-          <p></p>
-        </div>
-      </div>
-
-      <div id="plan-public" class="full plan">
-        <h4>Your plan:</h4>
-        <p>The public plan is blah blah blah.</p>
-      </div>
-
       <div id="form-name" class="form-field {% if form.contact_name.errors %}error{% endif %}">
         <label for="id_contact_name" class="required-label">Name</label>
         {{ form.contact_name }}

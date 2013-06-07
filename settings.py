@@ -18,7 +18,7 @@ ALLOWED_HOSTS = (
     'pressurenet-staging.elasticbeanstalk.com'
 )
 
-DEFAULT_FROM_EMAIL = 'noreply@pressurenet.cumulonimbus.ca'
+DEFAULT_FROM_EMAIL = 'livestream@cumulonimbus.ca'
 
 DATABASES = {
     'default': {
@@ -39,6 +39,11 @@ CACHES = {
         'LOCATION': 'aws-pn-cgekrg0dxurw.egumzu.cfg.use1.cache.amazonaws.com:11211',
     }
 }
+
+EMAIL_HOST = 'email-smtp.us-east-1.amazonaws.com'
+EMAIL_HOST_USER = 'AKIAJ3GJKBUIY2WRDXUA'
+EMAIL_HOST_PASSWORD = 'Ag7DjM8TZb0OHvy2Uc31Gb7nd1/tOW3LpLuqeC6XezjE'
+EMAIL_USE_TLS = True
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name

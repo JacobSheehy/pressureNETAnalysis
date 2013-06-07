@@ -20,7 +20,7 @@ CUSTOMER_TYPES = (
 )
 
 CUSTOMER_FORM_TYPES = (
-    (CUSTOMER_RESEARCHER, 'Researcher', 'For Researchers'),
-    (CUSTOMER_FORECASTER, 'Forecaster', 'For Forecasters'),
-    (CUSTOMER_PUBLIC, 'Public', 'For the Public'),
+    (CUSTOMER_RESEARCHER, 'Researcher', 'Currently, researchers receive our hourly, global data at no charge. You must be researchingat an academic institution to qualify.'),
+    #(CUSTOMER_FORECASTER, 'Forecaster', 'For Forecasters'),
+    (CUSTOMER_PUBLIC, 'Public', 'Everyone may access our smaller, public dataset, which contains only data our users have agreed to share publicly.'),
 )
