@@ -18,11 +18,7 @@ ALLOWED_HOSTS = (
     'pressurenet-staging.elasticbeanstalk.com'
 )
 
-<<<<<<< HEAD
-DEFAULT_FROM_EMAIL = 'livestream@cumulonimbus.ca'
-=======
 DEFAULT_FROM_EMAIL = 'pressureNET API <livestream@cumulonimbus.ca>'
->>>>>>> 186f7be6347f1278bfd8a5f0c634924ef50b6581
 
 DATABASES = {
     'default': {
@@ -44,14 +40,7 @@ CACHES = {
     }
 }
 
-<<<<<<< HEAD
-EMAIL_HOST = 'email-smtp.us-east-1.amazonaws.com'
-EMAIL_HOST_USER = 'AKIAJ3GJKBUIY2WRDXUA'
-EMAIL_HOST_PASSWORD = 'Ag7DjM8TZb0OHvy2Uc31Gb7nd1/tOW3LpLuqeC6XezjE'
-EMAIL_USE_TLS = True
-=======
 EMAIL_BACKEND = 'django_ses.SESBackend'
->>>>>>> 186f7be6347f1278bfd8a5f0c634924ef50b6581
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
