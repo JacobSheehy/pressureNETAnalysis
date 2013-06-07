@@ -18,7 +18,7 @@ ALLOWED_HOSTS = (
     'pressurenet-staging.elasticbeanstalk.com'
 )
 
-DEFAULT_FROM_EMAIL = 'noreply@pressurenet.cumulonimbus.ca'
+DEFAULT_FROM_EMAIL = 'pressureNET API <livestream@cumulonimbus.ca>'
 
 DATABASES = {
     'default': {
@@ -39,6 +39,8 @@ CACHES = {
         'LOCATION': 'aws-pn-cgekrg0dxurw.egumzu.cfg.use1.cache.amazonaws.com:11211',
     }
 }
+
+EMAIL_BACKEND = 'django_ses.SESBackend'
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
@@ -153,8 +155,7 @@ INSTALLED_APPS = (
 
 # AWS Settings
 AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID', '') 
-AWS_SECRET_KEY = os.environ.get('AWS_SECRET_KEY', '')
-
+AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_KEY', '')
 
 # Grappelli Admin
 GRAPPELLI_ADMIN_TITLE = 'PressureNET Admin'
