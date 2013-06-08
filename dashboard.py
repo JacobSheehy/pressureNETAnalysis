@@ -73,20 +73,18 @@ class PressureNETIndexDashboard(Dashboard):
         ))
         
         # append an app list module for "Applications"
-        self.children.append(modules.AppList(
+        self.children.append(modules.ModelList(
             _('Readings'),
             collapsible=True,
             column=1,
-            css_classes=('collapse closed',),
             models=('readings.*',),
         ))
         
         # append an app list module for "Applications"
-        self.children.append(modules.AppList(
+        self.children.append(modules.ModelList(
             _('Customers'),
             collapsible=True,
             column=1,
-            css_classes=('collapse closed',),
             models=('customers.*',),
         ))
 
