@@ -31,6 +31,7 @@ class Customer(models.Model):
     contact_phone = models.CharField(max_length=25, blank=True, null=True)
     contact_address = models.CharField(max_length=255, blank=True, null=True)
     api_key = models.CharField(max_length=255)
+    api_key_enabled = models.BooleanField(default=True)
     payment_status = models.CharField(max_length=20, blank=True, null=True)
     payment_confirmation = models.CharField(max_length=255, blank=True, null=True)
     comments = models.TextField(blank=True, null=True)

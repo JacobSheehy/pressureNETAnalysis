@@ -109,8 +109,8 @@ class APIKeyViewMixin(object):
     def get(self, *args, **kwargs):
         api_key = self.request.GET.get('api_key', '')
 
-        if not Customer.objects.filter(api_key=api_key).exists():
-            return HttpResponseNotAllowed('An API Key is required')
+        if not Customer.objects.filter(api_key=api_key, api_key_enabled=True).exists():
+            return HttpResponseNotAllowed('An active API Key is required')
 
         return super(APIKeyViewMixin, self).get(*args, **kwargs)
 
