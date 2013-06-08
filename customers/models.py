@@ -22,6 +22,7 @@ class CustomerPlan(models.Model):
 
 class Customer(models.Model):
     """Customer data"""
+    creation_date = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     customer_type = models.CharField(max_length=20, choices=customer_choices.CUSTOMER_TYPES)
     customer_plan = models.ForeignKey(CustomerPlan, blank=True, null=True)
     company_name = models.CharField(max_length=255, blank=True, null=True)
@@ -39,7 +40,7 @@ class Customer(models.Model):
         verbose_name_plural = 'Customers'
 
     def __unicode__(self):
-        return self.company_name
+        return self.contact_name
 
 
 class CustomerCallLog(models.Model):

@@ -9,8 +9,36 @@ admin.site.register(CustomerPlan, CustomerPlanAdmin)
 
 
 class CustomerAdmin(admin.ModelAdmin):
-    list_display = ('contact_name', 'company_name', 'contact_mail', 'customer_type')
+    list_display = ('contact_name', 'company_name', 'contact_mail', 'customer_type', 'customer_calls', 'creation_date')
     list_filter = ('customer_type',)
+    readonly_fields = ('creation_date', 'api_key')
+    fieldsets = (
+        ('Administration', {
+            'fields': (
+                'creation_date',
+                'api_key',
+            ),
+        }),
+        ('Plan', {
+            'fields': (
+                'customer_type',
+                'customer_plan',
+            ),
+        }),
+        ('Customer', {
+            'fields': (
+                'contact_name',
+                'contact_mail',
+                'company_name',
+                'contact_phone',
+                'contact_address',
+                'comments',
+            ),
+        }),
+    )
+
+    def customer_calls(self, instance):
+        return instance.customercalllog_set.count()
 
 admin.site.register(Customer, CustomerAdmin)
 
