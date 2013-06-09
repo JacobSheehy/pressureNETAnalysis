@@ -1,5 +1,7 @@
 from rest_framework import serializers
 
+from customers import choices as customers_choices
+from customers.models import Customer
 from readings.models import Reading, Condition
 
 
@@ -31,6 +33,17 @@ class ReadingLiveSerializer(serializers.ModelSerializer):
             'observation_type',
             'observation_unit',
         )
+
+    def get_fields(self):
+        fields = super(ReadingLiveSerializer, self).get_fields()
+
+        api_key = self.context['view'].request.GET.get('api_key', '')
+        customer = Customer.objects.get(api_key=api_key)
+
+        if customer.customer_type == customers_choices.CUSTOMER_PUBLIC:
+            del fields['user_id']
+
+        return fields
 
 
 class ConditionListSerializer(serializers.ModelSerializer):
