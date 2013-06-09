@@ -1,4 +1,7 @@
 from django.contrib import admin
+from django.core.urlresolvers import reverse
+from django.utils.safestring import mark_safe
+
 from customers.models import CustomerPlan, Customer, CustomerCallLog
 
 
@@ -39,7 +42,11 @@ class CustomerAdmin(admin.ModelAdmin):
     )
 
     def customer_calls(self, instance):
-        return instance.customercalllog_set.count()
+        return mark_safe('<a href="%s?customer__id__exact=%s">%s</a>' % (
+            reverse('admin:customers_customercalllog_changelist'),
+            instance.id,
+            instance.customercalllog_set.count(),
+        ))
 
 admin.site.register(Customer, CustomerAdmin)
 
