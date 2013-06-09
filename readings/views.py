@@ -156,6 +156,7 @@ class LoggedLocationListView(FilteredListAPIView):
         call_log.results_limit = parameters['results_limit']
         call_log.use_utc = ''
         call_log.processing_time = time.time() - start
+        call_log.ip_address = self.request.META['REMOTE_ADDR']
         call_log.save()
 
         return response

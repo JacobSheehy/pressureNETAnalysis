@@ -64,6 +64,7 @@ class CustomerCallLog(models.Model):
     query = models.TextField()
     processing_time = models.FloatField()
     results_returned = models.IntegerField()
+    ip_address = models.CharField(max_length=255, blank=True, null=True)
 
     class Meta:
         verbose_name = 'Customer Call Log'
