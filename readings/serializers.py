@@ -10,7 +10,10 @@ class ReadingListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Reading
         fields = (
-            'reading', 'daterecorded'
+            'reading',
+            'daterecorded',
+            'latitude',
+            'longitude',
         )
 
 
