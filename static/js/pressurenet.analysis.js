@@ -222,24 +222,12 @@
                 for(var reading_i in readings) {
                     var reading = readings[reading_i];
                     plot_data.push([reading.daterecorded, reading.reading]);
-                    count++;
-                    if(count%sampleFactor==0) {
-                      readings_sum += reading.reading;
-                    }
                 }
 
-                // remove outliers; find the mean, 
-                // then +- 50 should be fine.
-                var mean = readings_sum / (readings.length / sampleFactor);
-                // console.log('mean ' + mean + ' total ' + readings.length);
-                var minY = mean - 50;
-                var maxY = mean + 50; 
                 $.plot($("#placeholder"), [plot_data],{ 
                     lines:{show:false}, 
                     points:{show:true},
                     xaxis:{mode:"time"},
-                    yaxis:{min:minY,
-                           max:maxY}
                 });
                  
                 // if the results were likely limited, let the user show more
