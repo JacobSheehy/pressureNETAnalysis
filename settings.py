@@ -144,6 +144,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
 
     'rest_framework',
+    'raven.contrib.django.raven_compat',
     'south',
     'urlobject',
 
@@ -169,6 +170,12 @@ REST_FRAMEWORK = {
 }
 
 MAX_CALL_LENGTH = 10000
+
+
+# Sentry Logging
+RAVEN_CONFIG = {
+    'dsn': 'https://ddd1aa161f53439eab8b41715812d8b4:622f3185f82243d5b5e7eee4ba4e32fa@app.getsentry.com/11857',
+}
 
 try:
     from settings_local import *
