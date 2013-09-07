@@ -1,9 +1,9 @@
 [global]
 ApplicationName=PressureNET
-AwsCredentialFile=/home/jkerim/.elasticbeanstalk/aws_credential_file
+AwsCredentialFile=/home/ubuntu/.elasticbeanstalk/aws_credential_file
 DevToolsEndpoint=git.elasticbeanstalk.us-east-1.amazonaws.com
 EnvironmentName=PressureNET-Live
-OptionSettingFile=/home/jkerim/pressureNETAnalysis/.elasticbeanstalk/optionsettings.PressureNET-Live
+OptionSettingFile=/home/ubuntu/pressureNETAnalysis/.elasticbeanstalk/optionsettings.PressureNET-Live
 RdsDeletionPolicy=Snapshot
 RdsEnabled=Yes
 RdsSourceSnapshotName=
@@ -18,21 +18,21 @@ master=PressureNET-Live
 
 [branch:beanstalk]
 EnvironmentName=PressureNET-Live
-OptionSettingFile=/home/jkerim/pressureNETAnalysis/.elasticbeanstalk/optionsettings.PressureNET-Live
+OptionSettingFile=/home/ubuntu/pressureNETAnalysis/.elasticbeanstalk/optionsettings.PressureNET-Live
 RdsDeletionPolicy=Snapshot
 RdsEnabled=Yes
 RdsSourceSnapshotName=
 
 [branch:develop]
 EnvironmentName=PressureNET-Staging
-OptionSettingFile=/home/jkerim/pressurenet/.elasticbeanstalk/optionsettings.PressureNET-Staging
+OptionSettingFile=/home/ubuntu/pressureNETAnalysis/.elasticbeanstalk/optionsettings.PressureNET-Staging
 RdsDeletionPolicy=Snapshot
 RdsEnabled=Yes
 RdsSourceSnapshotName=
 
 [branch:master]
 EnvironmentName=PressureNET-Live
-OptionSettingFile=/home/jkerim/pressurenet/.elasticbeanstalk/optionsettings.PressureNET-Live
+OptionSettingFile=/home/ubuntu/pressureNETAnalysis/.elasticbeanstalk/optionsettings.PressureNET-Live
 RdsDeletionPolicy=Snapshot
 RdsEnabled=Yes
 RdsSourceSnapshotName=
