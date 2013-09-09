@@ -10,14 +10,7 @@ import factory
 
 from readings import choices as readings_choices
 from readings.models import Reading, Condition
-
-
-def to_unix(date):
-    return long(time.mktime(date.timetuple()) * 1000.0)
-
-
-def from_unix(timestamp):
-    return datetime.datetime.fromtimestamp(timestamp / 1000.0)
+from utils.time_utils import to_unix, from_unix 
 
 
 class ReadingFactory(factory.Factory):

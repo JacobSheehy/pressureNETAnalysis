@@ -5,7 +5,7 @@ from django.contrib import admin
 from django.utils import simplejson as json
 
 from readings.models import Reading, ReadingSync, Condition
-from readings.tests import to_unix
+from utils.time_utils import to_unix
 
 
 class ReadingAdmin(admin.ModelAdmin):
