@@ -1,4 +1,3 @@
----index-url=file:///opt/python/ondeck/app/packages/simple/
 Django==1.5.1
 MySQL-python==1.2.3
 South==0.7.6
