@@ -1,3 +1,4 @@
+---index-url=file:///opt/python/ondeck/app/packages/simple/
 Django==1.5.1
 MySQL-python==1.2.3
 South==0.7.6
@@ -9,11 +10,6 @@ django-grappelli==2.4.4
 django-ses==0.4.1
 djangorestframework==2.3.3
 docutils==0.11
-factory-boy==2.1.2
-ipython==0.13.1
-pep8==1.4.5
-pip2pi==0.2.1
-pyflakes==0.7
 python-memcached==1.51
 raven==3.4.1
 wsgiref==0.1.2
